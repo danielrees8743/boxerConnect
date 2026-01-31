@@ -41,9 +41,40 @@ git clone <repository-url>
 cd BoxerConnect
 ```
 
-### 2. Start Infrastructure Services
+### 2. One-Command Setup (Recommended)
 
-Start PostgreSQL and Redis using Docker Compose:
+The easiest way to get started:
+
+```bash
+# First time setup - installs all dependencies, starts Docker, and sets up the database
+npm run setup
+
+# Start the application (Docker + backend + frontend)
+npm run start
+```
+
+That's it! The app will be available at:
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:3001
+
+### Root-Level Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run setup` | First-time setup (install deps, start Docker, setup DB) |
+| `npm run start` | Start Docker containers + both servers |
+| `npm run dev` | Start both servers (assumes Docker is already running) |
+| `npm run stop` | Stop Docker containers |
+| `npm run docker:up` | Start only Docker containers |
+| `npm run docker:down` | Stop Docker containers |
+| `npm run install:all` | Install all dependencies (root, backend, frontend) |
+| `npm run db:setup` | Generate Prisma client and push schema to DB |
+
+### Manual Setup (Alternative)
+
+If you prefer to set up each component manually:
+
+#### Start Infrastructure Services
 
 ```bash
 docker-compose up -d
@@ -53,7 +84,7 @@ This will start:
 - PostgreSQL on port `5432`
 - Redis on port `6379`
 
-### 3. Setup Backend
+#### Setup Backend
 
 ```bash
 cd backend
@@ -63,7 +94,6 @@ npm install
 
 # Copy environment template and configure
 cp .env.example .env
-# Edit .env with your configuration
 
 # Generate Prisma client
 npm run prisma:generate
@@ -71,16 +101,13 @@ npm run prisma:generate
 # Run database migrations
 npm run prisma:migrate
 
-# (Optional) Seed database with test data
-npm run prisma:seed
-
 # Start development server
 npm run dev
 ```
 
 The backend API will be available at `http://localhost:3001`
 
-### 4. Setup Frontend
+#### Setup Frontend
 
 ```bash
 cd frontend
@@ -93,6 +120,19 @@ npm run dev
 ```
 
 The frontend will be available at `http://localhost:5173`
+
+## Test Accounts
+
+After running the application, you can use these test accounts (if seeded):
+
+| Email | Password | Description |
+|-------|----------|-------------|
+| `mike.tyson@test.com` | `Password123` | Professional heavyweight boxer |
+| `evander.holyfield@test.com` | `Password123` | Professional heavyweight boxer |
+| `lennox.lewis@test.com` | `Password123` | Professional heavyweight boxer |
+| `canelo@test.com` | `Password123` | Professional middleweight boxer |
+| `anthony.joshua@test.com` | `Password123` | Professional heavyweight boxer |
+| `amateur.boxer@test.com` | `Password123` | Amateur heavyweight boxer |
 
 ## Project Structure
 

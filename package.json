@@ -1,0 +1,24 @@
+{
+  "name": "boxerconnect",
+  "version": "1.0.0",
+  "description": "Professional Boxing Match Coordination Platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "db:setup": "cd backend && npm run prisma:generate && npx prisma db push",
+    "setup": "npm run install:all && npm run docker:up && sleep 3 && npm run db:setup",
+    "start": "npm run docker:up && sleep 2 && npm run dev",
+    "stop": "npm run docker:down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

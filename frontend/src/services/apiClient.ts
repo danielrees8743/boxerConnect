@@ -4,7 +4,7 @@ import type { ApiError } from '@/types';
 /**
  * Base API URL - uses Vite proxy in development
  */
-const API_BASE_URL = '/api';
+const API_BASE_URL = '/api/v1';
 
 /**
  * Axios instance configured for the BoxerConnect API.
