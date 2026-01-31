@@ -1,0 +1,3 @@
+# Validators Directory
+# This directory contains Zod schemas for request validation.
+# Validators ensure incoming data meets expected formats and constraints.

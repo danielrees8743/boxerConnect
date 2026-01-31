@@ -1,0 +1,3 @@
+# Routes Directory
+# This directory contains Express route definitions that map HTTP endpoints
+# to their corresponding controller methods.

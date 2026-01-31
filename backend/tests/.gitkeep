@@ -1,0 +1,5 @@
+# Tests Directory
+# This directory contains Jest test files.
+# - Unit tests: *.test.ts
+# - Integration tests: *.integration.test.ts
+# - E2E tests: *.e2e.test.ts

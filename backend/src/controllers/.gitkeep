@@ -1,0 +1,3 @@
+# Controllers Directory
+# This directory contains Express route controllers that handle HTTP requests
+# and delegate business logic to services.

@@ -1,0 +1,422 @@
+/**
+ * Core type definitions for BoxerConnect frontend
+ */
+
+// ============================================================================
+// Enums
+// ============================================================================
+
+// User roles in the system
+export type UserRole = 'BOXER' | 'COACH' | 'GYM_OWNER' | 'ADMIN';
+
+// Experience levels for boxers
+export enum ExperienceLevel {
+  BEGINNER = 'BEGINNER',
+  AMATEUR = 'AMATEUR',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED',
+  PROFESSIONAL = 'PROFESSIONAL',
+}
+
+// Fight result options
+export enum FightResult {
+  WIN = 'WIN',
+  LOSS = 'LOSS',
+  DRAW = 'DRAW',
+  NO_CONTEST = 'NO_CONTEST',
+}
+
+// Fight method/ending
+export enum FightMethod {
+  DECISION = 'DECISION',
+  UNANIMOUS_DECISION = 'UNANIMOUS_DECISION',
+  SPLIT_DECISION = 'SPLIT_DECISION',
+  MAJORITY_DECISION = 'MAJORITY_DECISION',
+  KO = 'KO',
+  TKO = 'TKO',
+  RTD = 'RTD',
+  DQ = 'DQ',
+  NO_CONTEST = 'NO_CONTEST',
+}
+
+// Match request status
+export enum MatchRequestStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DECLINED = 'DECLINED',
+  EXPIRED = 'EXPIRED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+}
+
+// Coach permission levels
+export enum CoachPermission {
+  VIEW_PROFILE = 'VIEW_PROFILE',
+  EDIT_PROFILE = 'EDIT_PROFILE',
+  MANAGE_AVAILABILITY = 'MANAGE_AVAILABILITY',
+  RESPOND_TO_MATCHES = 'RESPOND_TO_MATCHES',
+  FULL_ACCESS = 'FULL_ACCESS',
+}
+
+// Legacy weight class type (for backwards compatibility)
+export type WeightClass =
+  | 'minimumweight'
+  | 'light_flyweight'
+  | 'flyweight'
+  | 'super_flyweight'
+  | 'bantamweight'
+  | 'super_bantamweight'
+  | 'featherweight'
+  | 'super_featherweight'
+  | 'lightweight'
+  | 'super_lightweight'
+  | 'welterweight'
+  | 'super_welterweight'
+  | 'middleweight'
+  | 'super_middleweight'
+  | 'light_heavyweight'
+  | 'cruiserweight'
+  | 'heavyweight';
+
+// Boxing stance
+export type Stance = 'orthodox' | 'southpaw' | 'switch';
+
+// ============================================================================
+// User Types
+// ============================================================================
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  isActive: boolean;
+  emailVerified: boolean;
+  lastLoginAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ============================================================================
+// Boxer Types
+// ============================================================================
+
+export interface BoxerProfile {
+  id: string;
+  userId: string;
+  name: string;
+  weightKg: number | null;
+  heightCm: number | null;
+  dateOfBirth: string | null;
+  location: string | null;
+  city: string | null;
+  country: string | null;
+  experienceLevel: ExperienceLevel;
+  wins: number;
+  losses: number;
+  draws: number;
+  gymAffiliation: string | null;
+  bio: string | null;
+  profilePhotoUrl: string | null;
+  isVerified: boolean;
+  isSearchable: boolean;
+  createdAt: string;
+  updatedAt: string;
+  // Optional relations
+  user?: User;
+  fightHistory?: FightHistory[];
+  availability?: Availability[];
+}
+
+export interface CreateBoxerData {
+  name: string;
+  weightKg?: number;
+  heightCm?: number;
+  dateOfBirth?: string;
+  location?: string;
+  city?: string;
+  country?: string;
+  experienceLevel?: ExperienceLevel;
+  wins?: number;
+  losses?: number;
+  draws?: number;
+  gymAffiliation?: string;
+  bio?: string;
+  profilePhotoUrl?: string;
+}
+
+export interface UpdateBoxerData {
+  name?: string;
+  weightKg?: number | null;
+  heightCm?: number | null;
+  dateOfBirth?: string | null;
+  location?: string | null;
+  city?: string | null;
+  country?: string | null;
+  experienceLevel?: ExperienceLevel;
+  wins?: number;
+  losses?: number;
+  draws?: number;
+  gymAffiliation?: string | null;
+  bio?: string | null;
+  profilePhotoUrl?: string | null;
+  isSearchable?: boolean;
+}
+
+export interface BoxerSearchParams {
+  city?: string;
+  country?: string;
+  experienceLevel?: ExperienceLevel;
+  minWeight?: number;
+  maxWeight?: number;
+  isVerified?: boolean;
+  page?: number;
+  limit?: number;
+}
+
+// ============================================================================
+// Fight History Types
+// ============================================================================
+
+export interface FightHistory {
+  id: string;
+  boxerId: string;
+  opponentName: string;
+  date: string;
+  venue: string | null;
+  result: FightResult;
+  method: FightMethod | null;
+  round: number | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateFightHistoryData {
+  opponentName: string;
+  date: string;
+  venue?: string;
+  result: FightResult;
+  method?: FightMethod;
+  round?: number;
+  notes?: string;
+}
+
+export interface UpdateFightHistoryData {
+  opponentName?: string;
+  date?: string;
+  venue?: string | null;
+  result?: FightResult;
+  method?: FightMethod | null;
+  round?: number | null;
+  notes?: string | null;
+}
+
+// ============================================================================
+// Availability Types
+// ============================================================================
+
+export interface Availability {
+  id: string;
+  boxerId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateAvailabilityData {
+  date: string;
+  startTime: string;
+  endTime: string;
+  isAvailable?: boolean;
+  notes?: string;
+}
+
+export interface UpdateAvailabilityData {
+  date?: string;
+  startTime?: string;
+  endTime?: string;
+  isAvailable?: boolean;
+  notes?: string | null;
+}
+
+// ============================================================================
+// Match Request Types
+// ============================================================================
+
+export interface MatchRequest {
+  id: string;
+  requesterBoxerId: string;
+  targetBoxerId: string;
+  status: MatchRequestStatus;
+  message: string | null;
+  responseMessage: string | null;
+  proposedDate: string | null;
+  proposedVenue: string | null;
+  expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
+  // Optional relations
+  requesterBoxer?: BoxerProfile;
+  targetBoxer?: BoxerProfile;
+}
+
+export interface CreateMatchRequestData {
+  targetBoxerId: string;
+  message?: string;
+  proposedDate?: string;
+  proposedVenue?: string;
+}
+
+export interface MatchRequestSearchParams {
+  status?: MatchRequestStatus;
+  page?: number;
+  limit?: number;
+}
+
+export interface MatchRequestStats {
+  pending: number;
+  accepted: number;
+  declined: number;
+  expired: number;
+  cancelled: number;
+  completed: number;
+  total: number;
+}
+
+// ============================================================================
+// Matching Types
+// ============================================================================
+
+export interface MatchSuggestion {
+  boxer: BoxerProfile;
+  compatibilityScore: number;
+  matchReasons: string[];
+  distanceKm?: number;
+}
+
+export interface CompatibleMatchOptions {
+  experienceRange?: number;
+  weightRangeKg?: number;
+  maxDistanceKm?: number;
+  limit?: number;
+}
+
+// ============================================================================
+// Coach Types
+// ============================================================================
+
+export interface CoachBoxer {
+  id: string;
+  coachUserId: string;
+  boxerId: string;
+  permissions: CoachPermission;
+  createdAt: string;
+  updatedAt: string;
+  // Optional relations
+  coach?: User;
+  boxer?: BoxerProfile;
+}
+
+export interface CreateCoachBoxerData {
+  boxerId: string;
+  permissions?: CoachPermission;
+}
+
+export interface UpdateCoachBoxerData {
+  permissions: CoachPermission;
+}
+
+// ============================================================================
+// Admin Types
+// ============================================================================
+
+export interface AdminStats {
+  totalUsers: number;
+  totalBoxers: number;
+  totalMatches: number;
+  pendingVerifications: number;
+  activeUsers: number;
+  matchesThisMonth: number;
+  usersByRole: Record<UserRole, number>;
+  matchesByStatus: Record<MatchRequestStatus, number>;
+}
+
+// ============================================================================
+// Authentication Types
+// ============================================================================
+
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  name: string;
+  role?: UserRole;
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
+}
+
+// ============================================================================
+// API Types
+// ============================================================================
+
+export interface ApiError {
+  success: false;
+  message: string;
+  error?: string;
+  errors?: ValidationError[];
+  statusCode?: number;
+}
+
+export interface ValidationError {
+  field: string;
+  message: string;
+}
+
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+  errors?: ValidationError[];
+}
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  success: boolean;
+  data: T[];
+  pagination: PaginationInfo;
+  message?: string;
+}

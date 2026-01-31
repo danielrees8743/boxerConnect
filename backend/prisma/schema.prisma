@@ -1,0 +1,215 @@
+// BoxerConnect Prisma Schema
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  BOXER
+  COACH
+  GYM_OWNER
+  ADMIN
+}
+
+enum ExperienceLevel {
+  BEGINNER      // 0-1 years, 0-5 fights
+  AMATEUR       // 1-3 years, 5-15 fights
+  INTERMEDIATE  // 3-5 years, 15-30 fights
+  ADVANCED      // 5-10 years, 30-50 fights
+  PROFESSIONAL  // 10+ years or pro license
+}
+
+enum FightResult {
+  WIN
+  LOSS
+  DRAW
+  NO_CONTEST
+}
+
+enum FightMethod {
+  DECISION
+  UNANIMOUS_DECISION
+  SPLIT_DECISION
+  MAJORITY_DECISION
+  KO
+  TKO
+  RTD           // Retired/corner stoppage
+  DQ            // Disqualification
+  NO_CONTEST
+}
+
+enum MatchRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  CANCELLED
+  COMPLETED
+}
+
+enum CoachPermission {
+  VIEW_PROFILE
+  EDIT_PROFILE
+  MANAGE_AVAILABILITY
+  RESPOND_TO_MATCHES
+  FULL_ACCESS
+}
+
+// ============================================================================
+// MODELS
+// ============================================================================
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique @db.VarChar(255)
+  passwordHash  String    @map("password_hash") @db.VarChar(255)
+  role          UserRole  @default(BOXER)
+  name          String    @db.VarChar(100)
+  isActive      Boolean   @default(true) @map("is_active")
+  emailVerified Boolean   @default(false) @map("email_verified")
+  lastLoginAt   DateTime? @map("last_login_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  boxer         Boxer?
+  coachBoxers   CoachBoxer[] @relation("CoachRelation")
+
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+  @@map("users")
+}
+
+model Boxer {
+  id              String          @id @default(uuid()) @db.Uuid
+  userId          String          @unique @map("user_id") @db.Uuid
+  name            String          @db.VarChar(100)
+  weightKg        Decimal?        @map("weight_kg") @db.Decimal(5, 2)
+  heightCm        Int?            @map("height_cm")
+  dateOfBirth     DateTime?       @map("date_of_birth") @db.Date
+  location        String?         @db.VarChar(255)
+  city            String?         @db.VarChar(100)
+  country         String?         @db.VarChar(100)
+  experienceLevel ExperienceLevel @default(BEGINNER) @map("experience_level")
+  wins            Int             @default(0)
+  losses          Int             @default(0)
+  draws           Int             @default(0)
+  gymAffiliation  String?         @map("gym_affiliation") @db.VarChar(200)
+  bio             String?         @db.Text
+  profilePhotoUrl String?         @map("profile_photo_url") @db.VarChar(500)
+  isVerified      Boolean         @default(false) @map("is_verified")
+  isSearchable    Boolean         @default(true) @map("is_searchable")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fightHistory        FightHistory[]
+  availability        Availability[]
+  sentMatchRequests   MatchRequest[] @relation("RequesterBoxer")
+  receivedMatchRequests MatchRequest[] @relation("TargetBoxer")
+  coaches             CoachBoxer[]   @relation("BoxerRelation")
+
+  @@index([userId])
+  @@index([city, country])
+  @@index([experienceLevel])
+  @@index([weightKg])
+  @@index([isSearchable, isVerified])
+  @@map("boxers")
+}
+
+model FightHistory {
+  id           String      @id @default(uuid()) @db.Uuid
+  boxerId      String      @map("boxer_id") @db.Uuid
+  opponentName String      @map("opponent_name") @db.VarChar(100)
+  date         DateTime    @db.Date
+  venue        String?     @db.VarChar(200)
+  result       FightResult
+  method       FightMethod?
+  round        Int?
+  notes        String?     @db.Text
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  boxer        Boxer       @relation(fields: [boxerId], references: [id], onDelete: Cascade)
+
+  @@index([boxerId])
+  @@index([date])
+  @@index([result])
+  @@map("fight_history")
+}
+
+model Availability {
+  id          String   @id @default(uuid()) @db.Uuid
+  boxerId     String   @map("boxer_id") @db.Uuid
+  date        DateTime @db.Date
+  startTime   DateTime @map("start_time") @db.Time()
+  endTime     DateTime @map("end_time") @db.Time()
+  isAvailable Boolean  @default(true) @map("is_available")
+  notes       String?  @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  boxer       Boxer    @relation(fields: [boxerId], references: [id], onDelete: Cascade)
+
+  @@index([boxerId])
+  @@index([date])
+  @@index([isAvailable, date])
+  @@map("availability")
+}
+
+model MatchRequest {
+  id                String             @id @default(uuid()) @db.Uuid
+  requesterBoxerId  String             @map("requester_boxer_id") @db.Uuid
+  targetBoxerId     String             @map("target_boxer_id") @db.Uuid
+  status            MatchRequestStatus @default(PENDING)
+  message           String?            @db.Text
+  responseMessage   String?            @map("response_message") @db.Text
+  proposedDate      DateTime?          @map("proposed_date")
+  proposedVenue     String?            @map("proposed_venue") @db.VarChar(200)
+  expiresAt         DateTime           @map("expires_at")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  requesterBoxer    Boxer              @relation("RequesterBoxer", fields: [requesterBoxerId], references: [id], onDelete: Cascade)
+  targetBoxer       Boxer              @relation("TargetBoxer", fields: [targetBoxerId], references: [id], onDelete: Cascade)
+
+  @@index([requesterBoxerId])
+  @@index([targetBoxerId])
+  @@index([status])
+  @@index([expiresAt])
+  @@index([status, expiresAt])
+  @@map("match_requests")
+}
+
+model CoachBoxer {
+  id          String          @id @default(uuid()) @db.Uuid
+  coachUserId String          @map("coach_user_id") @db.Uuid
+  boxerId     String          @map("boxer_id") @db.Uuid
+  permissions CoachPermission @default(VIEW_PROFILE)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  coach       User            @relation("CoachRelation", fields: [coachUserId], references: [id], onDelete: Cascade)
+  boxer       Boxer           @relation("BoxerRelation", fields: [boxerId], references: [id], onDelete: Cascade)
+
+  @@unique([coachUserId, boxerId])
+  @@index([coachUserId])
+  @@index([boxerId])
+  @@map("coach_boxer")
+}

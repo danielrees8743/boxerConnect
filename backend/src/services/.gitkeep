@@ -1,0 +1,3 @@
+# Services Directory
+# This directory contains business logic services that interact with the database
+# and other external services. Services are called by controllers.
