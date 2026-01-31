@@ -140,12 +140,17 @@ export const BoxerForm: React.FC<BoxerFormProps> = ({
       FEMALE: Gender.FEMALE,
     };
 
+    // Convert date string to ISO datetime format for backend
+    const dateOfBirth = data.dateOfBirth
+      ? new Date(data.dateOfBirth).toISOString()
+      : undefined;
+
     const cleanedData: CreateBoxerData | UpdateBoxerData = {
       name: data.name,
       gender: data.gender ? genderMap[data.gender] : undefined,
       weightKg: data.weightKg || undefined,
       heightCm: data.heightCm || undefined,
-      dateOfBirth: data.dateOfBirth || undefined,
+      dateOfBirth,
       city: data.city || undefined,
       country: data.country || undefined,
       experienceLevel: experienceLevelMap[data.experienceLevel],
