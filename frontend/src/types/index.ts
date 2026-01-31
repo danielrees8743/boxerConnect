@@ -18,6 +18,12 @@ export enum ExperienceLevel {
   PROFESSIONAL = 'PROFESSIONAL',
 }
 
+// Gender for boxers
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+}
+
 // Fight result options
 export enum FightResult {
   WIN = 'WIN',
@@ -105,6 +111,7 @@ export interface BoxerProfile {
   id: string;
   userId: string;
   name: string;
+  gender?: Gender | null;
   weightKg: number | null;
   heightCm: number | null;
   dateOfBirth: string | null;
@@ -130,6 +137,7 @@ export interface BoxerProfile {
 
 export interface CreateBoxerData {
   name: string;
+  gender?: Gender;
   weightKg?: number;
   heightCm?: number;
   dateOfBirth?: string;
@@ -147,6 +155,7 @@ export interface CreateBoxerData {
 
 export interface UpdateBoxerData {
   name?: string;
+  gender?: Gender | null;
   weightKg?: number | null;
   heightCm?: number | null;
   dateOfBirth?: string | null;
@@ -166,6 +175,7 @@ export interface UpdateBoxerData {
 export interface BoxerSearchParams {
   city?: string;
   country?: string;
+  gender?: Gender;
   experienceLevel?: ExperienceLevel;
   minWeight?: number;
   maxWeight?: number;

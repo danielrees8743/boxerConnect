@@ -48,6 +48,11 @@ enum FightMethod {
   NO_CONTEST
 }
 
+enum Gender {
+  MALE
+  FEMALE
+}
+
 enum MatchRequestStatus {
   PENDING
   ACCEPTED
@@ -102,6 +107,7 @@ model Boxer {
   city            String?         @db.VarChar(100)
   country         String?         @db.VarChar(100)
   experienceLevel ExperienceLevel @default(BEGINNER) @map("experience_level")
+  gender          Gender?         @map("gender")
   wins            Int             @default(0)
   losses          Int             @default(0)
   draws           Int             @default(0)

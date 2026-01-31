@@ -14,7 +14,7 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui';
-import { ExperienceLevel } from '@/types';
+import { ExperienceLevel, Gender } from '@/types';
 import type { BoxerSearchParams } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -34,6 +34,12 @@ const experienceLevels: { value: ExperienceLevel | ''; label: string }[] = [
   { value: ExperienceLevel.INTERMEDIATE, label: 'Intermediate' },
   { value: ExperienceLevel.ADVANCED, label: 'Advanced' },
   { value: ExperienceLevel.PROFESSIONAL, label: 'Professional' },
+];
+
+const genderOptions: { value: Gender | ''; label: string }[] = [
+  { value: '', label: 'All Genders' },
+  { value: Gender.MALE, label: 'Male' },
+  { value: Gender.FEMALE, label: 'Female' },
 ];
 
 /**
@@ -134,6 +140,31 @@ export const BoxerSearchFilters: React.FC<BoxerSearchFiltersProps> = ({
               {experienceLevels.map((level) => (
                 <SelectItem key={level.value || 'all'} value={level.value || 'all'}>
                   {level.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Gender */}
+        <div className="space-y-2">
+          <Label>Gender</Label>
+          <Select
+            value={filters.gender || ''}
+            onValueChange={(value) =>
+              handleInputChange(
+                'gender',
+                value && value !== 'all' ? (value as Gender) : undefined
+              )
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="All Genders" />
+            </SelectTrigger>
+            <SelectContent>
+              {genderOptions.map((option) => (
+                <SelectItem key={option.value || 'all'} value={option.value || 'all'}>
+                  {option.label}
                 </SelectItem>
               ))}
             </SelectContent>

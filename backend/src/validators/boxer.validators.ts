@@ -2,7 +2,7 @@
 // Zod schemas for validating boxer-related requests
 
 import { z } from 'zod';
-import { ExperienceLevel } from '@prisma/client';
+import { ExperienceLevel, Gender } from '@prisma/client';
 
 // ============================================================================
 // Validation Schemas
@@ -53,6 +53,9 @@ export const createBoxerSchema = z.object({
     .nativeEnum(ExperienceLevel)
     .optional()
     .default(ExperienceLevel.BEGINNER),
+  gender: z
+    .nativeEnum(Gender)
+    .optional(),
   wins: z
     .number()
     .int('Wins must be a whole number')
@@ -137,6 +140,10 @@ export const updateBoxerSchema = z.object({
     .optional()
     .nullable(),
   experienceLevel: z.nativeEnum(ExperienceLevel).optional(),
+  gender: z
+    .nativeEnum(Gender)
+    .optional()
+    .nullable(),
   wins: z
     .number()
     .int('Wins must be a whole number')
@@ -189,6 +196,7 @@ export const boxerSearchSchema = z.object({
     .trim()
     .optional(),
   experienceLevel: z.nativeEnum(ExperienceLevel).optional(),
+  gender: z.nativeEnum(Gender).optional(),
   minWeight: z
     .string()
     .optional()

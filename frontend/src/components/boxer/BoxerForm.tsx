@@ -21,7 +21,7 @@ import {
   Alert,
   AlertDescription,
 } from '@/components/ui';
-import { ExperienceLevel } from '@/types';
+import { ExperienceLevel, Gender } from '@/types';
 import type { BoxerProfile, CreateBoxerData, UpdateBoxerData } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -31,6 +31,7 @@ const boxerFormSchema = z.object({
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(100, 'Name must be less than 100 characters'),
+  gender: z.enum(['MALE', 'FEMALE'] as const).nullable().optional(),
   weightKg: z
     .number()
     .min(40, 'Weight must be at least 40 kg')
@@ -74,6 +75,11 @@ const experienceLevels: { value: ExperienceLevel; label: string }[] = [
   { value: ExperienceLevel.PROFESSIONAL, label: 'Professional' },
 ];
 
+const genderOptions: { value: Gender; label: string }[] = [
+  { value: Gender.MALE, label: 'Male' },
+  { value: Gender.FEMALE, label: 'Female' },
+];
+
 /**
  * BoxerForm component for creating or editing boxer profiles.
  * Includes validation with react-hook-form and zod.
@@ -104,6 +110,7 @@ export const BoxerForm: React.FC<BoxerFormProps> = ({
     resolver: zodResolver(boxerFormSchema),
     defaultValues: {
       name: boxer?.name || '',
+      gender: boxer?.gender || null,
       weightKg: boxer?.weightKg || null,
       heightCm: boxer?.heightCm || null,
       dateOfBirth: boxer?.dateOfBirth ? boxer.dateOfBirth.split('T')[0] : null,
@@ -128,8 +135,14 @@ export const BoxerForm: React.FC<BoxerFormProps> = ({
       PROFESSIONAL: ExperienceLevel.PROFESSIONAL,
     };
 
+    const genderMap: Record<string, Gender> = {
+      MALE: Gender.MALE,
+      FEMALE: Gender.FEMALE,
+    };
+
     const cleanedData: CreateBoxerData | UpdateBoxerData = {
       name: data.name,
+      gender: data.gender ? genderMap[data.gender] : undefined,
       weightKg: data.weightKg || undefined,
       heightCm: data.heightCm || undefined,
       dateOfBirth: data.dateOfBirth || undefined,
@@ -190,6 +203,32 @@ export const BoxerForm: React.FC<BoxerFormProps> = ({
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
+          </div>
+
+          {/* Gender */}
+          <div className="space-y-2">
+            <Label>Gender</Label>
+            <Controller
+              name="gender"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value || ''}
+                  onValueChange={(value) => field.onChange(value || null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select gender (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {genderOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           {/* Physical Attributes */}

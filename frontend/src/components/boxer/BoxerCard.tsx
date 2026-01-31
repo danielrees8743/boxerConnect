@@ -11,7 +11,7 @@ import {
   Badge,
   getInitials,
 } from '@/components/ui';
-import type { BoxerProfile, ExperienceLevel } from '@/types';
+import type { BoxerProfile, ExperienceLevel, Gender } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface BoxerCardProps {
@@ -39,6 +39,13 @@ const experienceBadgeVariant: Record<ExperienceLevel, 'default' | 'secondary' | 
  */
 function formatExperienceLevel(level: ExperienceLevel): string {
   return level.charAt(0) + level.slice(1).toLowerCase();
+}
+
+/**
+ * Format gender for display.
+ */
+function formatGender(gender: Gender): string {
+  return gender === 'MALE' ? 'Male' : 'Female';
 }
 
 /**
@@ -87,11 +94,16 @@ export const BoxerCard: React.FC<BoxerCardProps> = ({
               )}
             </div>
 
-            {/* Weight and Experience */}
+            {/* Weight, Gender, and Experience */}
             <div className="mt-1 flex flex-wrap items-center gap-2">
               {boxer.weightKg && (
                 <span className="text-sm text-muted-foreground">
                   {boxer.weightKg} kg
+                </span>
+              )}
+              {boxer.gender && (
+                <span className="text-sm text-muted-foreground">
+                  {formatGender(boxer.gender)}
                 </span>
               )}
               <Badge variant={experienceBadgeVariant[boxer.experienceLevel]}>

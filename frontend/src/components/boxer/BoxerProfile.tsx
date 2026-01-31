@@ -24,7 +24,7 @@ import {
   Skeleton,
   getInitials,
 } from '@/components/ui';
-import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult } from '@/types';
+import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface BoxerProfileProps {
@@ -43,6 +43,13 @@ interface BoxerProfileProps {
  */
 function formatExperienceLevel(level: string): string {
   return level.charAt(0) + level.slice(1).toLowerCase();
+}
+
+/**
+ * Format gender for display.
+ */
+function formatGender(gender: Gender): string {
+  return gender === 'MALE' ? 'Male' : 'Female';
 }
 
 /**
@@ -161,7 +168,7 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
                 <div className="text-center p-3 rounded-lg bg-muted/50">
                   <div className="flex items-center justify-center gap-1 text-muted-foreground mb-1">
                     <Scale className="h-4 w-4" />
@@ -187,6 +194,15 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
                   </div>
                   <p className="font-semibold">
                     {boxer.dateOfBirth ? calculateAge(boxer.dateOfBirth) : '-'}
+                  </p>
+                </div>
+                <div className="text-center p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center justify-center gap-1 text-muted-foreground mb-1">
+                    <User className="h-4 w-4" />
+                    <span className="text-xs">Gender</span>
+                  </div>
+                  <p className="font-semibold">
+                    {boxer.gender ? formatGender(boxer.gender) : '-'}
                   </p>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-muted/50">
@@ -338,8 +354,8 @@ function BoxerProfileSkeleton() {
             <div className="flex-1 space-y-4">
               <Skeleton className="h-8 w-48" />
               <Skeleton className="h-4 w-32" />
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {Array.from({ length: 4 }).map((_, i) => (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                {Array.from({ length: 5 }).map((_, i) => (
                   <Skeleton key={i} className="h-20 rounded-lg" />
                 ))}
               </div>
