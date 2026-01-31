@@ -50,7 +50,7 @@ export const boxerService = {
    * Update a boxer profile
    */
   async updateBoxer(id: string, data: UpdateBoxerData): Promise<BoxerProfile> {
-    const response = await apiClient.patch<ApiResponse<{ boxer: BoxerProfile }>>(`/boxers/${id}`, data);
+    const response = await apiClient.put<ApiResponse<{ boxer: BoxerProfile }>>(`/boxers/${id}`, data);
     if (!response.data.data?.boxer) {
       throw new Error(response.data.message || 'Failed to update boxer profile');
     }
