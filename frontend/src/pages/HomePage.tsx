@@ -67,7 +67,7 @@ export const HomePage: React.FC = () => {
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white/10">
+                  <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white hover:text-boxing-navy bg-white/10">
                     <Link to="/login">Sign In</Link>
                   </Button>
                 </>

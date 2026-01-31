@@ -4,6 +4,7 @@ import { LogOut, Menu, X, User, Home, Users, Calendar, Settings } from 'lucide-r
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
+import { ThemeToggleDropdown, ThemeToggle } from '@/components/theme';
 import { cn } from '@/lib/utils';
 
 interface MainLayoutProps {
@@ -62,6 +63,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
 
             <div className="flex items-center space-x-4">
+              <ThemeToggleDropdown />
               {isAuthenticated ? (
                 <>
                   <Link
@@ -132,6 +134,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   <Settings className="h-4 w-4" />
                   <span>Profile</span>
                 </Link>
+                <div className="flex items-center space-x-2 text-sm font-medium text-muted-foreground">
+                  <ThemeToggle showLabel />
+                </div>
                 <button
                   onClick={() => {
                     handleLogout();
@@ -159,6 +164,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 >
                   Sign Up
                 </Link>
+                <div className="flex items-center space-x-2 text-sm font-medium text-muted-foreground">
+                  <ThemeToggle showLabel />
+                </div>
               </>
             )}
           </nav>

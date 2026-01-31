@@ -64,13 +64,16 @@ export const BoxerCard: React.FC<BoxerCardProps> = ({
   const locationDisplay = [boxer.city, boxer.country].filter(Boolean).join(', ');
 
   return (
-    <Card className={cn('overflow-hidden transition-shadow hover:shadow-md', className)}>
+    <Card className={cn(
+      'overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 border-l-4 border-l-boxing-red-600',
+      className
+    )}>
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           {/* Avatar */}
-          <Avatar className="h-16 w-16">
+          <Avatar className="h-16 w-16 ring-2 ring-boxing-red-100 dark:ring-boxing-red-900/30">
             <AvatarImage src={boxer.profilePhotoUrl || undefined} alt={boxer.name} />
-            <AvatarFallback className="bg-boxing-red/10 text-boxing-red text-lg">
+            <AvatarFallback className="bg-boxing-red-600 text-white text-lg font-bold">
               {getInitials(boxer.name)}
             </AvatarFallback>
           </Avatar>
@@ -97,14 +100,14 @@ export const BoxerCard: React.FC<BoxerCardProps> = ({
             </div>
 
             {/* Record */}
-            <div className="mt-2 flex items-center gap-1 text-sm">
-              <Trophy className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium text-green-600">{boxer.wins}W</span>
+            <div className="mt-2 flex items-center gap-1.5 text-sm">
+              <Trophy className="h-4 w-4 text-boxing-gold-500" />
+              <span className="font-bold text-victory">{boxer.wins}W</span>
               <span className="text-muted-foreground">-</span>
-              <span className="font-medium text-red-600">{boxer.losses}L</span>
+              <span className="font-bold text-defeat">{boxer.losses}L</span>
               <span className="text-muted-foreground">-</span>
-              <span className="font-medium text-muted-foreground">{boxer.draws}D</span>
-              <span className="text-muted-foreground ml-1">
+              <span className="font-bold text-draw">{boxer.draws}D</span>
+              <span className="text-xs text-muted-foreground ml-1">
                 ({totalFights} {totalFights === 1 ? 'fight' : 'fights'})
               </span>
             </div>
@@ -123,17 +126,17 @@ export const BoxerCard: React.FC<BoxerCardProps> = ({
             <div className="text-center shrink-0">
               <div
                 className={cn(
-                  'h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-lg',
+                  'h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md',
                   compatibilityScore >= 80
-                    ? 'bg-green-500'
+                    ? 'bg-victory'
                     : compatibilityScore >= 60
-                    ? 'bg-yellow-500'
-                    : 'bg-red-500'
+                    ? 'bg-boxing-gold-500'
+                    : 'bg-defeat'
                 )}
               >
                 {compatibilityScore}%
               </div>
-              <span className="text-xs text-muted-foreground mt-1 block">Match</span>
+              <span className="text-xs text-muted-foreground mt-1 block font-medium">Match</span>
             </div>
           )}
         </div>

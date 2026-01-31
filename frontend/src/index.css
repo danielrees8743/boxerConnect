@@ -4,65 +4,86 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* BoxerConnect Light Theme - Clean & Professional */
+    --background: 210 40% 98%;           /* Canvas White #F8FAFC */
+    --foreground: 217 33% 17%;           /* Navy Corner #1E293B */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;                   /* Pure White */
+    --card-foreground: 217 33% 17%;     /* Navy Corner */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 217 33% 17%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Ring Red - Primary Action Color */
+    --primary: 0 84% 50%;                /* #DC2626 */
+    --primary-foreground: 0 0% 100%;     /* White */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 215 20% 95%;            /* Light Gray */
+    --secondary-foreground: 217 33% 17%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 215 20% 95%;
+    --muted-foreground: 215 16% 47%;     /* Rope Gray #64748B */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Championship Gold - Accent */
+    --accent: 38 92% 50%;                /* #F59E0B */
+    --accent-foreground: 217 33% 17%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Knockout Red - Destructive */
+    --destructive: 0 84% 60%;            /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 0 84% 50%;                   /* Ring Red for focus */
 
     --radius: 0.5rem;
+
+    /* BoxerConnect Custom Properties */
+    --boxing-red: 0 84% 50%;
+    --boxing-gold: 38 92% 50%;
+    --boxing-navy: 217 33% 17%;
+    --boxing-success: 142 71% 45%;       /* Victory Green #22C55E */
+    --boxing-warning: 38 92% 50%;        /* Training Amber */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* BoxerConnect Dark Theme - Gym at Night */
+    --background: 222 47% 6%;            /* Deep Navy #0F172A */
+    --foreground: 210 40% 96%;           /* Light text #F1F5F9 */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 217 33% 17%;                 /* Navy Corner #1E293B */
+    --card-foreground: 210 40% 96%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 96%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Ring Red - Slightly brighter for dark mode */
+    --primary: 0 84% 60%;                /* #EF4444 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 217 33% 22%;
+    --secondary-foreground: 210 40% 96%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 217 33% 22%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Championship Gold - Brighter for dark mode */
+    --accent: 43 96% 56%;                /* #FBBF24 */
+    --accent-foreground: 217 33% 17%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
+    --ring: 0 84% 60%;
+
+    /* BoxerConnect Custom Properties - Dark Mode */
+    --boxing-red: 0 84% 60%;
+    --boxing-gold: 43 96% 56%;
+    --boxing-navy: 222 47% 6%;
+    --boxing-success: 142 71% 45%;
+    --boxing-warning: 43 96% 56%;
   }
 }
 
@@ -100,5 +121,107 @@
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     background-color: hsl(var(--muted-foreground));
+  }
+}
+
+/* BoxerConnect Custom Utilities */
+@layer utilities {
+  /* Text gradient for hero headlines */
+  .text-gradient-boxing {
+    @apply bg-gradient-to-r from-red-600 via-red-500 to-amber-500 bg-clip-text text-transparent;
+  }
+
+  /* Card hover lift effect */
+  .card-lift {
+    @apply transition-all duration-200 ease-out;
+  }
+  .card-lift:hover {
+    @apply -translate-y-0.5 shadow-lg;
+  }
+
+  /* Button press effect */
+  .btn-press:active {
+    @apply scale-[0.98];
+  }
+
+  /* Boxing ring border accent */
+  .ring-accent {
+    @apply border-l-4 border-l-red-600;
+  }
+
+  /* Win/Loss/Draw colors */
+  .text-win {
+    @apply text-green-500;
+  }
+  .text-loss {
+    @apply text-red-500;
+  }
+  .text-draw {
+    @apply text-slate-400;
+  }
+
+  /* Status badges */
+  .badge-pending {
+    @apply bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400;
+  }
+  .badge-accepted {
+    @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400;
+  }
+  .badge-declined {
+    @apply bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400;
+  }
+
+  /* Championship gold highlight */
+  .highlight-gold {
+    @apply bg-gradient-to-r from-amber-400 to-yellow-500;
+  }
+
+  /* Focus ring - boxing red */
+  .focus-boxing:focus-visible {
+    @apply outline-none ring-2 ring-red-500 ring-offset-2 ring-offset-background;
+  }
+}
+
+/* Animations */
+@layer utilities {
+  /* Slide up entrance */
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Pulse for notifications */
+  .animate-pulse-ring {
+    animation: pulseRing 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseRing {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+    }
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-slide-up,
+    .animate-pulse-ring {
+      animation: none;
+    }
+    .card-lift:hover {
+      transform: none;
+    }
   }
 }

@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/app/store';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { fetchCurrentUser } from '@/features/auth/authSlice';
+import { ThemeProvider } from '@/components/theme';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { HomePage } from '@/pages/HomePage';
 import { LoginPage } from '@/pages/LoginPage';
@@ -158,11 +159,13 @@ const AppRoutes: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <AuthInitializer>
-          <AppRoutes />
-        </AuthInitializer>
-      </BrowserRouter>
+      <ThemeProvider defaultTheme="system">
+        <BrowserRouter>
+          <AuthInitializer>
+            <AppRoutes />
+          </AuthInitializer>
+        </BrowserRouter>
+      </ThemeProvider>
     </Provider>
   );
 };

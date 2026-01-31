@@ -59,22 +59,27 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center">
+    <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-gradient-to-b from-background to-muted/30">
       <div className="mx-auto w-full max-w-md space-y-6 px-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to your BoxerConnect account
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Error Alert */}
-          {error && (
-            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              {error}
+        {/* Card wrapper */}
+        <div className="rounded-xl border bg-card p-8 shadow-lg">
+          <div className="text-center mb-8">
+            <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-boxing-red-600 flex items-center justify-center">
+              <span className="text-2xl font-bold text-white">B</span>
             </div>
-          )}
+            <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Sign in to your BoxerConnect account
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Error Alert */}
+            {error && (
+              <div className="rounded-md bg-destructive/10 border border-destructive/20 p-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
 
           {/* Email Field */}
           <div className="space-y-2">
@@ -134,26 +139,27 @@ export const LoginPage: React.FC = () => {
             )}
           </div>
 
-          {/* Submit Button */}
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
-              </>
-            ) : (
-              'Sign In'
-            )}
-          </Button>
-        </form>
+            {/* Submit Button */}
+            <Button type="submit" className="w-full mt-6" size="lg" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </Button>
+          </form>
 
-        {/* Register Link */}
-        <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
-          <Link to="/register" className="font-medium text-foreground hover:underline">
-            Sign up
-          </Link>
-        </p>
+          {/* Register Link */}
+          <p className="text-center text-sm text-muted-foreground pt-4 border-t mt-6">
+            Don&apos;t have an account?{' '}
+            <Link to="/register" className="font-medium text-boxing-red-600 hover:text-boxing-red-700 hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
