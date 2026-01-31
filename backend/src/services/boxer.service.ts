@@ -49,6 +49,7 @@ function buildCreateData(
   };
 
   // Only set optional fields if they have values
+  if (data.gender !== undefined) createData.gender = data.gender;
   if (data.weightKg !== undefined) createData.weightKg = data.weightKg;
   if (data.heightCm !== undefined) createData.heightCm = data.heightCm;
   if (data.dateOfBirth !== undefined) createData.dateOfBirth = data.dateOfBirth;
@@ -70,6 +71,7 @@ function buildUpdateDataFromCreate(data: CreateBoxerInput): Prisma.BoxerUpdateIn
     name: data.name,
   };
 
+  if (data.gender !== undefined) updateData.gender = data.gender;
   if (data.weightKg !== undefined) updateData.weightKg = data.weightKg;
   if (data.heightCm !== undefined) updateData.heightCm = data.heightCm;
   if (data.dateOfBirth !== undefined) updateData.dateOfBirth = data.dateOfBirth;
@@ -187,6 +189,7 @@ export async function updateBoxer(
   const updateData: Prisma.BoxerUpdateInput = {};
 
   if (data.name !== undefined) updateData.name = data.name;
+  if (data.gender !== undefined) updateData.gender = data.gender;
   if (data.weightKg !== undefined) updateData.weightKg = data.weightKg;
   if (data.heightCm !== undefined) updateData.heightCm = data.heightCm;
   if (data.dateOfBirth !== undefined) updateData.dateOfBirth = data.dateOfBirth;
