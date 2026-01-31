@@ -39,10 +39,14 @@ export async function register(
     // Validate request body
     const validatedData = registerSchema.parse(req.body);
 
-    // Register user
-    const user = await registerUser(validatedData);
+    // Register user (now returns tokens for immediate login)
+    const result = await registerUser(validatedData);
 
-    sendCreated(res, { user }, 'Registration successful');
+    sendCreated(res, {
+      user: result.user,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+    }, 'Registration successful');
   } catch (error) {
     if (error instanceof Error && error.message === 'User with this email already exists') {
       return next(new BadRequestError(error.message));

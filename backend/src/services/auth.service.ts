@@ -225,8 +225,9 @@ function sanitizeUser(user: {
 /**
  * Register a new user
  * Creates user and boxer profile if role is BOXER
+ * Returns user and tokens for immediate login
  */
-export async function register(data: RegisterInput): Promise<SafeUser> {
+export async function register(data: RegisterInput): Promise<AuthResult> {
   // Check if user already exists
   const existingUser = await prisma.user.findUnique({
     where: { email: data.email },
@@ -264,7 +265,21 @@ export async function register(data: RegisterInput): Promise<SafeUser> {
     return newUser;
   });
 
-  return sanitizeUser(user);
+  // Generate tokens for immediate login
+  const accessToken = generateAccessToken(user.id, user.role);
+  const refreshToken = generateRefreshToken(user.id);
+
+  // Decode refresh token to get tokenId and store it
+  const refreshPayload = verifyRefreshToken(refreshToken);
+  if (refreshPayload.tokenId) {
+    await storeRefreshToken(user.id, refreshPayload.tokenId, refreshToken);
+  }
+
+  return {
+    user: sanitizeUser(user),
+    accessToken,
+    refreshToken,
+  };
 }
 
 /**

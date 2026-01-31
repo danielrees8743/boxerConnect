@@ -1,10 +1,50 @@
-import axios, { type AxiosInstance, type AxiosError, type InternalAxiosRequestConfig } from 'axios';
-import type { ApiError } from '@/types';
+import axios, { type AxiosInstance, type AxiosError, type InternalAxiosRequestConfig, type AxiosResponse } from 'axios';
+import type { ApiError, ApiResponse } from '@/types';
 
 /**
  * Base API URL - uses Vite proxy in development
  */
 const API_BASE_URL = '/api/v1';
+
+/**
+ * Flag to prevent multiple refresh attempts
+ */
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value: AxiosResponse) => void;
+  reject: (error: Error) => void;
+  config: InternalAxiosRequestConfig;
+}> = [];
+
+/**
+ * Process queued requests after token refresh
+ */
+const processQueue = (error: Error | null) => {
+  failedQueue.forEach((promise) => {
+    if (error) {
+      promise.reject(error);
+    } else {
+      // Retry the request with new token
+      const token = localStorage.getItem('accessToken');
+      if (token && promise.config.headers) {
+        promise.config.headers.Authorization = `Bearer ${token}`;
+      }
+      apiClient.request(promise.config).then(promise.resolve).catch(promise.reject);
+    }
+  });
+  failedQueue = [];
+};
+
+/**
+ * Clear auth tokens and redirect to login
+ */
+const clearAuthAndRedirect = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  if (!window.location.pathname.includes('/login')) {
+    window.location.href = '/login';
+  }
+};
 
 /**
  * Axios instance configured for the BoxerConnect API.
@@ -23,7 +63,7 @@ export const apiClient: AxiosInstance = axios.create({
  */
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -35,24 +75,74 @@ apiClient.interceptors.request.use(
 );
 
 /**
- * Response interceptor for error handling
+ * Response interceptor for error handling with token refresh
  */
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<ApiError>) => {
+  async (error: AxiosError<ApiError>) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
     // Handle specific error codes
     if (error.response) {
       const { status, data } = error.response;
 
-      switch (status) {
-        case 401:
-          // Unauthorized - clear token and redirect to login
-          localStorage.removeItem('token');
-          // Only redirect if not already on login page
-          if (!window.location.pathname.includes('/login')) {
-            window.location.href = '/login';
+      // Handle 401 with token refresh
+      if (status === 401 && !originalRequest._retry) {
+        // Don't try to refresh if this is already the refresh request
+        if (originalRequest.url?.includes('/auth/refresh')) {
+          clearAuthAndRedirect();
+          return Promise.reject(new Error('Session expired. Please log in again.'));
+        }
+
+        // If already refreshing, queue this request
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject, config: originalRequest });
+          });
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        if (!refreshToken) {
+          isRefreshing = false;
+          clearAuthAndRedirect();
+          return Promise.reject(new Error('No refresh token available'));
+        }
+
+        try {
+          // Attempt to refresh the token
+          const response = await axios.post<ApiResponse<{ accessToken: string; refreshToken: string }>>(
+            `${API_BASE_URL}/auth/refresh`,
+            { refreshToken },
+            { headers: { 'Content-Type': 'application/json' } }
+          );
+
+          const newTokens = response.data.data;
+          if (newTokens) {
+            localStorage.setItem('accessToken', newTokens.accessToken);
+            localStorage.setItem('refreshToken', newTokens.refreshToken);
+
+            // Retry the original request with new token
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
+            }
+
+            processQueue(null);
+            return apiClient.request(originalRequest);
           }
-          break;
+        } catch (refreshError) {
+          processQueue(new Error('Token refresh failed'));
+          clearAuthAndRedirect();
+          return Promise.reject(new Error('Session expired. Please log in again.'));
+        } finally {
+          isRefreshing = false;
+        }
+      }
+
+      switch (status) {
         case 403:
           // Forbidden - user doesn't have permission
           console.error('Access forbidden:', data?.message);

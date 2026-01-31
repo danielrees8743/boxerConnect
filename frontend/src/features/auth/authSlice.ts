@@ -5,8 +5,8 @@ import { authService } from '@/services/authService';
 // Initial state for auth slice
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem('token'),
-  isAuthenticated: false,
+  token: localStorage.getItem('accessToken'),
+  isAuthenticated: !!localStorage.getItem('accessToken'),
   isLoading: false,
   error: null,
 };
@@ -21,7 +21,8 @@ export const loginUser = createAsyncThunk<
 >('auth/login', async (credentials, { rejectWithValue }) => {
   try {
     const response = await authService.login(credentials);
-    localStorage.setItem('token', response.token);
+    localStorage.setItem('accessToken', response.accessToken);
+    localStorage.setItem('refreshToken', response.refreshToken);
     return response;
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Login failed';
@@ -39,7 +40,8 @@ export const registerUser = createAsyncThunk<
 >('auth/register', async (data, { rejectWithValue }) => {
   try {
     const response = await authService.register(data);
-    localStorage.setItem('token', response.token);
+    localStorage.setItem('accessToken', response.accessToken);
+    localStorage.setItem('refreshToken', response.refreshToken);
     return response;
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Registration failed';
@@ -79,7 +81,8 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
-      localStorage.removeItem('token');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     },
     /**
      * Clear any auth errors
@@ -97,9 +100,10 @@ const authSlice = createSlice({
     /**
      * Set token directly
      */
-    setToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
-      localStorage.setItem('token', action.payload);
+    setToken: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {
+      state.token = action.payload.accessToken;
+      localStorage.setItem('accessToken', action.payload.accessToken);
+      localStorage.setItem('refreshToken', action.payload.refreshToken);
     },
   },
   extraReducers: (builder) => {
@@ -112,7 +116,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.token = action.payload.accessToken;
         state.isAuthenticated = true;
         state.error = null;
       })
@@ -131,7 +135,7 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.token = action.payload.accessToken;
         state.isAuthenticated = true;
         state.error = null;
       })
@@ -159,7 +163,8 @@ const authSlice = createSlice({
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
       });
   },
 });

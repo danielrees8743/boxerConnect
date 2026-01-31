@@ -145,12 +145,13 @@ export const declineMatchRequest = createAsyncThunk<
  * Cancel a match request
  */
 export const cancelMatchRequest = createAsyncThunk<
-  MatchRequest,
+  string,
   string,
   { rejectValue: string }
 >('requests/cancelMatchRequest', async (id, { rejectWithValue }) => {
   try {
-    return await matchRequestService.cancelMatchRequest(id);
+    await matchRequestService.cancelMatchRequest(id);
+    return id; // Return the ID of the cancelled request
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to cancel match request';
     return rejectWithValue(message);
@@ -336,10 +337,11 @@ const requestsSlice = createSlice({
       })
       .addCase(cancelMatchRequest.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.incomingRequests = updateRequestInList(state.incomingRequests, action.payload);
-        state.outgoingRequests = updateRequestInList(state.outgoingRequests, action.payload);
-        if (state.selectedRequest?.id === action.payload.id) {
-          state.selectedRequest = action.payload;
+        // Remove the cancelled request from both lists
+        state.incomingRequests = state.incomingRequests.filter((r) => r.id !== action.payload);
+        state.outgoingRequests = state.outgoingRequests.filter((r) => r.id !== action.payload);
+        if (state.selectedRequest?.id === action.payload) {
+          state.selectedRequest = null;
         }
       })
       .addCase(cancelMatchRequest.rejected, (state, action) => {
