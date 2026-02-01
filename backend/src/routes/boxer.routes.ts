@@ -19,12 +19,14 @@ import {
 import {
   authenticate,
   optionalAuth,
-  requireBoxer,
   standardLimiter,
   searchLimiter,
   createResourceLimiter,
   uploadProfilePhoto,
+  requirePermission,
+  requireAnyPermission,
 } from '../middleware';
+import { Permission } from '../permissions';
 
 const router = Router();
 
@@ -51,38 +53,68 @@ router.get('/', searchLimiter, optionalAuth, handler(searchBoxers));
 /**
  * GET /api/v1/boxers/me
  * Get current user's boxer profile
- * Requires authentication
+ * Requires: authentication + BOXER_READ_OWN_PROFILE permission
  */
-router.get('/me', standardLimiter, authenticate, handler(getMyBoxer));
+router.get(
+  '/me',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_READ_OWN_PROFILE),
+  handler(getMyBoxer)
+);
 
 /**
  * GET /api/v1/boxers/me/suggestions
  * Get suggested matches for current user
- * Requires authentication and BOXER role
+ * Requires: authentication + MATCH_READ_OWN_REQUESTS permission
  */
-router.get('/me/suggestions', standardLimiter, authenticate, requireBoxer, handler(getMySuggestedMatches));
+router.get(
+  '/me/suggestions',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.MATCH_READ_OWN_REQUESTS),
+  handler(getMySuggestedMatches)
+);
 
 /**
  * POST /api/v1/boxers/me/photo
  * Upload profile photo
- * Requires authentication and BOXER role
+ * Requires: authentication + BOXER_UPLOAD_PHOTO permission
  */
-router.post('/me/photo', createResourceLimiter, authenticate, requireBoxer, uploadProfilePhoto, handler(uploadPhoto));
+router.post(
+  '/me/photo',
+  createResourceLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_UPLOAD_PHOTO),
+  uploadProfilePhoto,
+  handler(uploadPhoto)
+);
 
 /**
  * DELETE /api/v1/boxers/me/photo
  * Remove profile photo
- * Requires authentication and BOXER role
+ * Requires: authentication + BOXER_UPLOAD_PHOTO permission
  */
-router.delete('/me/photo', standardLimiter, authenticate, requireBoxer, handler(removePhoto));
+router.delete(
+  '/me/photo',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_UPLOAD_PHOTO),
+  handler(removePhoto)
+);
 
 /**
  * POST /api/v1/boxers
  * Create or complete boxer profile
- * Rate limited by createResourceLimiter
- * Requires authentication and BOXER role
+ * Requires: authentication + BOXER_CREATE_PROFILE permission
  */
-router.post('/', createResourceLimiter, authenticate, requireBoxer, handler(createBoxer));
+router.post(
+  '/',
+  createResourceLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_CREATE_PROFILE),
+  handler(createBoxer)
+);
 
 // ============================================================================
 // Parameterized Routes (must come after /me routes)
@@ -91,30 +123,59 @@ router.post('/', createResourceLimiter, authenticate, requireBoxer, handler(crea
 /**
  * GET /api/v1/boxers/:id
  * Get boxer by ID
- * Rate limited by standardLimiter
  * Optional auth to check if user is owner
+ * Note: Authorization logic is in controller (public profiles, searchability)
  */
 router.get('/:id', standardLimiter, optionalAuth, handler(getBoxer));
 
 /**
  * PUT /api/v1/boxers/:id
- * Update boxer profile (owner only)
- * Requires authentication
+ * Update boxer profile
+ * Requires: authentication + either BOXER_UPDATE_OWN_PROFILE or BOXER_UPDATE_LINKED_PROFILE
+ * Resource-specific permission check determines if user owns or has coach permission
  */
-router.put('/:id', standardLimiter, authenticate, handler(updateBoxer));
+router.put(
+  '/:id',
+  standardLimiter,
+  authenticate,
+  requireAnyPermission(
+    [Permission.BOXER_UPDATE_OWN_PROFILE, Permission.BOXER_UPDATE_LINKED_PROFILE],
+    {
+      resourceIdParam: 'id',
+      resourceType: 'boxer',
+    }
+  ),
+  handler(updateBoxer)
+);
 
 /**
  * DELETE /api/v1/boxers/:id
  * Deactivate boxer profile (owner only)
- * Requires authentication
+ * Requires: authentication + BOXER_DELETE_OWN_PROFILE permission + ownership
  */
-router.delete('/:id', standardLimiter, authenticate, handler(deleteBoxerProfile));
+router.delete(
+  '/:id',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_DELETE_OWN_PROFILE, {
+    resourceIdParam: 'id',
+    resourceType: 'boxer',
+  }),
+  handler(deleteBoxerProfile)
+);
 
 /**
  * GET /api/v1/boxers/:id/matches
- * Get compatible matches for a boxer (owner only)
- * Requires authentication
+ * Get compatible matches for a boxer
+ * Requires: authentication + MATCH_READ_OWN_REQUESTS permission
+ * Note: Controller verifies boxer ownership
  */
-router.get('/:id/matches', standardLimiter, authenticate, handler(getCompatibleMatches));
+router.get(
+  '/:id/matches',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.MATCH_READ_OWN_REQUESTS),
+  handler(getCompatibleMatches)
+);
 
 export default router;

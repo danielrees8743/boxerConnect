@@ -13,7 +13,9 @@ import {
   authenticate,
   standardLimiter,
   createResourceLimiter,
+  requirePermission,
 } from '../middleware';
+import { Permission } from '../permissions';
 
 const router = Router();
 
@@ -28,9 +30,15 @@ const handler = (fn: unknown): RequestHandler => fn as RequestHandler;
 /**
  * GET /api/v1/availability/me
  * Get current user's boxer availability
- * Requires authentication
+ * Requires: authentication + AVAILABILITY_READ permission
  */
-router.get('/me', standardLimiter, authenticate, handler(getMyAvailability));
+router.get(
+  '/me',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.AVAILABILITY_READ),
+  handler(getMyAvailability)
+);
 
 // ============================================================================
 // Boxer-Specific Availability Routes
@@ -46,30 +54,57 @@ const boxerAvailabilityRouter = Router({ mergeParams: true });
 /**
  * POST /api/v1/boxers/:boxerId/availability
  * Create availability slot for a boxer
- * Requires authentication (owner only)
+ * Requires: authentication + AVAILABILITY_CREATE permission
+ * Note: Resource-specific check verifies user can manage the boxer's availability
  */
-boxerAvailabilityRouter.post('/', createResourceLimiter, authenticate, handler(createAvailability));
+boxerAvailabilityRouter.post(
+  '/',
+  createResourceLimiter,
+  authenticate,
+  requirePermission(Permission.AVAILABILITY_CREATE),
+  handler(createAvailability)
+);
 
 /**
  * GET /api/v1/boxers/:boxerId/availability
  * Get availability for a boxer
- * Requires authentication
+ * Requires: authentication + AVAILABILITY_READ permission
  */
-boxerAvailabilityRouter.get('/', standardLimiter, authenticate, handler(getAvailability));
+boxerAvailabilityRouter.get(
+  '/',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.AVAILABILITY_READ),
+  handler(getAvailability)
+);
 
 /**
  * PUT /api/v1/boxers/:boxerId/availability/:id
  * Update availability slot
- * Requires authentication (owner only)
+ * Requires: authentication + AVAILABILITY_UPDATE permission
+ * Note: Controller verifies user can manage this availability
  */
-boxerAvailabilityRouter.put('/:id', standardLimiter, authenticate, handler(updateAvailability));
+boxerAvailabilityRouter.put(
+  '/:id',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.AVAILABILITY_UPDATE),
+  handler(updateAvailability)
+);
 
 /**
  * DELETE /api/v1/boxers/:boxerId/availability/:id
  * Delete availability slot
- * Requires authentication (owner only)
+ * Requires: authentication + AVAILABILITY_DELETE permission
+ * Note: Controller verifies user can manage this availability
  */
-boxerAvailabilityRouter.delete('/:id', standardLimiter, authenticate, handler(deleteAvailability));
+boxerAvailabilityRouter.delete(
+  '/:id',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.AVAILABILITY_DELETE),
+  handler(deleteAvailability)
+);
 
 // Export both routers
 export { boxerAvailabilityRouter };

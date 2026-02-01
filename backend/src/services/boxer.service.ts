@@ -163,30 +163,41 @@ export async function getBoxerByUserId(userId: string): Promise<BoxerWithUser | 
   });
 }
 
+export interface UpdateBoxerOptions {
+  skipOwnershipCheck?: boolean;
+}
+
 /**
  * Update boxer profile
- * Only the owner can update their profile
+ * By default only the owner can update their profile
+ * Set skipOwnershipCheck to true when authorization is verified externally (e.g., coach permissions)
  */
 export async function updateBoxer(
   id: string,
   userId: string,
-  data: UpdateBoxerInput
+  data: UpdateBoxerInput,
+  options: UpdateBoxerOptions = {}
 ): Promise<Boxer> {
-  // Verify ownership
+  const { skipOwnershipCheck = false } = options;
+
+  // Verify the boxer exists
   const boxer = await prisma.boxer.findUnique({
     where: { id },
+    include: { club: true },
   });
 
   if (!boxer) {
     throw new Error('Boxer profile not found');
   }
 
-  if (boxer.userId !== userId) {
+  // Verify ownership unless explicitly skipped
+  if (!skipOwnershipCheck && boxer.userId !== userId) {
     throw new Error('Not authorized to update this profile');
   }
 
   // Build update data, handling null values for clearing fields
-  const updateData: Prisma.BoxerUpdateInput = {};
+  // Using UncheckedUpdateInput to allow direct clubId assignment
+  const updateData: Prisma.BoxerUncheckedUpdateInput = {};
 
   if (data.name !== undefined) updateData.name = data.name;
   if (data.gender !== undefined) updateData.gender = data.gender;
@@ -204,6 +215,21 @@ export async function updateBoxer(
   if (data.bio !== undefined) updateData.bio = data.bio;
   if (data.profilePhotoUrl !== undefined) updateData.profilePhotoUrl = data.profilePhotoUrl;
   if (data.isSearchable !== undefined) updateData.isSearchable = data.isSearchable;
+  if (data.clubId !== undefined) {
+    if (data.clubId) {
+      // Verify club exists before assigning
+      const club = await prisma.club.findUnique({ where: { id: data.clubId } });
+      if (!club) {
+        throw new Error('Club not found');
+      }
+      updateData.clubId = data.clubId;
+      // Update gymAffiliation with club name for backwards compatibility
+      updateData.gymAffiliation = club.name;
+    } else {
+      // Allow setting clubId to null (removing from club)
+      updateData.clubId = null;
+    }
+  }
 
   return prisma.boxer.update({
     where: { id },
