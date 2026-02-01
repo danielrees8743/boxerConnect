@@ -5,16 +5,19 @@ import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import { rateLimitConfig } from '../config/env';
 import type { ApiResponse } from '../types';
 
+// Check environment
+const isProduction = process.env.NODE_ENV === 'production';
+
 // Default rate limit message
 const rateLimitResponse: ApiResponse = {
   success: false,
   error: 'Too many requests. Please try again later.',
 };
 
-// Standard API rate limiter
+// Standard API rate limiter - more permissive in development
 export const standardLimiter: RateLimitRequestHandler = rateLimit({
   windowMs: rateLimitConfig.windowMs, // 15 minutes by default
-  max: rateLimitConfig.maxRequests, // 100 requests per window by default
+  max: isProduction ? rateLimitConfig.maxRequests : 1000, // 100 in prod, 1000 in dev
   message: rateLimitResponse,
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
@@ -25,7 +28,7 @@ export const standardLimiter: RateLimitRequestHandler = rateLimit({
 // Strict rate limiter for sensitive endpoints (auth, password reset, etc.)
 export const strictLimiter: RateLimitRequestHandler = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 requests per window
+  max: isProduction ? 10 : 100, // 10 in prod, 100 in dev
   message: {
     success: false,
     error: 'Too many attempts. Please try again in 15 minutes.',
@@ -36,7 +39,6 @@ export const strictLimiter: RateLimitRequestHandler = rateLimit({
 
 // Rate limiter for login attempts
 // More permissive in development, strict in production
-const isProduction = process.env.NODE_ENV === 'production';
 export const authLimiter: RateLimitRequestHandler = rateLimit({
   windowMs: isProduction ? 60 * 60 * 1000 : 15 * 60 * 1000, // 1 hour in prod, 15 min in dev
   max: isProduction ? 5 : 50, // 5 in prod, 50 in dev
