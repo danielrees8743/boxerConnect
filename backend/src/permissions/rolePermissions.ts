@@ -30,6 +30,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.BOXER_UPDATE_OWN_PROFILE,
     Permission.BOXER_DELETE_OWN_PROFILE,
     Permission.BOXER_UPLOAD_PHOTO,
+    Permission.BOXER_UPLOAD_VIDEO,
 
     // Can VIEW their own matches/availability (read-only)
     Permission.MATCH_READ_OWN_REQUESTS,

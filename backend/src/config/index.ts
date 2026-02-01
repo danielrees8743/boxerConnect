@@ -39,5 +39,9 @@ export {
   IMAGE_MAX_HEIGHT,
   IMAGE_QUALITY,
   OUTPUT_FORMAT,
+  MAX_VIDEO_FILE_SIZE,
+  ALLOWED_VIDEO_MIME_TYPES,
+  MAX_VIDEOS_PER_BOXER,
   type AllowedMimeType,
+  type AllowedVideoMimeType,
 } from './storage';

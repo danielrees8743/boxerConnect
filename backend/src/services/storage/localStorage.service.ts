@@ -6,8 +6,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
 import {
-  UPLOAD_PATH,
-  UPLOAD_URL_PREFIX,
+  STORAGE_BASE_PATH,
   IMAGE_MAX_WIDTH,
   IMAGE_MAX_HEIGHT,
   IMAGE_QUALITY,
@@ -28,8 +27,8 @@ class LocalStorageService implements StorageService {
   private readonly baseUrl: string;
 
   constructor() {
-    this.basePath = UPLOAD_PATH;
-    this.baseUrl = UPLOAD_URL_PREFIX;
+    this.basePath = STORAGE_BASE_PATH;
+    this.baseUrl = '/uploads';
   }
 
   /**
@@ -137,6 +136,66 @@ class LocalStorageService implements StorageService {
         throw error;
       }
     }
+  }
+
+  /**
+   * Upload a file to storage without processing (for videos and other raw files)
+   * Stores file as-is with original extension
+   */
+  async uploadRaw(
+    buffer: Buffer,
+    filename: string,
+    mimeType: string,
+    options?: UploadOptions
+  ): Promise<StorageResult> {
+    // Ensure upload directory exists
+    const uploadDir = options?.directory
+      ? path.join(this.basePath, options.directory)
+      : this.basePath;
+    await this.ensureDirectory(uploadDir);
+
+    // Generate UUID filename with original extension
+    const uuid = uuidv4();
+    const extension = path.extname(filename) || this.getExtensionFromMimeType(mimeType);
+    const outputFilename = `${uuid}${extension}`;
+    const outputPath = path.join(uploadDir, outputFilename);
+
+    // Write to disk without processing
+    await fs.writeFile(outputPath, buffer);
+
+    // Build the relative key (for storage reference)
+    const key = options?.directory
+      ? `${options.directory}/${outputFilename}`
+      : outputFilename;
+
+    // Build the URL
+    const url = options?.directory
+      ? `${this.baseUrl}/${options.directory}/${outputFilename}`
+      : `${this.baseUrl}/${outputFilename}`;
+
+    return {
+      key,
+      url,
+      size: buffer.length,
+      mimeType,
+    };
+  }
+
+  /**
+   * Get file extension from MIME type
+   */
+  private getExtensionFromMimeType(mimeType: string): string {
+    const mimeToExt: Record<string, string> = {
+      'video/mp4': '.mp4',
+      'video/webm': '.webm',
+      'video/quicktime': '.mov',
+      'video/x-msvideo': '.avi',
+      'image/jpeg': '.jpg',
+      'image/png': '.png',
+      'image/webp': '.webp',
+      'image/gif': '.gif',
+    };
+    return mimeToExt[mimeType] || '';
   }
 
   /**

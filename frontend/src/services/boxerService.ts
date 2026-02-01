@@ -1,6 +1,8 @@
 import { apiClient, uploadFile } from './apiClient';
 import type {
   BoxerProfile,
+  BoxerVideo,
+  BoxerVideoList,
   CreateBoxerData,
   UpdateBoxerData,
   BoxerSearchParams,
@@ -98,6 +100,54 @@ export const boxerService = {
    */
   async removeProfilePhoto(): Promise<void> {
     await apiClient.delete('/boxers/me/photo');
+  },
+
+  /**
+   * Upload a training video for the current user's boxer profile.
+   * Uses multipart/form-data for file upload.
+   *
+   * @param file - The video file to upload (max 100MB, mp4/webm/mov/avi)
+   * @returns Promise resolving to the uploaded video details
+   */
+  async uploadVideo(file: File): Promise<BoxerVideo> {
+    const response = await uploadFile<ApiResponse<{ video: BoxerVideo }>>(
+      '/boxers/me/videos',
+      file,
+      'video'
+    );
+    if (!response.data?.video) {
+      throw new Error(response.message || 'Failed to upload video');
+    }
+    return response.data.video;
+  },
+
+  /**
+   * Get all videos for the current user's boxer profile.
+   */
+  async getMyVideos(): Promise<BoxerVideoList> {
+    const response = await apiClient.get<ApiResponse<BoxerVideoList>>('/boxers/me/videos');
+    if (!response.data.data) {
+      throw new Error(response.data.message || 'Failed to get videos');
+    }
+    return response.data.data;
+  },
+
+  /**
+   * Delete a video from the current user's boxer profile.
+   */
+  async deleteVideo(videoId: string): Promise<void> {
+    await apiClient.delete(`/boxers/me/videos/${videoId}`);
+  },
+
+  /**
+   * Get videos for a boxer by ID (public).
+   */
+  async getBoxerVideos(boxerId: string): Promise<BoxerVideoList> {
+    const response = await apiClient.get<ApiResponse<BoxerVideoList>>(`/boxers/${boxerId}/videos`);
+    if (!response.data.data) {
+      throw new Error(response.data.message || 'Failed to get videos');
+    }
+    return response.data.data;
   },
 };
 

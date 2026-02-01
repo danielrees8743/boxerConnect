@@ -29,6 +29,35 @@ export const ALLOWED_MIME_TYPES = [
  */
 export type AllowedMimeType = (typeof ALLOWED_MIME_TYPES)[number];
 
+// ============================================================================
+// Video Upload Configuration
+// ============================================================================
+
+/**
+ * Maximum file size for video uploads (100MB)
+ */
+export const MAX_VIDEO_FILE_SIZE = 100 * 1024 * 1024;
+
+/**
+ * Allowed MIME types for video uploads
+ */
+export const ALLOWED_VIDEO_MIME_TYPES = [
+  'video/mp4',
+  'video/webm',
+  'video/quicktime', // .mov
+  'video/x-msvideo', // .avi
+] as const;
+
+/**
+ * Type for allowed video MIME types
+ */
+export type AllowedVideoMimeType = (typeof ALLOWED_VIDEO_MIME_TYPES)[number];
+
+/**
+ * Maximum number of videos a boxer can upload
+ */
+export const MAX_VIDEOS_PER_BOXER = 5;
+
 /**
  * Upload directory for profile photos (relative to storage root)
  */
@@ -118,6 +147,11 @@ export const storageConfig = {
     maxHeight: IMAGE_MAX_HEIGHT,
     quality: IMAGE_QUALITY,
     outputFormat: OUTPUT_FORMAT,
+  },
+  video: {
+    maxFileSize: MAX_VIDEO_FILE_SIZE,
+    allowedMimeTypes: ALLOWED_VIDEO_MIME_TYPES,
+    maxVideosPerBoxer: MAX_VIDEOS_PER_BOXER,
   },
 } as const;
 

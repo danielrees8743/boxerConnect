@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyBoxer, updateBoxer, createBoxer } from '@/features/boxer/boxerSlice';
-import { BoxerProfile, BoxerForm } from '@/components/boxer';
-import { Alert, AlertDescription, Button } from '@/components/ui';
-import type { CreateBoxerData, UpdateBoxerData } from '@/types';
+import { BoxerProfile, BoxerForm, VideoUpload, VideoList } from '@/components/boxer';
+import { Alert, AlertDescription, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { Video } from 'lucide-react';
+import { boxerService } from '@/services/boxerService';
+import type { CreateBoxerData, UpdateBoxerData, BoxerVideo } from '@/types';
 
 /**
  * ProfilePage displays and manages the current user's boxer profile.
@@ -13,12 +15,47 @@ export const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { myBoxer, isLoading, error } = useAppSelector((state) => state.boxer);
   const { user } = useAppSelector((state) => state.auth);
-  const [isEditing, setIsEditing] = React.useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [videos, setVideos] = useState<BoxerVideo[]>([]);
+  const [videoCount, setVideoCount] = useState(0);
+  const [maxVideos, setMaxVideos] = useState(5);
+  const [videosLoading, setVideosLoading] = useState(false);
 
   // Fetch boxer profile on mount
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchMyBoxer());
   }, [dispatch]);
+
+  // Fetch videos when boxer profile is loaded
+  useEffect(() => {
+    const fetchVideos = async () => {
+      if (!myBoxer) return;
+      setVideosLoading(true);
+      try {
+        const result = await boxerService.getMyVideos();
+        setVideos(result.videos);
+        setVideoCount(result.count);
+        setMaxVideos(result.maxVideos);
+      } catch (err) {
+        console.error('Failed to fetch videos:', err);
+      } finally {
+        setVideosLoading(false);
+      }
+    };
+    fetchVideos();
+  }, [myBoxer]);
+
+  // Handle video upload
+  const handleVideoUploaded = useCallback((video: BoxerVideo) => {
+    setVideos((prev) => [video, ...prev]);
+    setVideoCount((prev) => prev + 1);
+  }, []);
+
+  // Handle video deletion
+  const handleVideoDeleted = useCallback((videoId: string) => {
+    setVideos((prev) => prev.filter((v) => v.id !== videoId));
+    setVideoCount((prev) => prev - 1);
+  }, []);
 
   // Handle creating/updating boxer profile
   const handleSubmit = async (data: CreateBoxerData | UpdateBoxerData) => {
@@ -89,10 +126,39 @@ export const ProfilePage: React.FC = () => {
         boxer={myBoxer}
         fightHistory={myBoxer?.fightHistory || []}
         availability={myBoxer?.availability || []}
+        videos={videos}
         isOwner={true}
         isLoading={isLoading}
         onEdit={() => setIsEditing(true)}
       />
+
+      {/* Training Videos Section */}
+      {myBoxer && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Video className="h-5 w-5" />
+              Training Videos
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Video Upload */}
+            <VideoUpload
+              currentCount={videoCount}
+              maxVideos={maxVideos}
+              onVideoUploaded={handleVideoUploaded}
+            />
+
+            {/* Video List */}
+            <VideoList
+              videos={videos}
+              isOwner={true}
+              onVideoDeleted={handleVideoDeleted}
+              isLoading={videosLoading}
+            />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

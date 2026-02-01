@@ -17,12 +17,19 @@ import {
   removePhoto,
 } from '../controllers/profilePhoto.controller';
 import {
+  uploadVideo,
+  deleteVideo,
+  getMyVideos,
+  getBoxerVideos,
+} from '../controllers/video.controller';
+import {
   authenticate,
   optionalAuth,
   standardLimiter,
   searchLimiter,
   createResourceLimiter,
   uploadProfilePhoto,
+  uploadVideo as uploadVideoMiddleware,
   requirePermission,
   requireAnyPermission,
 } from '../middleware';
@@ -104,6 +111,46 @@ router.delete(
 );
 
 /**
+ * POST /api/v1/boxers/me/videos
+ * Upload a training video
+ * Requires: authentication + BOXER_UPLOAD_VIDEO permission
+ */
+router.post(
+  '/me/videos',
+  createResourceLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_UPLOAD_VIDEO),
+  uploadVideoMiddleware,
+  handler(uploadVideo)
+);
+
+/**
+ * GET /api/v1/boxers/me/videos
+ * Get my uploaded videos
+ * Requires: authentication + BOXER_READ_OWN_PROFILE permission
+ */
+router.get(
+  '/me/videos',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_READ_OWN_PROFILE),
+  handler(getMyVideos)
+);
+
+/**
+ * DELETE /api/v1/boxers/me/videos/:id
+ * Delete a video
+ * Requires: authentication + BOXER_UPLOAD_VIDEO permission
+ */
+router.delete(
+  '/me/videos/:id',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.BOXER_UPLOAD_VIDEO),
+  handler(deleteVideo)
+);
+
+/**
  * POST /api/v1/boxers
  * Create or complete boxer profile
  * Requires: authentication + BOXER_CREATE_PROFILE permission
@@ -176,6 +223,18 @@ router.get(
   authenticate,
   requirePermission(Permission.MATCH_READ_OWN_REQUESTS),
   handler(getCompatibleMatches)
+);
+
+/**
+ * GET /api/v1/boxers/:id/videos
+ * Get videos for a boxer (public)
+ * Optional auth for future personalization
+ */
+router.get(
+  '/:id/videos',
+  standardLimiter,
+  optionalAuth,
+  handler(getBoxerVideos)
 );
 
 export default router;

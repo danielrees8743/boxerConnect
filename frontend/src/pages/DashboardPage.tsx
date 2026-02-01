@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Calendar, TrendingUp, ChevronRight, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { fetchMyBoxer } from '@/features/boxer/boxerSlice';
+import { boxerService } from '@/services/boxerService';
 
 /**
  * Dashboard page - Main authenticated user dashboard.
@@ -14,6 +15,7 @@ export const DashboardPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { myBoxer } = useAppSelector((state) => state.boxer);
+  const [videoCount, setVideoCount] = useState(0);
 
   // Fetch boxer profile on mount
   useEffect(() => {
@@ -21,6 +23,20 @@ export const DashboardPage: React.FC = () => {
       dispatch(fetchMyBoxer());
     }
   }, [dispatch, user?.role]);
+
+  // Fetch video count when boxer profile is loaded
+  useEffect(() => {
+    const fetchVideos = async () => {
+      if (!myBoxer) return;
+      try {
+        const result = await boxerService.getMyVideos();
+        setVideoCount(result.count);
+      } catch (err) {
+        console.error('Failed to fetch videos:', err);
+      }
+    };
+    fetchVideos();
+  }, [myBoxer]);
 
   // Calculate profile completion
   const profileCompletion = useMemo(() => {
@@ -41,7 +57,7 @@ export const DashboardPage: React.FC = () => {
       },
       {
         label: 'Add training videos',
-        completed: false, // Placeholder - videos not implemented yet
+        completed: videoCount > 0,
       },
     ];
 
@@ -50,7 +66,7 @@ export const DashboardPage: React.FC = () => {
     const incompleteItems = items.filter((item) => !item.completed);
 
     return { percentage, items, incompleteItems };
-  }, [myBoxer]);
+  }, [myBoxer, videoCount]);
 
   // Stats for boxers (without pending requests - that's for gym owners)
   const stats = [

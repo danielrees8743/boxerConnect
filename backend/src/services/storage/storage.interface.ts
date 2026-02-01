@@ -57,7 +57,7 @@ export interface UploadOptions {
  */
 export interface StorageService {
   /**
-   * Upload a file to storage
+   * Upload a file to storage (with image processing for photos)
    * @param buffer - File contents as a buffer
    * @param filename - Original filename (used for extension if not preserving)
    * @param mimeType - MIME type of the file
@@ -65,6 +65,21 @@ export interface StorageService {
    * @returns Promise resolving to storage result with file details
    */
   upload(
+    buffer: Buffer,
+    filename: string,
+    mimeType: string,
+    options?: UploadOptions
+  ): Promise<StorageResult>;
+
+  /**
+   * Upload a file to storage without processing (for videos and other raw files)
+   * @param buffer - File contents as a buffer
+   * @param filename - Original filename (used for extension)
+   * @param mimeType - MIME type of the file
+   * @param options - Optional upload configuration
+   * @returns Promise resolving to storage result with file details
+   */
+  uploadRaw(
     buffer: Buffer,
     filename: string,
     mimeType: string,

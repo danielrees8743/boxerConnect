@@ -107,6 +107,22 @@ export interface User {
 // Boxer Types
 // ============================================================================
 
+export interface BoxerVideo {
+  id: string;
+  boxerId?: string;
+  url: string;
+  filename: string;
+  size: number;
+  mimeType: string;
+  createdAt: string;
+}
+
+export interface BoxerVideoList {
+  videos: BoxerVideo[];
+  count: number;
+  maxVideos: number;
+}
+
 export interface BoxerProfile {
   id: string;
   userId: string;
@@ -133,6 +149,7 @@ export interface BoxerProfile {
   user?: User;
   fightHistory?: FightHistory[];
   availability?: Availability[];
+  videos?: BoxerVideo[];
 }
 
 export interface CreateBoxerData {

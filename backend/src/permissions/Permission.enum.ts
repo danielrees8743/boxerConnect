@@ -28,6 +28,9 @@ export enum Permission {
   /** Upload photos to boxer profile */
   BOXER_UPLOAD_PHOTO = 'boxer:upload:photo',
 
+  /** Upload videos to boxer profile */
+  BOXER_UPLOAD_VIDEO = 'boxer:upload:video',
+
   // ============================================================================
   // Match Request Operations
   // ============================================================================

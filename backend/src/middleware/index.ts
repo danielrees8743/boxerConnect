@@ -37,6 +37,7 @@ export {
 
 export {
   uploadProfilePhoto,
+  uploadVideo,
   MulterError,
 } from './upload.middleware';
 

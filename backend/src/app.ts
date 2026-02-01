@@ -56,9 +56,10 @@ app.use(standardLimiter);
 // Static File Serving
 // ============================================================================
 
-// Serve profile photo uploads only from the specific subdirectory
+// Serve all boxer uploads (photos and videos) from the storage base path
 // Uses external storage path if configured, otherwise falls back to local uploads
-app.use('/uploads/profile-photos', express.static(storageConfig.uploadPath));
+// Structure: /uploads/{boxerId}/photo.webp, /uploads/{boxerId}/videos/{uuid}.mp4
+app.use('/uploads', express.static(storageConfig.storageBasePath));
 
 // ============================================================================
 // Request Logging (Development)

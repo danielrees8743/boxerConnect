@@ -10,6 +10,7 @@ import {
   User,
   Scale,
   Ruler,
+  Video,
 } from 'lucide-react';
 import {
   Card,
@@ -24,13 +25,14 @@ import {
   Skeleton,
   getInitials,
 } from '@/components/ui';
-import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender } from '@/types';
+import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender, BoxerVideo } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface BoxerProfileProps {
   boxer: BoxerProfileType | null;
   fightHistory?: FightHistory[];
   availability?: Availability[];
+  videos?: BoxerVideo[];
   isOwner?: boolean;
   isLoading?: boolean;
   onEdit?: () => void;
@@ -98,6 +100,7 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
   boxer,
   fightHistory = [],
   availability = [],
+  videos = [],
   isOwner = false,
   isLoading = false,
   onEdit,
@@ -337,6 +340,40 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
           )}
         </CardContent>
       </Card>
+
+      {/* Training Videos */}
+      {videos.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Video className="h-5 w-5" />
+              Training Videos
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {videos.slice(0, 4).map((video) => (
+                <div
+                  key={video.id}
+                  className="relative rounded-lg overflow-hidden bg-black aspect-video"
+                >
+                  <video
+                    src={video.url}
+                    controls
+                    className="w-full h-full object-contain"
+                    preload="metadata"
+                  />
+                </div>
+              ))}
+            </div>
+            {videos.length > 4 && (
+              <p className="text-sm text-muted-foreground text-center mt-4">
+                +{videos.length - 4} more videos
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

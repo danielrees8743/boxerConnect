@@ -114,6 +114,16 @@ export {
   type ProfilePhotoResult,
 } from './profilePhoto.service';
 
+// Video Service
+export {
+  uploadVideo,
+  deleteVideo,
+  getMyVideos,
+  getBoxerVideos,
+  type VideoResult,
+  type VideoListResult,
+} from './video.service';
+
 // Storage Service
 export {
   storageService,

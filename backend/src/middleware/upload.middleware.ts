@@ -3,7 +3,14 @@
 
 import multer, { FileFilterCallback } from 'multer';
 import { Request } from 'express';
-import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, AllowedMimeType } from '../config';
+import {
+  MAX_FILE_SIZE,
+  ALLOWED_MIME_TYPES,
+  AllowedMimeType,
+  MAX_VIDEO_FILE_SIZE,
+  ALLOWED_VIDEO_MIME_TYPES,
+  AllowedVideoMimeType,
+} from '../config';
 import { BadRequestError } from './errorHandler';
 
 // ============================================================================
@@ -15,6 +22,13 @@ import { BadRequestError } from './errorHandler';
  */
 function isAllowedMimeType(mimeType: string): mimeType is AllowedMimeType {
   return ALLOWED_MIME_TYPES.includes(mimeType as AllowedMimeType);
+}
+
+/**
+ * Check if a MIME type is allowed for video uploads
+ */
+function isAllowedVideoMimeType(mimeType: string): mimeType is AllowedVideoMimeType {
+  return ALLOWED_VIDEO_MIME_TYPES.includes(mimeType as AllowedVideoMimeType);
 }
 
 // ============================================================================
@@ -64,6 +78,49 @@ const multerConfig = multer({
  */
 export const uploadProfilePhoto = multerConfig.single('photo');
 
+// ============================================================================
+// Video Upload Configuration
+// ============================================================================
+
+/**
+ * File filter function for video uploads
+ * Validates that uploaded files are of allowed video MIME types
+ */
+const videoFileFilter = (
+  _req: Request,
+  file: Express.Multer.File,
+  callback: FileFilterCallback
+): void => {
+  if (isAllowedVideoMimeType(file.mimetype)) {
+    callback(null, true);
+  } else {
+    callback(
+      new BadRequestError(
+        `Invalid file type. Allowed video types: ${ALLOWED_VIDEO_MIME_TYPES.join(', ')}`
+      )
+    );
+  }
+};
+
+/**
+ * Multer configuration for video uploads
+ * Uses memory storage with larger file size limit
+ */
+const videoMulterConfig = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: MAX_VIDEO_FILE_SIZE,
+    files: 1,
+  },
+  fileFilter: videoFileFilter,
+});
+
+/**
+ * Middleware for handling single video upload
+ * File will be available at req.file
+ */
+export const uploadVideo = videoMulterConfig.single('video');
+
 /**
  * Export multer error types for error handling
  */
@@ -71,5 +128,6 @@ export const MulterError = multer.MulterError;
 
 export default {
   uploadProfilePhoto,
+  uploadVideo,
   MulterError,
 };

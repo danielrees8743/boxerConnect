@@ -132,6 +132,7 @@ model Boxer {
   sentMatchRequests   MatchRequest[] @relation("RequesterBoxer")
   receivedMatchRequests MatchRequest[] @relation("TargetBoxer")
   coaches             CoachBoxer[]   @relation("BoxerRelation")
+  videos              BoxerVideo[]
 
   @@index([userId])
   @@index([city, country])
@@ -272,4 +273,20 @@ model ClubCoach {
   @@index([clubId])
   @@index([coachUserId])
   @@map("club_coaches")
+}
+
+model BoxerVideo {
+  id        String   @id @default(uuid()) @db.Uuid
+  boxerId   String   @map("boxer_id") @db.Uuid
+  url       String   @db.VarChar(500)
+  filename  String   @db.VarChar(255)
+  size      Int      // bytes
+  mimeType  String   @map("mime_type") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  boxer     Boxer    @relation(fields: [boxerId], references: [id], onDelete: Cascade)
+
+  @@index([boxerId])
+  @@map("boxer_videos")
 }

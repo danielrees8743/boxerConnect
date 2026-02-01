@@ -20,7 +20,7 @@ export interface ProfilePhotoResult {
 
 /**
  * Upload a profile photo for a boxer
- * - Processes and stores the image
+ * - Processes and stores the image in per-boxer folder
  * - Updates the boxer's profilePhotoUrl in the database
  * - Removes the old photo if one exists
  * @param userId - The user ID of the boxer
@@ -44,8 +44,9 @@ export async function uploadProfilePhoto(
   // If there's an existing photo, delete it
   if (boxer.profilePhotoUrl) {
     try {
-      // Extract the key from the URL (filename portion)
-      const existingKey = boxer.profilePhotoUrl.split('/').pop();
+      // Extract the key from the URL (e.g., "{boxerId}/photo.webp")
+      const urlParts = boxer.profilePhotoUrl.split('/uploads/');
+      const existingKey = urlParts[1] || boxer.profilePhotoUrl.split('/').pop();
       if (existingKey) {
         await storageService.delete(existingKey);
       }
@@ -55,11 +56,13 @@ export async function uploadProfilePhoto(
     }
   }
 
-  // Upload the new photo
+  // Upload the new photo to per-boxer folder
+  // File will be stored as /{boxerId}/photo.webp
   const result = await storageService.upload(
     file.buffer,
-    file.originalname,
-    file.mimetype
+    'photo', // Use fixed name for profile photo
+    file.mimetype,
+    { directory: boxer.id }
   );
 
   // Update the boxer's profile with the new photo URL
@@ -97,8 +100,9 @@ export async function removeProfilePhoto(userId: string): Promise<void> {
     return;
   }
 
-  // Extract the key from the URL and delete the file
-  const photoKey = boxer.profilePhotoUrl.split('/').pop();
+  // Extract the key from the URL (e.g., "{boxerId}/photo.webp")
+  const urlParts = boxer.profilePhotoUrl.split('/uploads/');
+  const photoKey = urlParts[1] || boxer.profilePhotoUrl.split('/').pop();
   if (photoKey) {
     try {
       await storageService.delete(photoKey);
