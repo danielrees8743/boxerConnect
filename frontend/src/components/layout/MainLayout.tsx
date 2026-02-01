@@ -54,8 +54,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:flex-1 md:items-center md:justify-between">
             <div className="flex items-center space-x-6">
-              {/* Public links - always visible */}
-              {publicLinks.map((link) => (
+              {/* Public links - visible for non-admin users */}
+              {user?.role !== 'ADMIN' && publicLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
@@ -65,8 +65,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   <span>{link.label}</span>
                 </Link>
               ))}
-              {/* Authenticated links */}
-              {isAuthenticated &&
+              {/* Authenticated links - visible for non-admin users */}
+              {isAuthenticated && user?.role !== 'ADMIN' &&
                 navLinks.map((link) => (
                   <Link
                     key={link.to}
@@ -141,8 +141,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <nav className="container space-y-4 pb-4">
             {isAuthenticated ? (
               <>
-                {/* Public links in mobile menu */}
-                {publicLinks.map((link) => (
+                {/* Public links in mobile menu - for non-admin users */}
+                {user?.role !== 'ADMIN' && publicLinks.map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}
@@ -153,7 +153,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     <span>{link.label}</span>
                   </Link>
                 ))}
-                {navLinks.map((link) => (
+                {/* Nav links - for non-admin users */}
+                {user?.role !== 'ADMIN' && navLinks.map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}

@@ -23,7 +23,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export const LoginPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isLoading, error, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isLoading, error, isAuthenticated, user } = useAppSelector((state) => state.auth);
 
   const {
     register,
@@ -40,9 +40,9 @@ export const LoginPage: React.FC = () => {
   // Redirect if already authenticated
   React.useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate(user?.role === 'ADMIN' ? '/admin' : '/dashboard');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   // Clear errors on unmount
   React.useEffect(() => {
@@ -54,7 +54,9 @@ export const LoginPage: React.FC = () => {
   const onSubmit = async (data: LoginFormData) => {
     const result = await dispatch(loginUser(data));
     if (loginUser.fulfilled.match(result)) {
-      navigate('/dashboard');
+      // Redirect admins to admin dashboard, others to regular dashboard
+      const userRole = result.payload.user.role;
+      navigate(userRole === 'ADMIN' ? '/admin' : '/dashboard');
     }
   };
 
