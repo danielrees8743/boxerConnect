@@ -15,7 +15,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Plus, Pencil, Trash2, Shield, ShieldOff } from 'lucide-react';
@@ -251,7 +250,10 @@ export const AdminBoxersPage: React.FC = () => {
         />
         <Select value={verifiedFilter} onValueChange={handleVerifiedChange}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Filter by verification" />
+            <span>
+              {verificationOptions.find((opt) => opt.value === verifiedFilter)?.label ||
+                'Filter by verification'}
+            </span>
           </SelectTrigger>
           <SelectContent>
             {verificationOptions.map((option) => (
