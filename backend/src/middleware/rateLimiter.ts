@@ -16,8 +16,8 @@ const rateLimitResponse: ApiResponse = {
 
 // Standard API rate limiter - very permissive in development
 export const standardLimiter: RateLimitRequestHandler = rateLimit({
-  windowMs: rateLimitConfig.windowMs,
-  max: isDev ? 10000 : rateLimitConfig.maxRequests,
+  windowMs: rateLimitConfig.windowMs, // 15 minutes by default
+  max: isDev ? 10000 : rateLimitConfig.maxRequests, // 10000 in dev, 100 in prod
   message: rateLimitResponse,
   standardHeaders: true,
   legacyHeaders: false,
@@ -27,8 +27,8 @@ export const standardLimiter: RateLimitRequestHandler = rateLimit({
 
 // Strict rate limiter for sensitive endpoints - relaxed in development
 export const strictLimiter: RateLimitRequestHandler = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: isDev ? 1000 : 10,
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: isDev ? 1000 : 10, // 1000 in dev, 10 in prod
   message: {
     success: false,
     error: 'Too many attempts. Please try again in 15 minutes.',

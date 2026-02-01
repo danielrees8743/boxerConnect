@@ -1,0 +1,1422 @@
+[
+  {
+    "name": "Caernarfon ABC",
+    "email": "owendecorators@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Terri Owen",
+    "postcode": "LL55 2BL",
+    "region": "North Division",
+    "latitude": 53.1378468,
+    "longitude": -4.2335615
+  },
+  {
+    "name": "Clwyd ABC",
+    "email": "clwydboxing@hotmail.com",
+    "phone": null,
+    "contactName": "Darryl Jones",
+    "postcode": "LL18 2EW",
+    "region": "North Division",
+    "latitude": 53.316386,
+    "longitude": -3.4834654
+  },
+  {
+    "name": "Dyffryn ABC",
+    "email": "wezjones1974@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Wesley Jones",
+    "postcode": "LL29 8EA",
+    "region": "North Division",
+    "latitude": 53.294585,
+    "longitude": -3.7207247
+  },
+  {
+    "name": "Holyhead & Angelesey ABC",
+    "email": "tonymag11@hotmail.co.uk",
+    "phone": "07888 763167",
+    "contactName": "Anthony Maguire",
+    "postcode": "LL65 1HS",
+    "region": "North Division",
+    "latitude": 53.3153256,
+    "longitude": -4.6326238
+  },
+  {
+    "name": "Llandudno ABC",
+    "email": "mikehoganskips@aol.co.uk",
+    "phone": null,
+    "contactName": "Mike Hogan",
+    "postcode": "LL28 4YL",
+    "region": "North Division",
+    "latitude": 53.3177529,
+    "longitude": -3.8252199
+  },
+  {
+    "name": "Llangefni ABC",
+    "email": "derwyn.williams@tiscali.co.uk",
+    "phone": null,
+    "contactName": "Sian Williams",
+    "postcode": "LL77 7HR",
+    "region": "North Division",
+    "latitude": 53.2536135,
+    "longitude": -4.2908803
+  },
+  {
+    "name": "Llay ABC",
+    "email": "llayboxing@hotmail.com",
+    "phone": null,
+    "contactName": "Donna Price Lewis",
+    "postcode": "LL12 0RL",
+    "region": "North Division",
+    "latitude": 53.0911027,
+    "longitude": -2.9997153
+  },
+  {
+    "name": "Pwllheli ABC",
+    "email": "vicbarma@btinternet.com",
+    "phone": null,
+    "contactName": "Vic Barma",
+    "postcode": "LL53 5HD",
+    "region": "North Division",
+    "latitude": 52.8803696,
+    "longitude": -4.4231102
+  },
+  {
+    "name": "Maes G ABC",
+    "email": "maesgabc1@gmail.com",
+    "phone": null,
+    "contactName": "Brian Williams",
+    "postcode": "LL57 1LR",
+    "region": "North Division",
+    "latitude": 53.2240548,
+    "longitude": -4.1160115
+  },
+  {
+    "name": "Newtown ABC",
+    "email": "steve11evans@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Stephen Evans",
+    "postcode": "SY16 1BS",
+    "region": "North Division",
+    "latitude": 52.512948,
+    "longitude": -3.309827
+  },
+  {
+    "name": "Rhyl Youth ABC",
+    "email": "rhylyouthboxing@gmail.com",
+    "phone": null,
+    "contactName": "Dan Andrews",
+    "postcode": "LL18 2AE",
+    "region": "North Division",
+    "latitude": 53.3151487,
+    "longitude": -3.4918774
+  },
+  {
+    "name": "Shotton ABC",
+    "email": "diane.doran01@btinternet.com",
+    "phone": null,
+    "contactName": "Diane Doran",
+    "postcode": "CH5 1PP",
+    "region": "North Division",
+    "latitude": 53.2116486,
+    "longitude": -3.03538900000001
+  },
+  {
+    "name": "Welshpool ABC",
+    "email": "mdsinden@gmail.com",
+    "phone": null,
+    "contactName": "Mike Sinden",
+    "postcode": "SY21 7NA",
+    "region": "North Division",
+    "latitude": 52.6615922,
+    "longitude": -3.157499
+  },
+  {
+    "name": "Wrexham ABC",
+    "email": "stevetheboxer77@yahoo.co.uk",
+    "phone": null,
+    "contactName": "Stephen Williams",
+    "postcode": "LL12 7AU",
+    "region": "North Division",
+    "latitude": 53.0539383,
+    "longitude": -2.9901951
+  },
+  {
+    "name": "Maelor ABC",
+    "email": "butchmaelorboxing@yahoo.com",
+    "phone": null,
+    "contactName": "David 'Butch' Jones",
+    "postcode": "LL14 3BH",
+    "region": "North Division",
+    "latitude": 52.9746578,
+    "longitude": -3.07570439999995
+  },
+  {
+    "name": "Buckley ABC",
+    "email": "Markfield64@outlook.com",
+    "phone": null,
+    "contactName": "Mark Field:",
+    "postcode": "CH7 3DZ",
+    "region": "North Division",
+    "latitude": 53.1734188,
+    "longitude": -3.068124
+  },
+  {
+    "name": "Denbigh & District ABC",
+    "email": "nathan.hanika@talktalk.net",
+    "phone": "07776 202855",
+    "contactName": "Nathan Hanika",
+    "postcode": "LL16 3EN",
+    "region": "North Division",
+    "latitude": 53.182817,
+    "longitude": -3.415439
+  },
+  {
+    "name": "Deva ABC",
+    "email": "shellyboyntondeva@hotmail.com",
+    "phone": null,
+    "contactName": "Michelle Boynton-Newall",
+    "postcode": "CH4 8SL",
+    "region": "North Division",
+    "latitude": 53.180497,
+    "longitude": -2.935473
+  },
+  {
+    "name": "Harleys ABC",
+    "email": "anthonybyfield2@gmail.com",
+    "phone": null,
+    "contactName": "Anthony Dean Byfield",
+    "postcode": "LL65 4UL",
+    "region": "North Division",
+    "latitude": 53.2986125,
+    "longitude": -4.6201735
+  },
+  {
+    "name": "Draig Goch ABC",
+    "email": "ryangibbs1991boxing@gmail.com",
+    "phone": null,
+    "contactName": "Ryan Gibbs",
+    "postcode": "LL65 1HL",
+    "region": "North Division",
+    "latitude": 53.3021369,
+    "longitude": -4.6482461
+  },
+  {
+    "name": "Evolution ABC",
+    "email": "brettnigel77@gmail.com",
+    "phone": null,
+    "contactName": "Nigel Brett",
+    "postcode": "LL11 5AP",
+    "region": "North Division",
+    "latitude": 53.0768896,
+    "longitude": -3.0504871
+  },
+  {
+    "name": "Mold ABC",
+    "email": "michaeljohnphillips@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Michael Phillips",
+    "postcode": "CH7 1HS",
+    "region": "North Division",
+    "latitude": 53.1473142,
+    "longitude": -2.866497
+  },
+  {
+    "name": "Queens Park ABC",
+    "email": "garethharper10@gmail.com",
+    "phone": null,
+    "contactName": "Gareth Harper",
+    "postcode": "LL13 8UH",
+    "region": "North Division",
+    "latitude": 53.0430899,
+    "longitude": -2.9894201
+  },
+  {
+    "name": "Aberaman ABC",
+    "email": "jedwardsk@aol.com",
+    "phone": null,
+    "contactName": "Jeffery Edwards",
+    "postcode": "CF44 6DF",
+    "region": "South Division",
+    "latitude": 51.7022229,
+    "longitude": -3.424978
+  },
+  {
+    "name": "ANA ABC",
+    "email": "anaboxingclub@hotmail.com",
+    "phone": null,
+    "contactName": "Paul Thomas",
+    "postcode": "CF45 3SH",
+    "region": "South Division",
+    "latitude": 51.6723022,
+    "longitude": -3.368418
+  },
+  {
+    "name": "Caerau Dragons ABC",
+    "email": "leondavies@talktalk.net",
+    "phone": null,
+    "contactName": "Tudor Davies",
+    "postcode": "CF34 0PB",
+    "region": "South Division",
+    "latitude": 51.6380416,
+    "longitude": -3.64952
+  },
+  {
+    "name": "Caerau Ely ABC",
+    "email": "mark_atkins@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Mark Atkins",
+    "postcode": "CF5 5AQ",
+    "region": "South Division",
+    "latitude": 51.478612,
+    "longitude": -3.23081630000001
+  },
+  {
+    "name": "Cardiff University ABC",
+    "email": "boxing@cardiff.ac.uk",
+    "phone": null,
+    "contactName": "Jameel Sandham",
+    "postcode": "CF24 3BD",
+    "region": "South Division",
+    "latitude": 51.4884705,
+    "longitude": -3.17740960000003
+  },
+  {
+    "name": "Colcot ABC",
+    "email": "waynegurd@gmail.com",
+    "phone": null,
+    "contactName": "Wayne Gurd",
+    "postcode": "CF62 9PX",
+    "region": "South Division",
+    "latitude": 51.4161833,
+    "longitude": -3.28294289999997
+  },
+  {
+    "name": "Dowlais ABC",
+    "email": "seanjones74@live.co.uk",
+    "phone": null,
+    "contactName": "Sean Jones",
+    "postcode": "CF48 3LP",
+    "region": "South Division",
+    "latitude": 51.7631311,
+    "longitude": -3.35526830000003
+  },
+  {
+    "name": "Gilfach Goch ABC",
+    "email": "cossy1@hotmail.co.uk",
+    "phone": "07414573967",
+    "contactName": null,
+    "postcode": "CF39 8TG",
+    "region": "South Division",
+    "latitude": 51.5838501,
+    "longitude": -3.4704858
+  },
+  {
+    "name": "Grange ABC",
+    "email": "mqkkhan@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Qasim Khan",
+    "postcode": "CF11 6JB",
+    "region": "South Division",
+    "latitude": 51.4772733,
+    "longitude": -3.1952377
+  },
+  {
+    "name": "Hope & Glory ABC",
+    "email": "l.griffiths31@btinternet.com",
+    "phone": null,
+    "contactName": "Lee Griffiths",
+    "postcode": "CF45 3SH",
+    "region": "South Division",
+    "latitude": 51.6741814,
+    "longitude": -3.36939589999997
+  },
+  {
+    "name": "Apollos ABC",
+    "email": "llanederynpentwynabc@aol.com",
+    "phone": null,
+    "contactName": "Nicola Wheten",
+    "postcode": "CF23 9US",
+    "region": "South Division",
+    "latitude": 51.5133638,
+    "longitude": -3.1491688
+  },
+  {
+    "name": "Llanharan ABC",
+    "email": "llanharan.abc@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Stuart Trowbridge",
+    "postcode": "CF72 9RA",
+    "region": "South Division",
+    "latitude": 51.5359947,
+    "longitude": -3.44089439999993
+  },
+  {
+    "name": "Llanrumney Phoenix ABC",
+    "email": "boxingtony88@gmail.com",
+    "phone": null,
+    "contactName": "Tony Richards",
+    "postcode": "CF4 5NX",
+    "region": "South Division",
+    "latitude": 51.5260603,
+    "longitude": -3.126027
+  },
+  {
+    "name": "Llantwit Major ABC",
+    "email": "mbdixon36@aol.com",
+    "phone": null,
+    "contactName": "Mickey Dixon",
+    "postcode": "CF61 1PP",
+    "region": "South Division",
+    "latitude": 51.4080683,
+    "longitude": -3.4791893
+  },
+  {
+    "name": "Maerdy ABC",
+    "email": "brettparry999@btinternet.com",
+    "phone": null,
+    "contactName": "Brett Parry",
+    "postcode": "CF43 4DP",
+    "region": "South Division",
+    "latitude": 51.6753398,
+    "longitude": -3.4851653
+  },
+  {
+    "name": "Maesteg ABC",
+    "email": "invicta7777@yahoo.co.uk",
+    "phone": null,
+    "contactName": "Ray Watts",
+    "postcode": "CF34 9EJ",
+    "region": "South Division",
+    "latitude": 51.60556,
+    "longitude": -3.6505039
+  },
+  {
+    "name": "Merthyr Ex-Servicemen's ABC",
+    "email": "garethturley@btinternet.com",
+    "phone": null,
+    "contactName": "Gareth Donovan",
+    "postcode": "CF47 8EB",
+    "region": "South Division",
+    "latitude": 51.7419882,
+    "longitude": -3.3768618
+  },
+  {
+    "name": "Penarth ABC",
+    "email": "neilmunn7@live.co.uk",
+    "phone": null,
+    "contactName": "Neil Munn",
+    "postcode": "CF64 3EE",
+    "region": "South Division",
+    "latitude": 51.4355246,
+    "longitude": -3.1749522
+  },
+  {
+    "name": "Pencoed ABC",
+    "email": "rosejones21@hotmail.co.uk",
+    "phone": null,
+    "contactName": "John Jones",
+    "postcode": "CF35 5LZ",
+    "region": "South Division",
+    "latitude": 51.5200561,
+    "longitude": -3.5029953
+  },
+  {
+    "name": "Pontyclun ABC",
+    "email": "mathewlee123@me.com",
+    "phone": null,
+    "contactName": "Matthew Robinson",
+    "postcode": "CF72 9HG",
+    "region": "South Division",
+    "latitude": 51.531911,
+    "longitude": -3.4008915
+  },
+  {
+    "name": "Pontypridd ABC",
+    "email": "grantbriggs@ntlworld.com",
+    "phone": null,
+    "contactName": "Grant Briggs",
+    "postcode": "CF37 5LN",
+    "region": "South Division",
+    "latitude": 51.5828845,
+    "longitude": -3.3091812
+  },
+  {
+    "name": "Porthcawl & Pyle ABC",
+    "email": "porthcawlpumas@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Tim Yorke",
+    "postcode": "CF36 5DN",
+    "region": "South Division",
+    "latitude": 51.4823233,
+    "longitude": -3.6948867
+  },
+  {
+    "name": "Prince of Wales ABC",
+    "email": "pestboxing@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Carl Pesticcio",
+    "postcode": "CF11 8TF",
+    "region": "South Division",
+    "latitude": 51.4695318,
+    "longitude": -3.1925148
+  },
+  {
+    "name": "Rhondda ABC",
+    "email": "rhonddaabc@yahoo.com",
+    "phone": null,
+    "contactName": "John Wynne",
+    "postcode": "CF40 1LL",
+    "region": "South Division",
+    "latitude": 51.6165362,
+    "longitude": -3.4515052
+  },
+  {
+    "name": "Rhoose ABC",
+    "email": "barrybomber123@gmail.com",
+    "phone": null,
+    "contactName": "Michael Smyth",
+    "postcode": "CF62 3DR",
+    "region": "South Division",
+    "latitude": 51.3891832,
+    "longitude": -3.3492171
+  },
+  {
+    "name": "Splott Adventure ABC",
+    "email": "mwasigallah@hotmail.co.uk",
+    "phone": null,
+    "contactName": "James Mwasigallah",
+    "postcode": "CF24 2LJ",
+    "region": "South Division",
+    "latitude": 51.4809976,
+    "longitude": -3.1459761
+  },
+  {
+    "name": "St Clares ABC",
+    "email": "Kelly_11_00@hotmail.com",
+    "phone": null,
+    "contactName": "Kelly Gadd",
+    "postcode": "CF5 3JX",
+    "region": "South Division",
+    "latitude": 51.4984149,
+    "longitude": -3.2534545
+  },
+  {
+    "name": "St Joseph's ABC",
+    "email": "chairman@stjosephsabc.co.uk",
+    "phone": null,
+    "contactName": "Robin Powell",
+    "postcode": "CF14 3XG",
+    "region": "South Division",
+    "latitude": 51.4986255,
+    "longitude": -3.1893262
+  },
+  {
+    "name": "Tiger Bay ABC",
+    "email": "wasimsaid151@hotmail.com",
+    "phone": null,
+    "contactName": "Wasem Said",
+    "postcode": "CF10 5LB",
+    "region": "South Division",
+    "latitude": 51.4678987,
+    "longitude": -3.1691614
+  },
+  {
+    "name": "Tonteg ABC",
+    "email": "sarahmattews46@gmail.com",
+    "phone": null,
+    "contactName": "Sarah Matthews",
+    "postcode": "CF38 1ND",
+    "region": "South Division",
+    "latitude": 51.5691885,
+    "longitude": -3.3107526
+  },
+  {
+    "name": "Tonyrefail ABC",
+    "email": "tonyrefailabc@outlook.com",
+    "phone": null,
+    "contactName": "Alan Blackburn",
+    "postcode": "CF39 8PX",
+    "region": "South Division",
+    "latitude": 51.5838559,
+    "longitude": -3.42706
+  },
+  {
+    "name": "Trelewis ABC",
+    "email": "bebb1970@aol.com",
+    "phone": null,
+    "contactName": "Richard Bebb",
+    "postcode": "CF46 6NF",
+    "region": "South Division",
+    "latitude": 51.6505758,
+    "longitude": -3.2818931
+  },
+  {
+    "name": "Tylorstown ABC",
+    "email": "harrisondavies354@gmail.com",
+    "phone": null,
+    "contactName": "Harrison Davies",
+    "postcode": "CF43 3BW",
+    "region": "South Division",
+    "latitude": 51.6551901,
+    "longitude": -3.438564
+  },
+  {
+    "name": "Aberdare ABC",
+    "email": "ryanchris236@sky.com",
+    "phone": null,
+    "contactName": "Ryan Christopher",
+    "postcode": "CF44 8EZ",
+    "region": "South Division",
+    "latitude": 51.4724241,
+    "longitude": -3.1478785
+  },
+  {
+    "name": "Barry West End ABC",
+    "email": "glen.mclaggon@gmail.com",
+    "phone": null,
+    "contactName": "Glen Mclaggon",
+    "postcode": "CF63 4LU",
+    "region": "South Division",
+    "latitude": 51.4095784,
+    "longitude": -3.2589423
+  },
+  {
+    "name": "Mynydd Cynffig ABC",
+    "email": "rosgood8@gmail.com",
+    "phone": null,
+    "contactName": "Ryan Osgood",
+    "postcode": "CF33 4AS",
+    "region": "South Division",
+    "latitude": 51.5321751,
+    "longitude": -3.6779139
+  },
+  {
+    "name": "Ogmore Valley Dragons ABC",
+    "email": "Nantyboxing@hotmail.com",
+    "phone": null,
+    "contactName": "Dean Morgan",
+    "postcode": "CF32 7AB",
+    "region": "South Division",
+    "latitude": 51.602093,
+    "longitude": -3.541254
+  },
+  {
+    "name": "Ely Warriors ABC",
+    "email": "elypete@googlemail.com",
+    "phone": null,
+    "contactName": "Peter Sullivan",
+    "postcode": "CF5 4BS",
+    "region": "South Division",
+    "latitude": 51.4976706,
+    "longitude": -3.2233925
+  },
+  {
+    "name": "Llanishen ABC",
+    "email": "lukerichards1927@yahoo.com",
+    "phone": null,
+    "contactName": "Luke Richards",
+    "postcode": "CF14 5YL",
+    "region": "South Division",
+    "latitude": 51.5286692,
+    "longitude": -3.1903969
+  },
+  {
+    "name": "Llynfi Valley ABC",
+    "email": "adrian@ancoascaffolding.co.uk",
+    "phone": null,
+    "contactName": "Adrian Shearan",
+    "postcode": "CF34 9DW",
+    "region": "South Division",
+    "latitude": 51.5902959,
+    "longitude": -3.6269287
+  },
+  {
+    "name": "Robinson's ABC",
+    "email": "stevochamp7@gmail.com",
+    "phone": null,
+    "contactName": "Stephen Robinson",
+    "postcode": "CF24 5EB",
+    "region": "South Division",
+    "latitude": 51.4844363,
+    "longitude": -3.1429321
+  },
+  {
+    "name": "Welsh Warriors ABC",
+    "email": "welshwarriorsabc@yahoo.com",
+    "phone": null,
+    "contactName": "Lee Rodgers",
+    "postcode": "CF31 3AP",
+    "region": "South Division",
+    "latitude": 51.5103584,
+    "longitude": -3.5771307
+  },
+  {
+    "name": "Cefn Cribwr ABC",
+    "email": null,
+    "phone": null,
+    "contactName": null,
+    "postcode": "CF32 0AY",
+    "region": "South Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Cefn Cribwr ABC",
+    "email": "sean.evs90@aol.com",
+    "phone": null,
+    "contactName": "Byron John or Sean Evans",
+    "postcode": null,
+    "region": "South Division",
+    "latitude": 51.5255522,
+    "longitude": -3.6376041
+  },
+  {
+    "name": "Heath Warriors ABC",
+    "email": "team@celtic-warriors.com",
+    "phone": null,
+    "contactName": "Thomas Bowen",
+    "postcode": null,
+    "region": "South Division",
+    "latitude": 51.4831371,
+    "longitude": -3.1518385
+  },
+  {
+    "name": "Guerrilla ABC",
+    "email": "b3xingevents1@gmail.com",
+    "phone": null,
+    "contactName": "Chris Houlihan",
+    "postcode": null,
+    "region": "South Division",
+    "latitude": 51.5973867,
+    "longitude": -3.8033756
+  },
+  {
+    "name": "Hayers ABC",
+    "email": "taff600@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Ricky Hayer",
+    "postcode": null,
+    "region": "South Division",
+    "latitude": 51.7540347,
+    "longitude": -3.2805617
+  },
+  {
+    "name": "Barry East End ABC",
+    "email": "alan.lamb@nssgroup.com",
+    "phone": null,
+    "contactName": "Alan Lamb",
+    "postcode": "CF63 3RF",
+    "region": "South Division",
+    "latitude": 51.4011199,
+    "longitude": -3.24452
+  },
+  {
+    "name": "Aberystwyth ABC",
+    "email": "jay.beasley9585@gmail.com",
+    "phone": null,
+    "contactName": "Jamie Beasley",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": 52.4044132,
+    "longitude": -4.0777701
+  },
+  {
+    "name": "Afan Spartans ABC",
+    "email": "ian.afanboxingclub@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Ian Jenkins",
+    "postcode": "SA13 2BN",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Bonymaen ABC",
+    "email": "eddiej2015@outlook.com",
+    "phone": null,
+    "contactName": "Eddie Jay",
+    "postcode": "SA1 7DG",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Briton Ferry ABC",
+    "email": "fairfieldboxing@hotmail.com",
+    "phone": null,
+    "contactName": "Pappy Jones",
+    "postcode": "SA11 2PB",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Cardigan ABC",
+    "email": "lizcroft@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Guy Croft",
+    "postcode": "SA43 1NR",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "St Clears ABC",
+    "email": "robert.couzens.1705@gmail.com",
+    "phone": null,
+    "contactName": "Robert Couzens",
+    "postcode": "SA33 4AX",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Cwmavon Hornets ABC",
+    "email": "cwmavonhornets@aol.com",
+    "phone": null,
+    "contactName": "Nigel Davies",
+    "postcode": "SA12 9DF",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Cwmgors ABC",
+    "email": "cwmgorsboxing@gmail.com",
+    "phone": null,
+    "contactName": "Steph Davies",
+    "postcode": "SA18 1UN",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Cwmgwrach ABC",
+    "email": null,
+    "phone": null,
+    "contactName": "Neil Summerhayes",
+    "postcode": "SA11 5TE",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "DJ Boxing ABC",
+    "email": "pelegreenall@outlook.com",
+    "phone": null,
+    "contactName": "Pele Greenall",
+    "postcode": "SA6 5HR",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Dockers ABC",
+    "email": "carlkeane@hotmail.com",
+    "phone": null,
+    "contactName": "Carl Keane",
+    "postcode": "SA72 6WT",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Gwent Swansea ABC",
+    "email": "terrygrey1946@yahoo.co.uk",
+    "phone": null,
+    "contactName": "Terry Grey",
+    "postcode": "SA1 6NF",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Gwynfi ABC",
+    "email": "gwynfi.boxing@hotmail.com",
+    "phone": null,
+    "contactName": "Owain Davies",
+    "postcode": "SA13 3TE",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Narberth ABC",
+    "email": "Lola1955@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Lorraine Haines",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Neath & Melyn ABC",
+    "email": "neath_melyn_abc_@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Denzil Holmes Jr",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Pembroke ABC",
+    "email": "mcewen_71@hotmail.com",
+    "phone": null,
+    "contactName": "C McEwen",
+    "postcode": "SA72 6DN",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Penyrheol ABC",
+    "email": "chrisreece18@yahoo.co.uk",
+    "phone": null,
+    "contactName": "Chris Reece",
+    "postcode": "SA4 4YL",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Port Talbot ABC",
+    "email": "simonwe2@msn.com",
+    "phone": null,
+    "contactName": "Simon Jones",
+    "postcode": "SA12 7PA",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Portmead & Blaenymaes ABC",
+    "email": "paulgrenfell@live.co.uk",
+    "phone": null,
+    "contactName": "Paul Grenfell",
+    "postcode": "SA5 8HB",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Premier ABC",
+    "email": "premierabc@hotmail.com",
+    "phone": null,
+    "contactName": "Steven Brophy",
+    "postcode": "SA1 2NA",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Prizefighter ABC",
+    "email": null,
+    "phone": null,
+    "contactName": "Kevin Evans",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Swansea Uni ABC",
+    "email": null,
+    "phone": null,
+    "contactName": "Ryan Thornhill",
+    "postcode": "SA2 8QB",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Trostre ABC",
+    "email": "trostre_abc@btinternet.com",
+    "phone": null,
+    "contactName": "Del Phillips",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Warehouse ABC",
+    "email": "warehouseabc2021@gmail.com",
+    "phone": null,
+    "contactName": "Chris Houlihan or David Owen",
+    "postcode": "SA1 4EH",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Jay Jay's ABC",
+    "email": "spencerjason667@gmail.com",
+    "phone": null,
+    "contactName": "Jason Spencer",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": 52.420733,
+    "longitude": -4.0824508
+  },
+  {
+    "name": "Towy ABC",
+    "email": "anthony242@btinternet.com",
+    "phone": null,
+    "contactName": "David 'Cass' Davies",
+    "postcode": "SA14 7NT",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Merlins Bridge ABC",
+    "email": "merlinsbridgeabc@gmail.com",
+    "phone": null,
+    "contactName": "Graham Brockway",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Jack 2 A King Boxing Gym",
+    "email": "ajack2king@gmail.com",
+    "phone": null,
+    "contactName": "Jason Hughes",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Bobby's Gym ABC",
+    "email": "daibunford@gmail.com",
+    "phone": null,
+    "contactName": "Dai Bunford",
+    "postcode": "SA14 7AD",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Celtic Warriors",
+    "email": "paul.kennedy@wolseley.co.uk",
+    "phone": null,
+    "contactName": "Paul Kennedy",
+    "postcode": "SA6 5BQ",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Tenby Sharks ABC",
+    "email": "daviemarxs@gmail.com",
+    "phone": null,
+    "contactName": "Mark Davies",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Stallion ABC",
+    "email": "stallionboxingfitness@gmail.com",
+    "phone": null,
+    "contactName": "Angelo Dragone",
+    "postcode": "SA14 8NA",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Box of Fists ABC",
+    "email": "ryanredfern33@hotmail.com",
+    "phone": null,
+    "contactName": "Ryan Redfern",
+    "postcode": "SA19 6BU",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Positive Vibes ABC",
+    "email": "info@positivevibesboxing.co.uk",
+    "phone": null,
+    "contactName": "Allyn Wood",
+    "postcode": "SA4 8PD",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Haus of Boxing",
+    "email": "harleybusiness0800@gmail.com",
+    "phone": null,
+    "contactName": "Harley Griffiths",
+    "postcode": "SA13 1LZ",
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Llanelli ABC",
+    "email": "jaimieryan_214@yahoo.com",
+    "phone": null,
+    "contactName": "Jaimie Ryan",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "MB Boxing ABC",
+    "email": "mbboxing123@gmail.com",
+    "phone": null,
+    "contactName": "Morgan Baxter",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Skewen ABC",
+    "email": "jakfitnessjk@gmail.com",
+    "phone": null,
+    "contactName": "John Kaighin",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "RKB Fitness",
+    "email": "runabakshi01@gmail.com",
+    "phone": null,
+    "contactName": "Runa Khanom-Bakshi",
+    "postcode": null,
+    "region": "West Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "All Saints ABC",
+    "email": "heathjohnson68@icloud.com",
+    "phone": null,
+    "contactName": "Sweed Johnson",
+    "postcode": "CF83 3HE",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Alway ABC",
+    "email": null,
+    "phone": null,
+    "contactName": null,
+    "postcode": "NP19 9RY",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Bargoed ABC",
+    "email": null,
+    "phone": null,
+    "contactName": null,
+    "postcode": null,
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Brecon Phoenix ABC",
+    "email": "giblet185@gmail.com",
+    "phone": null,
+    "contactName": "Dave Gilbert",
+    "postcode": "LD3 8AH",
+    "region": "East Division",
+    "latitude": 51.948679,
+    "longitude": -3.3929189
+  },
+  {
+    "name": "Caerphilly ABC",
+    "email": "mark_atkins@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Mark Atkins",
+    "postcode": "CF83 1HD",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Chepstow ABC",
+    "email": "stevewoods1965@gmail.com",
+    "phone": null,
+    "contactName": "Steve Woods",
+    "postcode": "NP16 5HJ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Coedeva ABC",
+    "email": "jspeirs1970@gmail.com",
+    "phone": null,
+    "contactName": "Jason Speirs",
+    "postcode": null,
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Cwmbran ABC",
+    "email": "keithcwmbranabc@outlook.com",
+    "phone": null,
+    "contactName": "Keith Jefferies",
+    "postcode": "NP44 1NJ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Cwmcarn ABC",
+    "email": "stevehammett_2@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Steve Hammett",
+    "postcode": null,
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Fleur-De-Lys ABC",
+    "email": "rossturner09@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Ross Turner",
+    "postcode": "NP12 3AB",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Gelligaer ABC",
+    "email": "brian.martin.gelligaer.boxing@gmail.com",
+    "phone": null,
+    "contactName": "Brian Martin",
+    "postcode": "CF82 8EP",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Goodes A.B.A ABC",
+    "email": "podhome@hotmail.com",
+    "phone": null,
+    "contactName": "Jon Manning",
+    "postcode": "NP44 2JJ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Heads Of Valleys ABC",
+    "email": "melvyn.hamer@yahoo.com",
+    "phone": null,
+    "contactName": "Mel Hamer",
+    "postcode": null,
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Newport Sporting ABC",
+    "email": "davidfoster610@msn.com",
+    "phone": null,
+    "contactName": "Dai Foster",
+    "postcode": "NP20 4DA",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Pantside ABC",
+    "email": "gavinmrees@yahoo.co.uk",
+    "phone": null,
+    "contactName": "Gavin Rees",
+    "postcode": "NP115LX",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Planet Fitness ABC",
+    "email": "jasonpaynter1971@gmail.com",
+    "phone": null,
+    "contactName": "Jason Paynter",
+    "postcode": "NP22 4QZ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Pontypool ABC",
+    "email": "dale@pontypoolboxing.co.uk",
+    "phone": null,
+    "contactName": "Dale Cooper",
+    "postcode": "NP4 6NF",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Somerton Rascals ABC",
+    "email": "mark1963james@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Mark James",
+    "postcode": "NP19 9AX",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "KB Boxing & Fitness Gym",
+    "email": "kbboxing1@gmail.com",
+    "phone": null,
+    "contactName": "Kate Porter",
+    "postcode": "NP20 5NQ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "St Josephs ABC",
+    "email": "sueanddaveexton@yahoo.co.uk",
+    "phone": null,
+    "contactName": "David Exton",
+    "postcode": null,
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Torfaen Warriors ABC",
+    "email": "champsboxinguk@gmail.com",
+    "phone": null,
+    "contactName": "Simon Weaver",
+    "postcode": "NP44 8HQ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Eastside ABC",
+    "email": "joseph.mckenzie1@aol.co.uk",
+    "phone": null,
+    "contactName": ": Joe McKenzie",
+    "postcode": "NP19 4NG",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Ashley Brace Boxing Academy",
+    "email": "ashleybracesboxingacademy@gmail.com",
+    "phone": null,
+    "contactName": "Catherine Callaghan",
+    "postcode": "NP23 5PP",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Newbridge ABC",
+    "email": null,
+    "phone": null,
+    "contactName": null,
+    "postcode": "NP11 5AR",
+    "region": "East Division",
+    "latitude": 51.6440544,
+    "longitude": -3.1358576
+  },
+  {
+    "name": "Abergavenny",
+    "email": "gething123@hotmail.co.uk",
+    "phone": null,
+    "contactName": "Kieran Gething",
+    "postcode": "NP7 7RL",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "St Michaels ABC",
+    "email": "luisevans1980@hotmail.com",
+    "phone": null,
+    "contactName": "Luis Evans",
+    "postcode": "NP20 5NQ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "MCL St Brides Boxing Academy",
+    "email": null,
+    "phone": null,
+    "contactName": "Tom Janes",
+    "postcode": "NP10 8SH",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Highcross",
+    "email": "highcross.abc@outlook.com",
+    "phone": null,
+    "contactName": "Ashley Edwards",
+    "postcode": "NP20 5ES",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Pontnewynydd Boxing Gym",
+    "email": "sjmdanny@gmail.com",
+    "phone": null,
+    "contactName": "Steve Mayley",
+    "postcode": "NP4 7UF",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Silurian ABC",
+    "email": "silurianboxing@gmail.com",
+    "phone": null,
+    "contactName": "Steven Aherne",
+    "postcode": "NP22 4RW",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "Toe 2 Toe ABC",
+    "email": "neil93718@gmail.com",
+    "phone": null,
+    "contactName": "Neil Davies",
+    "postcode": "NP44 7JJ",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  },
+  {
+    "name": "NCJM Boxing Club",
+    "email": "naz.islam7c@outlook.com",
+    "phone": null,
+    "contactName": "Nazrul Islam",
+    "postcode": "NP20 4DX",
+    "region": "East Division",
+    "latitude": null,
+    "longitude": null
+  }
+]

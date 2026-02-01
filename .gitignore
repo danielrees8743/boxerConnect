@@ -49,3 +49,10 @@ backend/prisma/*.db-journal
 # Uploads (keep .gitkeep files)
 backend/uploads/**/*
 !backend/uploads/**/.gitkeep
+
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Test credentials (do not commit)
+TEST_CREDENTIALS.md

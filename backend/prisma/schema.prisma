@@ -89,6 +89,8 @@ model User {
   // Relations
   boxer         Boxer?
   coachBoxers   CoachBoxer[] @relation("CoachRelation")
+  ownedClubs    Club[]       @relation("ClubOwner")
+  clubCoach     ClubCoach?
 
   @@index([email])
   @@index([role])
@@ -119,6 +121,10 @@ model Boxer {
   createdAt       DateTime        @default(now()) @map("created_at")
   updatedAt       DateTime        @updatedAt @map("updated_at")
 
+  // Club relationship (proper link)
+  clubId          String?         @map("club_id") @db.Uuid
+  club            Club?           @relation(fields: [clubId], references: [id], onDelete: SetNull)
+
   // Relations
   user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   fightHistory        FightHistory[]
@@ -132,6 +138,7 @@ model Boxer {
   @@index([experienceLevel])
   @@index([weightKg])
   @@index([isSearchable, isVerified])
+  @@index([clubId])
   @@map("boxers")
 }
 
@@ -218,4 +225,51 @@ model CoachBoxer {
   @@index([coachUserId])
   @@index([boxerId])
   @@map("coach_boxer")
+}
+
+model Club {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @db.VarChar(200)
+  email       String?  @db.VarChar(255)
+  phone       String?  @db.VarChar(50)
+  contactName String?  @map("contact_name") @db.VarChar(100)
+  postcode    String?  @db.VarChar(20)
+  region      String?  @db.VarChar(100)
+  latitude    Decimal? @db.Decimal(10, 7)
+  longitude   Decimal? @db.Decimal(10, 7)
+  isVerified  Boolean  @default(false) @map("is_verified")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Owner relationship (GYM_OWNER)
+  ownerId     String?  @map("owner_id") @db.Uuid
+  owner       User?    @relation("ClubOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  // Members
+  boxers      Boxer[]
+  coaches     ClubCoach[]
+
+  @@index([name])
+  @@index([region])
+  @@index([postcode])
+  @@index([ownerId])
+  @@map("clubs")
+}
+
+model ClubCoach {
+  id          String   @id @default(uuid()) @db.Uuid
+  clubId      String   @map("club_id") @db.Uuid
+  coachUserId String   @unique @map("coach_user_id") @db.Uuid
+  joinedAt    DateTime @default(now()) @map("joined_at")
+  isHead      Boolean  @default(false) @map("is_head")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  coach       User     @relation(fields: [coachUserId], references: [id], onDelete: Cascade)
+
+  @@unique([clubId, coachUserId])
+  @@index([clubId])
+  @@index([coachUserId])
+  @@map("club_coaches")
 }

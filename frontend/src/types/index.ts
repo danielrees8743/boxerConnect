@@ -347,13 +347,139 @@ export interface UpdateCoachBoxerData {
 
 export interface AdminStats {
   totalUsers: number;
-  totalBoxers: number;
-  totalMatches: number;
-  pendingVerifications: number;
   activeUsers: number;
-  matchesThisMonth: number;
-  usersByRole: Record<UserRole, number>;
-  matchesByStatus: Record<MatchRequestStatus, number>;
+  totalBoxers: number;
+  verifiedBoxers: number;
+  pendingVerifications: number;
+  totalCoaches: number;
+  totalGymOwners: number;
+  totalAdmins: number;
+  totalClubs: number;
+  verifiedClubs: number;
+  totalMatchRequests: number;
+  pendingMatchRequests: number;
+  acceptedMatchRequests: number;
+  usersByRole: { role: UserRole; count: number }[];
+  recentSignups: number;
+}
+
+export interface CreateUserData {
+  email: string;
+  password: string;
+  name: string;
+  role: UserRole;
+}
+
+export interface UpdateUserData {
+  email?: string;
+  name?: string;
+  role?: UserRole;
+}
+
+export interface AdminBoxerData {
+  userId: string;
+  name: string;
+  gender?: Gender;
+  weightKg?: number;
+  heightCm?: number;
+  dateOfBirth?: string;
+  city?: string;
+  country?: string;
+  experienceLevel?: ExperienceLevel;
+  wins?: number;
+  losses?: number;
+  draws?: number;
+  gymAffiliation?: string;
+  bio?: string;
+  isVerified?: boolean;
+  clubId?: string;
+}
+
+export interface UpdateAdminBoxerData {
+  name?: string;
+  gender?: Gender | null;
+  weightKg?: number | null;
+  heightCm?: number | null;
+  dateOfBirth?: string | null;
+  city?: string | null;
+  country?: string | null;
+  experienceLevel?: ExperienceLevel;
+  wins?: number;
+  losses?: number;
+  draws?: number;
+  gymAffiliation?: string | null;
+  bio?: string | null;
+  isVerified?: boolean;
+  isSearchable?: boolean;
+  clubId?: string | null;
+}
+
+export interface Club {
+  id: string;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  contactName?: string | null;
+  postcode?: string | null;
+  region?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  isVerified: boolean;
+  ownerId?: string | null;
+  owner?: User | null;
+  createdAt: string;
+  updatedAt: string;
+  _count?: {
+    boxers: number;
+    coaches: number;
+  };
+}
+
+export interface CreateClubData {
+  name: string;
+  email?: string;
+  phone?: string;
+  contactName?: string;
+  postcode?: string;
+  region?: string;
+  latitude?: number;
+  longitude?: number;
+  ownerId?: string;
+  isVerified?: boolean;
+}
+
+export interface UpdateClubData {
+  name?: string;
+  email?: string | null;
+  phone?: string | null;
+  contactName?: string | null;
+  postcode?: string | null;
+  region?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  ownerId?: string | null;
+  isVerified?: boolean;
+}
+
+export interface AdminUserSearchParams {
+  role?: UserRole;
+  isActive?: boolean;
+  page?: number;
+  limit?: number;
+}
+
+export interface AdminBoxerSearchParams {
+  isVerified?: boolean;
+  clubId?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface AdminClubSearchParams {
+  isVerified?: boolean;
+  region?: string;
+  page?: number;
+  limit?: number;
 }
 
 // ============================================================================

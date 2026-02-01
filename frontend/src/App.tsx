@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { fetchCurrentUser } from '@/features/auth/authSlice';
 import { ThemeProvider } from '@/components/theme';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { AdminLayout } from '@/components/admin/AdminLayout';
 import { HomePage } from '@/pages/HomePage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
@@ -15,16 +16,28 @@ import { BoxersPage } from '@/pages/BoxersPage';
 import { BoxerDetailPage } from '@/pages/BoxerDetailPage';
 import { MatchesPage } from '@/pages/MatchesPage';
 import { RequestsPage } from '@/pages/RequestsPage';
+import { ClubsPage } from '@/pages/ClubsPage';
+import {
+  AdminDashboardPage,
+  AdminUsersPage,
+  AdminUserFormPage,
+  AdminBoxersPage,
+  AdminBoxerFormPage,
+  AdminClubsPage,
+  AdminClubFormPage,
+} from '@/pages/admin';
 
 /**
  * Protected route component that redirects to login if not authenticated.
+ * Optionally redirects admin users to admin dashboard.
  */
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  redirectAdminTo?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading, token } = useAppSelector((state) => state.auth);
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, redirectAdminTo }) => {
+  const { isAuthenticated, isLoading, token, user } = useAppSelector((state) => state.auth);
 
   if (isLoading) {
     return (
@@ -36,6 +49,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (!isAuthenticated && !token) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Redirect admin users to admin area if specified
+  if (redirectAdminTo && user?.role === 'ADMIN') {
+    return <Navigate to={redirectAdminTo} replace />;
   }
 
   return <>{children}</>;
@@ -82,12 +100,13 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/clubs" element={<ClubsPage />} />
 
         {/* Protected Routes */}
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute redirectAdminTo="/admin">
               <DashboardPage />
             </ProtectedRoute>
           }
@@ -154,6 +173,28 @@ const AppRoutes: React.FC = () => {
 };
 
 /**
+ * Admin routes component - separated from main layout.
+ */
+const AdminRoutes: React.FC = () => {
+  return (
+    <Routes>
+      <Route element={<AdminLayout />}>
+        <Route index element={<AdminDashboardPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="users/new" element={<AdminUserFormPage />} />
+        <Route path="users/:id/edit" element={<AdminUserFormPage />} />
+        <Route path="boxers" element={<AdminBoxersPage />} />
+        <Route path="boxers/new" element={<AdminBoxerFormPage />} />
+        <Route path="boxers/:id/edit" element={<AdminBoxerFormPage />} />
+        <Route path="clubs" element={<AdminClubsPage />} />
+        <Route path="clubs/new" element={<AdminClubFormPage />} />
+        <Route path="clubs/:id/edit" element={<AdminClubFormPage />} />
+      </Route>
+    </Routes>
+  );
+};
+
+/**
  * Root App component with providers.
  */
 const App: React.FC = () => {
@@ -162,7 +203,12 @@ const App: React.FC = () => {
       <ThemeProvider defaultTheme="system">
         <BrowserRouter>
           <AuthInitializer>
-            <AppRoutes />
+            <Routes>
+              {/* Admin routes have their own layout */}
+              <Route path="/admin/*" element={<AdminRoutes />} />
+              {/* All other routes use main layout */}
+              <Route path="/*" element={<AppRoutes />} />
+            </Routes>
           </AuthInitializer>
         </BrowserRouter>
       </ThemeProvider>

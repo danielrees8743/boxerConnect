@@ -39,3 +39,12 @@ export {
   uploadProfilePhoto,
   MulterError,
 } from './upload.middleware';
+
+export {
+  requirePermission,
+  requireAnyPermission,
+  requireAllPermissions,
+  checkPermissionInController,
+  checkAnyPermissionInController,
+  type PermissionMiddlewareOptions,
+} from './permission.middleware';

@@ -178,6 +178,11 @@ export const updateBoxerSchema = z.object({
     .optional()
     .nullable(),
   isSearchable: z.boolean().optional(),
+  clubId: z
+    .string()
+    .uuid('Invalid club ID format')
+    .optional()
+    .nullable(),
 });
 
 /**
