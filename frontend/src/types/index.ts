@@ -354,6 +354,8 @@ export interface AdminStats {
   totalCoaches: number;
   totalGymOwners: number;
   totalAdmins: number;
+  totalClubs: number;
+  verifiedClubs: number;
   totalMatchRequests: number;
   pendingMatchRequests: number;
   acceptedMatchRequests: number;

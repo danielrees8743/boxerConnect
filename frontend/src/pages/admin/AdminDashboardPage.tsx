@@ -82,8 +82,9 @@ export const AdminDashboardPage: React.FC = () => {
         />
         <StatsCard
           title="Total Clubs"
-          value={stats?.usersByRole?.find((r) => r.role === 'GYM_OWNER')?.count ?? 0}
+          value={stats?.totalClubs ?? 0}
           icon={Building2}
+          description={`${stats?.verifiedClubs ?? 0} verified`}
           iconClassName="bg-blue-100 text-blue-600"
         />
         <StatsCard

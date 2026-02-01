@@ -75,6 +75,8 @@ export interface SystemStats {
   totalCoaches: number;
   totalGymOwners: number;
   totalAdmins: number;
+  totalClubs: number;
+  verifiedClubs: number;
   totalMatchRequests: number;
   pendingMatchRequests: number;
   acceptedMatchRequests: number;
@@ -220,6 +222,8 @@ export async function getSystemStats(): Promise<SystemStats> {
     totalCoaches,
     totalGymOwners,
     totalAdmins,
+    totalClubs,
+    verifiedClubs,
     totalMatchRequests,
     pendingMatchRequests,
     acceptedMatchRequests,
@@ -233,6 +237,8 @@ export async function getSystemStats(): Promise<SystemStats> {
     prisma.user.count({ where: { role: UserRole.COACH } }),
     prisma.user.count({ where: { role: UserRole.GYM_OWNER } }),
     prisma.user.count({ where: { role: UserRole.ADMIN } }),
+    prisma.club.count(),
+    prisma.club.count({ where: { isVerified: true } }),
     prisma.matchRequest.count(),
     prisma.matchRequest.count({ where: { status: 'PENDING' } }),
     prisma.matchRequest.count({ where: { status: 'ACCEPTED' } }),
@@ -254,6 +260,8 @@ export async function getSystemStats(): Promise<SystemStats> {
     totalCoaches,
     totalGymOwners,
     totalAdmins,
+    totalClubs,
+    verifiedClubs,
     totalMatchRequests,
     pendingMatchRequests,
     acceptedMatchRequests,
