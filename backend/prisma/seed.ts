@@ -9,66 +9,119 @@ async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, BCRYPT_COST);
 }
 
-interface CoachData {
+interface UserData {
   name: string;
   email: string;
   password: string;
+  role: UserRole;
 }
 
-const coaches: CoachData[] = [
+const admins: UserData[] = [
+  {
+    name: 'System Admin',
+    email: 'admin@boxerconnect.com',
+    password: 'admin123',
+    role: UserRole.ADMIN,
+  },
+  {
+    name: 'Dan Admin',
+    email: 'dan.admin@test.com',
+    password: 'admin123',
+    role: UserRole.ADMIN,
+  },
+];
+
+const gymOwners: UserData[] = [
+  {
+    name: 'Wild Card Boxing',
+    email: 'wildcard@test.com',
+    password: 'gym123',
+    role: UserRole.GYM_OWNER,
+  },
+  {
+    name: 'Kronk Gym',
+    email: 'kronk@test.com',
+    password: 'gym123',
+    role: UserRole.GYM_OWNER,
+  },
+  {
+    name: 'Gleason\'s Gym',
+    email: 'gleasons@test.com',
+    password: 'gym123',
+    role: UserRole.GYM_OWNER,
+  },
+];
+
+const coaches: UserData[] = [
   {
     name: 'Freddie Roach',
     email: 'freddie.roach@test.com',
     password: 'coach123',
+    role: UserRole.COACH,
   },
   {
     name: 'Emanuel Steward',
     email: 'emanuel.steward@test.com',
     password: 'coach123',
+    role: UserRole.COACH,
   },
   {
     name: 'Cus D\'Amato',
     email: 'cus.damato@test.com',
     password: 'coach123',
+    role: UserRole.COACH,
   },
   {
     name: 'Angelo Dundee',
     email: 'angelo.dundee@test.com',
     password: 'coach123',
+    role: UserRole.COACH,
   },
 ];
 
-async function main() {
-  console.log('Seeding coaches...');
+async function seedUsers(users: UserData[], label: string): Promise<string[]> {
+  console.log(`Seeding ${label}...`);
+  const createdIds: string[] = [];
 
-  const createdCoaches: string[] = [];
-
-  for (const coach of coaches) {
+  for (const userData of users) {
     const existingUser = await prisma.user.findUnique({
-      where: { email: coach.email },
+      where: { email: userData.email },
     });
 
     if (existingUser) {
-      console.log(`Coach ${coach.name} already exists, skipping...`);
+      console.log(`  ${userData.name} already exists, skipping...`);
       continue;
     }
 
-    const passwordHash = await hashPassword(coach.password);
+    const passwordHash = await hashPassword(userData.password);
 
     const user = await prisma.user.create({
       data: {
-        email: coach.email,
+        email: userData.email,
         passwordHash,
-        name: coach.name,
-        role: UserRole.COACH,
+        name: userData.name,
+        role: userData.role,
         isActive: true,
         emailVerified: true,
       },
     });
 
-    createdCoaches.push(user.id);
-    console.log(`Created coach: ${coach.name} (${coach.email})`);
+    createdIds.push(user.id);
+    console.log(`  Created: ${userData.name} (${userData.email})`);
   }
+
+  return createdIds;
+}
+
+async function main() {
+  // Seed admins
+  await seedUsers(admins, 'admins');
+
+  // Seed gym owners
+  await seedUsers(gymOwners, 'gym owners');
+
+  // Seed coaches
+  const createdCoaches = await seedUsers(coaches, 'coaches');
 
   // Link some coaches to boxers
   if (createdCoaches.length > 0) {
