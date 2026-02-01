@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyBoxer, updateBoxer, createBoxer } from '@/features/boxer/boxerSlice';
-import { BoxerProfile, BoxerForm, VideoUpload, VideoList, FightHistoryList } from '@/components/boxer';
+import { BoxerProfile, BoxerForm, VideoUpload, VideoList } from '@/components/boxer';
 import { Alert, AlertDescription, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Video } from 'lucide-react';
 import { boxerService } from '@/services/boxerService';
@@ -21,7 +21,6 @@ export const ProfilePage: React.FC = () => {
   const [maxVideos, setMaxVideos] = useState(5);
   const [videosLoading, setVideosLoading] = useState(false);
   const [fights, setFights] = useState<FightHistory[]>([]);
-  const [fightsLoading, setFightsLoading] = useState(false);
 
   // Fetch boxer profile on mount
   useEffect(() => {
@@ -51,14 +50,11 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchFights = async () => {
       if (!myBoxer) return;
-      setFightsLoading(true);
       try {
         const result = await boxerService.getMyFights();
         setFights(result.fights);
       } catch (err) {
         console.error('Failed to fetch fight history:', err);
-      } finally {
-        setFightsLoading(false);
       }
     };
     fetchFights();
@@ -153,15 +149,6 @@ export const ProfilePage: React.FC = () => {
         isLoading={isLoading}
         onEdit={() => setIsEditing(true)}
       />
-
-      {/* Fight History Section (read-only for boxers - managed by coaches/gym owners) */}
-      {myBoxer && (
-        <FightHistoryList
-          fights={fights}
-          canManageFights={false}
-          isLoading={fightsLoading}
-        />
-      )}
 
       {/* Training Videos Section */}
       {myBoxer && (
