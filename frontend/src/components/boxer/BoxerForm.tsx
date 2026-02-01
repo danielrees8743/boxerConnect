@@ -247,6 +247,7 @@ export const BoxerForm: React.FC<BoxerFormProps> = ({
               <Input
                 id="weightKg"
                 type="number"
+                step="0.1"
                 placeholder="70"
                 disabled={isLoading}
                 variant={errors.weightKg ? 'error' : 'default'}

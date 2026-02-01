@@ -2,11 +2,11 @@
 // Protects API endpoints from abuse and DDoS attacks
 
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
-import { rateLimitConfig } from '../config/env';
+import { rateLimitConfig, serverConfig } from '../config/env';
 import type { ApiResponse } from '../types';
 
-// Check environment
-const isProduction = process.env.NODE_ENV === 'production';
+// Check environment - disable/relax rate limiting in development
+const isDev = serverConfig.isDevelopment;
 
 // Default rate limit message
 const rateLimitResponse: ApiResponse = {
@@ -14,21 +14,21 @@ const rateLimitResponse: ApiResponse = {
   error: 'Too many requests. Please try again later.',
 };
 
-// Standard API rate limiter - more permissive in development
+// Standard API rate limiter - very permissive in development
 export const standardLimiter: RateLimitRequestHandler = rateLimit({
   windowMs: rateLimitConfig.windowMs, // 15 minutes by default
-  max: isProduction ? rateLimitConfig.maxRequests : 1000, // 100 in prod, 1000 in dev
+  max: isDev ? 10000 : rateLimitConfig.maxRequests, // 10000 in dev, 100 in prod
   message: rateLimitResponse,
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  standardHeaders: true,
+  legacyHeaders: false,
   skipSuccessfulRequests: false,
   skipFailedRequests: false,
 });
 
-// Strict rate limiter for sensitive endpoints (auth, password reset, etc.)
+// Strict rate limiter for sensitive endpoints - relaxed in development
 export const strictLimiter: RateLimitRequestHandler = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: isProduction ? 10 : 100, // 10 in prod, 100 in dev
+  max: isDev ? 1000 : 10, // 1000 in dev, 10 in prod
   message: {
     success: false,
     error: 'Too many attempts. Please try again in 15 minutes.',
@@ -37,18 +37,17 @@ export const strictLimiter: RateLimitRequestHandler = rateLimit({
   legacyHeaders: false,
 });
 
-// Rate limiter for login attempts
-// More permissive in development, strict in production
+// Auth rate limiter - effectively disabled in development
 export const authLimiter: RateLimitRequestHandler = rateLimit({
-  windowMs: isProduction ? 60 * 60 * 1000 : 15 * 60 * 1000, // 1 hour in prod, 15 min in dev
-  max: isProduction ? 5 : 50, // 5 in prod, 50 in dev
+  windowMs: isDev ? 60 * 1000 : 60 * 60 * 1000, // 1 min in dev, 1 hour in prod
+  max: isDev ? 1000 : 5, // 1000 in dev, 5 in prod
   message: {
     success: false,
     error: 'Too many login attempts. Please try again later.',
   } as ApiResponse,
   standardHeaders: true,
   legacyHeaders: false,
-  skipSuccessfulRequests: true, // Don't count successful logins
+  skipSuccessfulRequests: true,
 });
 
 // Rate limiter for password reset requests
