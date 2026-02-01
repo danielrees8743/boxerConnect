@@ -1,17 +1,56 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Calendar, MessageSquare, TrendingUp, ChevronRight } from 'lucide-react';
+import { Users, Calendar, TrendingUp, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAppSelector } from '@/app/hooks';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
+import { fetchMyBoxer } from '@/features/boxer/boxerSlice';
 
 /**
  * Dashboard page - Main authenticated user dashboard.
  * Displays overview stats, recent activity, and quick actions.
  */
 export const DashboardPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const { myBoxer } = useAppSelector((state) => state.boxer);
 
-  // Placeholder stats - will be replaced with real data from API
+  // Fetch boxer profile on mount
+  useEffect(() => {
+    if (user?.role === 'BOXER') {
+      dispatch(fetchMyBoxer());
+    }
+  }, [dispatch, user?.role]);
+
+  // Calculate profile completion
+  const profileCompletion = useMemo(() => {
+    if (!myBoxer) return { percentage: 0, items: [] };
+
+    const items = [
+      {
+        label: 'Basic information completed',
+        completed: !!(myBoxer.name && myBoxer.gender),
+      },
+      {
+        label: 'Fight record added',
+        completed: myBoxer.wins !== null || myBoxer.losses !== null || myBoxer.draws !== null,
+      },
+      {
+        label: 'Add profile photo',
+        completed: !!myBoxer.profilePhotoUrl,
+      },
+      {
+        label: 'Add training videos',
+        completed: false, // Placeholder - videos not implemented yet
+      },
+    ];
+
+    const completedCount = items.filter((item) => item.completed).length;
+    const percentage = Math.round((completedCount / items.length) * 100);
+
+    return { percentage, items };
+  }, [myBoxer]);
+
+  // Stats for boxers (without pending requests - that's for gym owners)
   const stats = [
     {
       label: 'Potential Matches',
@@ -19,13 +58,6 @@ export const DashboardPage: React.FC = () => {
       icon: Users,
       change: '+3 this week',
       changeType: 'positive' as const,
-    },
-    {
-      label: 'Pending Requests',
-      value: '4',
-      icon: MessageSquare,
-      change: '2 new',
-      changeType: 'neutral' as const,
     },
     {
       label: 'Upcoming Matches',
@@ -88,17 +120,14 @@ export const DashboardPage: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" asChild>
-            <Link to="/profile">Edit Profile</Link>
-          </Button>
           <Button asChild>
-            <Link to="/boxers">Find Matches</Link>
+            <Link to="/profile">View Profile</Link>
           </Button>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         {stats.map((stat) => (
           <div
             key={stat.label}
@@ -159,70 +188,39 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="space-y-6">
-          {/* Pending Requests Card */}
-          <div className="rounded-lg border bg-card shadow-sm">
-            <div className="flex items-center justify-between border-b px-6 py-4">
-              <h2 className="font-semibold">Pending Requests</h2>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/requests">
-                  View all
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-            <div className="p-6">
-              <p className="text-center text-sm text-muted-foreground">
-                You have 4 pending match requests.
-                <br />
-                <Link to="/requests" className="text-primary hover:underline">
-                  Review them now
-                </Link>
-              </p>
-            </div>
+        {/* Profile Completion Card */}
+        <div className="rounded-lg border bg-card shadow-sm">
+          <div className="border-b px-6 py-4">
+            <h2 className="font-semibold">Complete Your Profile</h2>
           </div>
-
-          {/* Profile Completion Card */}
-          <div className="rounded-lg border bg-card shadow-sm">
-            <div className="border-b px-6 py-4">
-              <h2 className="font-semibold">Complete Your Profile</h2>
-            </div>
-            <div className="p-6">
-              <div className="mb-4">
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span>Profile completion</span>
-                  <span className="font-medium">75%</span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-muted">
-                  <div
-                    className="h-2 rounded-full bg-boxing-red"
-                    style={{ width: '75%' }}
-                  />
-                </div>
+          <div className="p-6">
+            <div className="mb-4">
+              <div className="mb-2 flex items-center justify-between text-sm">
+                <span>Profile completion</span>
+                <span className="font-medium">{profileCompletion.percentage}%</span>
               </div>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                  Basic information completed
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                  Fight record added
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-                  Add profile photo
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-                  Add training videos
-                </li>
-              </ul>
-              <Button className="mt-4 w-full" variant="outline" asChild>
-                <Link to="/profile/edit">Complete Profile</Link>
-              </Button>
+              <div className="h-2 w-full rounded-full bg-muted">
+                <div
+                  className="h-2 rounded-full bg-boxing-red"
+                  style={{ width: `${profileCompletion.percentage}%` }}
+                />
+              </div>
             </div>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              {profileCompletion.items.map((item, index) => (
+                <li key={index} className="flex items-center gap-2">
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      item.completed ? 'bg-green-500' : 'bg-yellow-500'
+                    }`}
+                  />
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+            <Button className="mt-4 w-full" variant="outline" asChild>
+              <Link to="/profile/edit">Complete Profile</Link>
+            </Button>
           </div>
         </div>
       </div>
