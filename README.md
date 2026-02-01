@@ -170,7 +170,11 @@ BoxerConnect/
 ├── docs/                       # Documentation
 │   ├── API.md                 # API documentation
 │   ├── DATABASE.md            # Database schema documentation
-│   └── DEVELOPMENT.md         # Development guide
+│   ├── DEVELOPMENT.md         # Development guide
+│   ├── api/                   # Endpoint-specific documentation
+│   │   └── profile-photo.md   # Profile photo upload API
+│   └── architecture/          # Architecture documentation
+│       └── storage.md         # Storage system architecture
 │
 ├── docker-compose.yml          # Docker services configuration
 └── README.md                   # This file
@@ -262,6 +266,7 @@ The BoxerConnect API follows RESTful conventions with JWT authentication.
 |----------|-----------|-------------|
 | Authentication | `/auth` | Register, login, logout, token refresh |
 | Boxers | `/boxers` | Boxer profiles and search |
+| Profile Photos | `/boxers/me/photo` | Upload and manage profile photos |
 | Match Requests | `/match-requests` | Sparring match coordination |
 | Availability | `/availability` | Boxer availability management |
 | Coach | `/coach` | Coach-boxer relationships |
@@ -326,5 +331,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 For more detailed documentation:
 - [API Documentation](docs/API.md)
+- [Profile Photo API](docs/api/profile-photo.md)
 - [Database Schema](docs/DATABASE.md)
 - [Development Guide](docs/DEVELOPMENT.md)
+- [Storage Architecture](docs/architecture/storage.md)

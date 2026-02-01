@@ -45,3 +45,7 @@ backend/prisma/*.db-journal
 *.tgz
 *.tar.gz
 .cache/
+
+# Uploads (keep .gitkeep files)
+backend/uploads/**/*
+!backend/uploads/**/.gitkeep

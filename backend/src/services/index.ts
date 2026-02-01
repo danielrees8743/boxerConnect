@@ -105,3 +105,22 @@ export {
   type PaginatedPendingVerifications,
   type SystemStats,
 } from './admin.service';
+
+// Profile Photo Service
+export {
+  uploadProfilePhoto,
+  removeProfilePhoto,
+  getProfilePhotoUrl,
+  type ProfilePhotoResult,
+} from './profilePhoto.service';
+
+// Storage Service
+export {
+  storageService,
+  getStorageService,
+  localStorageService,
+  type StorageService,
+  type StorageResult,
+  type UploadOptions,
+  type StorageProvider,
+} from './storage';
