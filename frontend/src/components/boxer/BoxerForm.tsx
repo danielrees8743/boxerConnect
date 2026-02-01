@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Upload } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { PhotoUpload } from './PhotoUpload';
 import {
   Card,
   CardContent,
@@ -101,10 +102,16 @@ export const BoxerForm: React.FC<BoxerFormProps> = ({
   mode = 'create',
   className,
 }) => {
+  // Track current photo URL (updated when photo is uploaded/removed)
+  const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(
+    boxer?.profilePhotoUrl || null
+  );
+
   const {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors, isDirty },
   } = useForm<BoxerFormData>({
     resolver: zodResolver(boxerFormSchema),
@@ -181,18 +188,15 @@ export const BoxerForm: React.FC<BoxerFormProps> = ({
             </Alert>
           )}
 
-          {/* Photo Upload Placeholder */}
+          {/* Photo Upload */}
           <div className="space-y-2">
             <Label>Profile Photo</Label>
-            <div className="flex items-center gap-4">
-              <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-muted-foreground/25">
-                <Upload className="h-8 w-8 text-muted-foreground/50" />
-              </div>
-              <Button type="button" variant="outline" disabled>
-                Upload Photo
-              </Button>
-            </div>
-            <p className="text-sm text-muted-foreground">Photo upload coming soon.</p>
+            <PhotoUpload
+              currentPhotoUrl={currentPhotoUrl}
+              name={watch('name') || boxer?.name}
+              onPhotoChange={setCurrentPhotoUrl}
+              disabled={isLoading}
+            />
           </div>
 
           {/* Name */}

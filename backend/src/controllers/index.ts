@@ -60,3 +60,9 @@ export {
   getStats,
   getPendingVerifications,
 } from './admin.controller';
+
+// Profile Photo Controller
+export {
+  uploadPhoto,
+  removePhoto,
+} from './profilePhoto.controller';

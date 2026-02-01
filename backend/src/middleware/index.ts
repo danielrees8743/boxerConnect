@@ -34,3 +34,8 @@ export {
   requireAdmin,
   requireElevatedRole,
 } from './auth.middleware';
+
+export {
+  uploadProfilePhoto,
+  MulterError,
+} from './upload.middleware';

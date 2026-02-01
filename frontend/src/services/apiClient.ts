@@ -177,4 +177,37 @@ apiClient.interceptors.response.use(
   }
 );
 
+/**
+ * Helper function for file uploads using multipart/form-data.
+ * Handles authentication and proper content-type headers.
+ *
+ * @param url - The API endpoint URL (relative to base URL)
+ * @param file - The File object to upload
+ * @param fieldName - The form field name for the file (default: 'file')
+ * @returns Promise resolving to the response data
+ *
+ * @example
+ * const result = await uploadFile<{ profilePhotoUrl: string }>(
+ *   '/boxers/me/photo',
+ *   selectedFile,
+ *   'photo'
+ * );
+ */
+export async function uploadFile<T>(
+  url: string,
+  file: File,
+  fieldName: string = 'file'
+): Promise<T> {
+  const formData = new FormData();
+  formData.append(fieldName, file);
+
+  // Use apiClient to leverage existing interceptors for auth and error handling
+  const response = await apiClient.post<T>(url, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+}
+
 export default apiClient;

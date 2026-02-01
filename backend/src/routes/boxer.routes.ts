@@ -13,12 +13,17 @@ import {
   getMySuggestedMatches,
 } from '../controllers/boxer.controller';
 import {
+  uploadPhoto,
+  removePhoto,
+} from '../controllers/profilePhoto.controller';
+import {
   authenticate,
   optionalAuth,
   requireBoxer,
   standardLimiter,
   searchLimiter,
   createResourceLimiter,
+  uploadProfilePhoto,
 } from '../middleware';
 
 const router = Router();
@@ -56,6 +61,20 @@ router.get('/me', standardLimiter, authenticate, handler(getMyBoxer));
  * Requires authentication and BOXER role
  */
 router.get('/me/suggestions', standardLimiter, authenticate, requireBoxer, handler(getMySuggestedMatches));
+
+/**
+ * POST /api/v1/boxers/me/photo
+ * Upload profile photo
+ * Requires authentication and BOXER role
+ */
+router.post('/me/photo', createResourceLimiter, authenticate, requireBoxer, uploadProfilePhoto, handler(uploadPhoto));
+
+/**
+ * DELETE /api/v1/boxers/me/photo
+ * Remove profile photo
+ * Requires authentication and BOXER role
+ */
+router.delete('/me/photo', standardLimiter, authenticate, requireBoxer, handler(removePhoto));
 
 /**
  * POST /api/v1/boxers

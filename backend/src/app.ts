@@ -4,6 +4,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import path from 'path';
 import { corsConfig, serverConfig, checkDatabaseHealth, checkRedisHealth } from './config';
 import { errorHandler, notFoundHandler, standardLimiter } from './middleware';
 import { sendSuccess } from './utils';
@@ -51,6 +52,13 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Apply standard rate limiting to all routes
 app.use(standardLimiter);
+
+// ============================================================================
+// Static File Serving
+// ============================================================================
+
+// Serve uploaded files (profile photos, etc.)
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // ============================================================================
 // Request Logging (Development)

@@ -1,4 +1,4 @@
-import { apiClient } from './apiClient';
+import { apiClient, uploadFile } from './apiClient';
 import type {
   BoxerProfile,
   CreateBoxerData,
@@ -72,6 +72,32 @@ export const boxerService = {
    */
   async deleteBoxer(id: string): Promise<void> {
     await apiClient.delete(`/boxers/${id}`);
+  },
+
+  /**
+   * Upload a profile photo for the current user's boxer profile.
+   * Uses multipart/form-data for file upload.
+   *
+   * @param file - The image file to upload (max 5MB, jpeg/png/webp/gif)
+   * @returns Promise resolving to the new profile photo URL
+   */
+  async uploadProfilePhoto(file: File): Promise<{ profilePhotoUrl: string }> {
+    const response = await uploadFile<ApiResponse<{ profilePhotoUrl: string }>>(
+      '/boxers/me/photo',
+      file,
+      'photo'
+    );
+    if (!response.data?.profilePhotoUrl) {
+      throw new Error(response.message || 'Failed to upload profile photo');
+    }
+    return { profilePhotoUrl: response.data.profilePhotoUrl };
+  },
+
+  /**
+   * Remove the profile photo for the current user's boxer profile.
+   */
+  async removeProfilePhoto(): Promise<void> {
+    await apiClient.delete('/boxers/me/photo');
   },
 };
 
