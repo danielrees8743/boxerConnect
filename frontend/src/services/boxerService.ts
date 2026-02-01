@@ -8,6 +8,9 @@ import type {
   BoxerSearchParams,
   ApiResponse,
   PaginatedResponse,
+  FightHistory,
+  CreateFightHistoryData,
+  UpdateFightHistoryData,
 } from '@/types';
 
 /**
@@ -148,6 +151,106 @@ export const boxerService = {
       throw new Error(response.data.message || 'Failed to get videos');
     }
     return response.data.data;
+  },
+
+  // ============================================================================
+  // Fight History Methods
+  // ============================================================================
+
+  /**
+   * Get all fight history for the current user's boxer profile.
+   */
+  async getMyFights(): Promise<{ fights: FightHistory[]; count: number }> {
+    const response = await apiClient.get<
+      ApiResponse<{ fights: FightHistory[]; count: number }>
+    >('/boxers/me/fights');
+    if (!response.data.data) {
+      throw new Error(response.data.message || 'Failed to get fight history');
+    }
+    return response.data.data;
+  },
+
+  /**
+   * @deprecated Boxers can no longer manage their own fight history.
+   * Use createFightForBoxer() instead (requires coach/gym owner role).
+   */
+  async createFight(_data: CreateFightHistoryData): Promise<FightHistory> {
+    throw new Error('Boxers cannot manage their own fight history. Please contact your coach or gym owner.');
+  },
+
+  /**
+   * @deprecated Boxers can no longer manage their own fight history.
+   * Use updateFightForBoxer() instead (requires coach/gym owner role).
+   */
+  async updateFight(_fightId: string, _data: UpdateFightHistoryData): Promise<FightHistory> {
+    throw new Error('Boxers cannot manage their own fight history. Please contact your coach or gym owner.');
+  },
+
+  /**
+   * @deprecated Boxers can no longer manage their own fight history.
+   * Use deleteFightForBoxer() instead (requires coach/gym owner role).
+   */
+  async deleteFight(_fightId: string): Promise<void> {
+    throw new Error('Boxers cannot manage their own fight history. Please contact your coach or gym owner.');
+  },
+
+  /**
+   * Get fight history for a boxer by ID (public).
+   */
+  async getBoxerFights(boxerId: string): Promise<{ fights: FightHistory[]; count: number }> {
+    const response = await apiClient.get<
+      ApiResponse<{ fights: FightHistory[]; count: number }>
+    >(`/boxers/${boxerId}/fights`);
+    if (!response.data.data) {
+      throw new Error(response.data.message || 'Failed to get fight history');
+    }
+    return response.data.data;
+  },
+
+  // ============================================================================
+  // Coach/Gym Owner Fight Management Methods
+  // ============================================================================
+
+  /**
+   * Create a fight history entry for a linked boxer (coach/gym owner only).
+   */
+  async createFightForBoxer(
+    boxerId: string,
+    data: CreateFightHistoryData
+  ): Promise<FightHistory> {
+    const response = await apiClient.post<ApiResponse<{ fight: FightHistory }>>(
+      `/boxers/${boxerId}/fights`,
+      data
+    );
+    if (!response.data.data?.fight) {
+      throw new Error(response.data.message || 'Failed to create fight history');
+    }
+    return response.data.data.fight;
+  },
+
+  /**
+   * Update a fight history entry for a linked boxer (coach/gym owner only).
+   */
+  async updateFightForBoxer(
+    boxerId: string,
+    fightId: string,
+    data: UpdateFightHistoryData
+  ): Promise<FightHistory> {
+    const response = await apiClient.put<ApiResponse<{ fight: FightHistory }>>(
+      `/boxers/${boxerId}/fights/${fightId}`,
+      data
+    );
+    if (!response.data.data?.fight) {
+      throw new Error(response.data.message || 'Failed to update fight history');
+    }
+    return response.data.data.fight;
+  },
+
+  /**
+   * Delete a fight history entry for a linked boxer (coach/gym owner only).
+   */
+  async deleteFightForBoxer(boxerId: string, fightId: string): Promise<void> {
+    await apiClient.delete(`/boxers/${boxerId}/fights/${fightId}`);
   },
 };
 

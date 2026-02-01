@@ -124,6 +124,17 @@ export {
   type VideoListResult,
 } from './video.service';
 
+// Fight History Service
+export {
+  createFight,
+  getMyFights,
+  updateFight,
+  deleteFight,
+  getBoxerFights,
+  type FightHistoryResult,
+  type FightHistoryListResult,
+} from './fightHistory.service';
+
 // Storage Service
 export {
   storageService,

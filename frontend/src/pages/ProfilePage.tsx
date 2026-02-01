@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyBoxer, updateBoxer, createBoxer } from '@/features/boxer/boxerSlice';
-import { BoxerProfile, BoxerForm, VideoUpload, VideoList } from '@/components/boxer';
+import { BoxerProfile, BoxerForm, VideoUpload, VideoList, FightHistoryList } from '@/components/boxer';
 import { Alert, AlertDescription, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Video } from 'lucide-react';
 import { boxerService } from '@/services/boxerService';
-import type { CreateBoxerData, UpdateBoxerData, BoxerVideo } from '@/types';
+import type { CreateBoxerData, UpdateBoxerData, BoxerVideo, FightHistory } from '@/types';
 
 /**
  * ProfilePage displays and manages the current user's boxer profile.
@@ -20,6 +20,8 @@ export const ProfilePage: React.FC = () => {
   const [videoCount, setVideoCount] = useState(0);
   const [maxVideos, setMaxVideos] = useState(5);
   const [videosLoading, setVideosLoading] = useState(false);
+  const [fights, setFights] = useState<FightHistory[]>([]);
+  const [fightsLoading, setFightsLoading] = useState(false);
 
   // Fetch boxer profile on mount
   useEffect(() => {
@@ -45,17 +47,37 @@ export const ProfilePage: React.FC = () => {
     fetchVideos();
   }, [myBoxer]);
 
+  // Fetch fight history when boxer profile is loaded
+  useEffect(() => {
+    const fetchFights = async () => {
+      if (!myBoxer) return;
+      setFightsLoading(true);
+      try {
+        const result = await boxerService.getMyFights();
+        setFights(result.fights);
+      } catch (err) {
+        console.error('Failed to fetch fight history:', err);
+      } finally {
+        setFightsLoading(false);
+      }
+    };
+    fetchFights();
+  }, [myBoxer]);
+
   // Handle video upload
-  const handleVideoUploaded = useCallback((video: BoxerVideo) => {
+  const handleVideoUploaded = (video: BoxerVideo) => {
     setVideos((prev) => [video, ...prev]);
     setVideoCount((prev) => prev + 1);
-  }, []);
+  };
 
   // Handle video deletion
-  const handleVideoDeleted = useCallback((videoId: string) => {
+  const handleVideoDeleted = (videoId: string) => {
     setVideos((prev) => prev.filter((v) => v.id !== videoId));
     setVideoCount((prev) => prev - 1);
-  }, []);
+  };
+
+  // Note: Fight management callbacks removed - boxers can no longer manage their own fights.
+  // Fight history is now managed by coaches and gym owners only.
 
   // Handle creating/updating boxer profile
   const handleSubmit = async (data: CreateBoxerData | UpdateBoxerData) => {
@@ -124,13 +146,22 @@ export const ProfilePage: React.FC = () => {
 
       <BoxerProfile
         boxer={myBoxer}
-        fightHistory={myBoxer?.fightHistory || []}
+        fightHistory={fights}
         availability={myBoxer?.availability || []}
         videos={videos}
         isOwner={true}
         isLoading={isLoading}
         onEdit={() => setIsEditing(true)}
       />
+
+      {/* Fight History Section (read-only for boxers - managed by coaches/gym owners) */}
+      {myBoxer && (
+        <FightHistoryList
+          fights={fights}
+          canManageFights={false}
+          isLoading={fightsLoading}
+        />
+      )}
 
       {/* Training Videos Section */}
       {myBoxer && (

@@ -45,6 +45,7 @@ export {
   requirePermission,
   requireAnyPermission,
   requireAllPermissions,
+  requireFightManagePermission,
   checkPermissionInController,
   checkAnyPermissionInController,
   type PermissionMiddlewareOptions,

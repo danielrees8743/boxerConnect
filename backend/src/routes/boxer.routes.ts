@@ -23,6 +23,13 @@ import {
   getBoxerVideos,
 } from '../controllers/video.controller';
 import {
+  getMyFights,
+  getBoxerFights,
+  createFightForBoxer,
+  updateFightForBoxer,
+  deleteFightForBoxer,
+} from '../controllers/fightHistory.controller';
+import {
   authenticate,
   optionalAuth,
   standardLimiter,
@@ -32,6 +39,8 @@ import {
   uploadVideo as uploadVideoMiddleware,
   requirePermission,
   requireAnyPermission,
+  requireFightManagePermission,
+  ForbiddenError,
 } from '../middleware';
 import { Permission } from '../permissions';
 
@@ -150,6 +159,65 @@ router.delete(
   handler(deleteVideo)
 );
 
+// ============================================================================
+// Fight History Routes (Read-only for boxers)
+// ============================================================================
+
+/**
+ * GET /api/v1/boxers/me/fights
+ * Get my fight history (read-only for boxers)
+ * Requires: authentication + FIGHT_READ permission
+ */
+router.get(
+  '/me/fights',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.FIGHT_READ),
+  handler(getMyFights)
+);
+
+/**
+ * POST /api/v1/boxers/me/fights
+ * DEPRECATED: Boxers can no longer create their own fight history.
+ * Use POST /api/v1/boxers/:boxerId/fights (coach/gym owner route) instead.
+ */
+router.post(
+  '/me/fights',
+  createResourceLimiter,
+  authenticate,
+  (_req, _res, next) => {
+    next(new ForbiddenError('Boxers cannot manage their own fight history. Please contact your coach or gym owner.'));
+  }
+);
+
+/**
+ * PUT /api/v1/boxers/me/fights/:id
+ * DEPRECATED: Boxers can no longer update their own fight history.
+ * Use PUT /api/v1/boxers/:boxerId/fights/:fightId (coach/gym owner route) instead.
+ */
+router.put(
+  '/me/fights/:id',
+  standardLimiter,
+  authenticate,
+  (_req, _res, next) => {
+    next(new ForbiddenError('Boxers cannot manage their own fight history. Please contact your coach or gym owner.'));
+  }
+);
+
+/**
+ * DELETE /api/v1/boxers/me/fights/:id
+ * DEPRECATED: Boxers can no longer delete their own fight history.
+ * Use DELETE /api/v1/boxers/:boxerId/fights/:fightId (coach/gym owner route) instead.
+ */
+router.delete(
+  '/me/fights/:id',
+  standardLimiter,
+  authenticate,
+  (_req, _res, next) => {
+    next(new ForbiddenError('Boxers cannot manage their own fight history. Please contact your coach or gym owner.'));
+  }
+);
+
 /**
  * POST /api/v1/boxers
  * Create or complete boxer profile
@@ -235,6 +303,73 @@ router.get(
   standardLimiter,
   optionalAuth,
   handler(getBoxerVideos)
+);
+
+/**
+ * GET /api/v1/boxers/:id/fights
+ * Get fight history for a boxer (public)
+ * Optional auth for future personalization
+ */
+router.get(
+  '/:id/fights',
+  standardLimiter,
+  optionalAuth,
+  handler(getBoxerFights)
+);
+
+// ============================================================================
+// Coach/Gym Owner Fight Management Routes
+// ============================================================================
+
+/**
+ * POST /api/v1/boxers/:boxerId/fights
+ * Create a fight history entry for a linked boxer
+ * Requires: authentication + FIGHT_MANAGE_LINKED permission
+ * Authorized for:
+ * - Coaches with MANAGE_FIGHT_HISTORY or FULL_ACCESS permission for the boxer
+ * - Gym owners for boxers in their club
+ * - Admins (full access)
+ */
+router.post(
+  '/:boxerId/fights',
+  createResourceLimiter,
+  authenticate,
+  requireFightManagePermission('boxerId'),
+  handler(createFightForBoxer)
+);
+
+/**
+ * PUT /api/v1/boxers/:boxerId/fights/:fightId
+ * Update a fight history entry for a linked boxer
+ * Requires: authentication + FIGHT_MANAGE_LINKED permission
+ * Authorized for:
+ * - Coaches with MANAGE_FIGHT_HISTORY or FULL_ACCESS permission for the boxer
+ * - Gym owners for boxers in their club
+ * - Admins (full access)
+ */
+router.put(
+  '/:boxerId/fights/:fightId',
+  standardLimiter,
+  authenticate,
+  requireFightManagePermission('boxerId'),
+  handler(updateFightForBoxer)
+);
+
+/**
+ * DELETE /api/v1/boxers/:boxerId/fights/:fightId
+ * Delete a fight history entry for a linked boxer
+ * Requires: authentication + FIGHT_MANAGE_LINKED permission
+ * Authorized for:
+ * - Coaches with MANAGE_FIGHT_HISTORY or FULL_ACCESS permission for the boxer
+ * - Gym owners for boxers in their club
+ * - Admins (full access)
+ */
+router.delete(
+  '/:boxerId/fights/:fightId',
+  standardLimiter,
+  authenticate,
+  requireFightManagePermission('boxerId'),
+  handler(deleteFightForBoxer)
 );
 
 export default router;

@@ -21,7 +21,7 @@ export interface PermissionContext {
 }
 
 export interface ResourceContext {
-  resourceType: 'boxer' | 'club' | 'availability' | 'matchRequest';
+  resourceType: 'boxer' | 'club' | 'availability' | 'matchRequest' | 'fightHistory';
   resourceId: string;
 }
 
@@ -175,6 +175,9 @@ async function checkResourcePermission(
 
     case 'matchRequest':
       return checkMatchRequestPermission(context, permission, resourceId);
+
+    case 'fightHistory':
+      return checkFightHistoryPermission(context, permission, resourceId);
 
     default:
       return { allowed: true };
@@ -450,6 +453,93 @@ async function checkMatchRequestPermission(
   return { allowed: true };
 }
 
+/**
+ * Check permission for fight history resource
+ * Used when checking permission for a specific fight by its ID
+ */
+async function checkFightHistoryPermission(
+  context: PermissionContext,
+  _permission: Permission,
+  fightId: string
+): Promise<PermissionCheckResult> {
+  // Get the fight to find the boxer
+  const fight = await prisma.fightHistory.findUnique({
+    where: { id: fightId },
+    select: { boxerId: true },
+  });
+
+  if (!fight) {
+    return {
+      allowed: false,
+      reason: 'Fight not found',
+    };
+  }
+
+  // Delegate to boxer-based permission check
+  return checkFightManagePermissionForBoxer(context, fight.boxerId);
+}
+
+/**
+ * Check if a user can manage a specific boxer's fight history.
+ * Used for routes like POST/PUT/DELETE /boxers/:boxerId/fights
+ *
+ * Authorization rules:
+ * - Coaches: Must have MANAGE_FIGHT_HISTORY or FULL_ACCESS permission for the boxer
+ * - Gym Owners: Boxer must be a member of their club
+ * - Admins: Full access
+ * - Boxers: Cannot manage their own fights (read-only)
+ */
+export async function checkFightManagePermissionForBoxer(
+  context: PermissionContext,
+  boxerId: string
+): Promise<PermissionCheckResult> {
+  // Admin can manage any boxer's fights
+  if (context.role === UserRole.ADMIN) {
+    return { allowed: true };
+  }
+
+  // Coach with MANAGE_FIGHT_HISTORY or FULL_ACCESS permission
+  if (context.role === UserRole.COACH) {
+    const hasPermission = await checkCoachBoxerPermission(
+      context.userId,
+      boxerId,
+      CoachPermission.MANAGE_FIGHT_HISTORY
+    );
+    if (hasPermission) {
+      return { allowed: true };
+    }
+    return {
+      allowed: false,
+      reason: 'You do not have permission to manage this boxer\'s fight history',
+    };
+  }
+
+  // Gym owner for club members
+  if (context.role === UserRole.GYM_OWNER) {
+    const isInOwnedClub = await isBoxerInOwnedClub(context.userId, boxerId);
+    if (isInOwnedClub) {
+      return { allowed: true };
+    }
+    return {
+      allowed: false,
+      reason: 'You can only manage fight history for boxers in your club',
+    };
+  }
+
+  // Boxers cannot manage their own fights
+  if (context.role === UserRole.BOXER) {
+    return {
+      allowed: false,
+      reason: 'Boxers cannot manage their own fight history. Please contact your coach or gym owner.',
+    };
+  }
+
+  return {
+    allowed: false,
+    reason: 'Not authorized to manage this boxer\'s fight history',
+  };
+}
+
 // ============================================================================
 // Helper Functions (with caching)
 // ============================================================================
@@ -666,6 +756,7 @@ export default {
   hasPermission,
   hasAnyPermission,
   hasAllPermissions,
+  checkFightManagePermissionForBoxer,
   invalidateUserPermissionCache,
   invalidateBoxerPermissionCache,
   invalidateClubPermissionCache,

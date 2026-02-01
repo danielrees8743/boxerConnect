@@ -66,3 +66,20 @@ export {
   uploadPhoto,
   removePhoto,
 } from './profilePhoto.controller';
+
+// Video Controller
+export {
+  uploadVideo,
+  deleteVideo,
+  getMyVideos,
+  getBoxerVideos,
+} from './video.controller';
+
+// Fight History Controller
+export {
+  createFight,
+  getMyFights,
+  updateFight,
+  deleteFight,
+  getBoxerFights,
+} from './fightHistory.controller';
