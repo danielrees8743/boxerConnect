@@ -17,10 +17,12 @@ API endpoints for managing boxer profile photos.
 
 The Profile Photo API allows authenticated boxers to upload and manage their profile photos. All uploaded images are automatically processed for consistency and security:
 
+- **Storage**: Files stored in Supabase Storage with global CDN delivery
 - **Format**: Converted to WebP for optimal file size
 - **Dimensions**: Resized to fit within 400x400 pixels (aspect ratio preserved)
 - **Metadata**: EXIF and other metadata stripped for privacy and security
 - **Quality**: Compressed at 80% quality for balance between size and clarity
+- **Size Limit**: 5 MB maximum per photo
 
 ---
 
@@ -87,7 +89,7 @@ const response = await fetch('/api/v1/boxers/me/photo', {
 {
   "success": true,
   "data": {
-    "profilePhotoUrl": "/uploads/profile-photos/550e8400-e29b-41d4-a716-446655440000.webp",
+    "profilePhotoUrl": "https://project.supabase.co/storage/v1/object/public/boxer-photos/profile-photos/550e8400-e29b-41d4-a716-446655440000.webp",
     "size": 12345,
     "mimeType": "image/webp"
   },
@@ -97,9 +99,11 @@ const response = await fetch('/api/v1/boxers/me/photo', {
 
 | Field | Type | Description |
 |-------|------|-------------|
-| profilePhotoUrl | string | URL path to access the uploaded photo |
+| profilePhotoUrl | string | Public URL to access the uploaded photo (Supabase CDN) |
 | size | number | Size of the processed image in bytes |
 | mimeType | string | MIME type of the stored image (always `image/webp`) |
+
+**Note**: The URL is a public CDN URL served by Supabase Storage for fast global access.
 
 ---
 

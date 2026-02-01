@@ -10,6 +10,7 @@ export {
   rateLimitConfig,
   corsConfig,
   loggingConfig,
+  supabaseEnvConfig,
 } from './env';
 
 export {
@@ -45,3 +46,10 @@ export {
   type AllowedMimeType,
   type AllowedVideoMimeType,
 } from './storage';
+
+export {
+  getSupabaseClient,
+  getSupabaseAdminClient,
+  supabaseConfig,
+  testSupabaseConnection,
+} from './supabase';

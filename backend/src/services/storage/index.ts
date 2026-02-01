@@ -3,23 +3,25 @@
 
 export type { StorageService, StorageResult, UploadOptions } from './storage.interface';
 export { localStorageService } from './localStorage.service';
+export { supabaseStorageService } from './supabaseStorage.service';
 
 // ============================================================================
 // Storage Service Factory
 // ============================================================================
 
 import { localStorageService } from './localStorage.service';
+import { supabaseStorageService } from './supabaseStorage.service';
 import type { StorageService } from './storage.interface';
 
 /**
  * Storage provider types
  * Extend this enum when adding new storage providers (e.g., S3, GCS)
  */
-export type StorageProvider = 'local' | 's3';
+export type StorageProvider = 'local' | 'supabase' | 's3';
 
 /**
  * Get the storage service instance
- * Currently returns local storage; extend for other providers
+ * Supports local and Supabase storage; extend for other providers
  * @param provider - Storage provider type (default: 'local')
  * @returns StorageService implementation
  */
@@ -27,6 +29,8 @@ export function getStorageService(provider: StorageProvider = 'local'): StorageS
   switch (provider) {
     case 'local':
       return localStorageService;
+    case 'supabase':
+      return supabaseStorageService;
     case 's3':
       // TODO: Implement S3 storage service
       throw new Error('S3 storage not yet implemented');
@@ -36,9 +40,18 @@ export function getStorageService(provider: StorageProvider = 'local'): StorageS
 }
 
 /**
- * Default storage service instance
- * Uses local storage for now
+ * Get storage provider from environment variable
+ * Defaults to 'local' if STORAGE_PROVIDER is not set
  */
-export const storageService = getStorageService('local');
+function getStorageProvider(): StorageProvider {
+  const provider = process.env['STORAGE_PROVIDER'] as StorageProvider | undefined;
+  return provider && ['local', 'supabase', 's3'].includes(provider) ? provider : 'local';
+}
+
+/**
+ * Default storage service instance
+ * Uses provider specified in STORAGE_PROVIDER env variable (defaults to 'local')
+ */
+export const storageService = getStorageService(getStorageProvider());
 
 export default storageService;

@@ -7,8 +7,8 @@ A modern web platform that connects boxers with sparring partners and facilitate
 ### Backend
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js with TypeScript
-- **Database**: PostgreSQL 15 with Prisma ORM
-- **Cache/Sessions**: Redis 7
+- **Database**: Supabase (PostgreSQL) with Prisma ORM
+- **Storage**: Supabase Storage (profile photos, videos)
 - **Authentication**: JWT (access + refresh tokens)
 - **Validation**: Zod
 - **Security**: Helmet, CORS, Rate Limiting
@@ -29,8 +29,8 @@ Before you begin, ensure you have the following installed:
 
 - **Node.js** 18.0.0 or higher
 - **npm** or **yarn**
-- **Docker** and **Docker Compose** (for local development databases)
 - **Git**
+- **Supabase Account** (free tier available at https://supabase.com)
 
 ## Quick Start
 
@@ -41,19 +41,56 @@ git clone <repository-url>
 cd BoxerConnect
 ```
 
-### 2. One-Command Setup (Recommended)
+### 2. Supabase Setup
 
-The easiest way to get started:
+Create and configure your Supabase project:
+
+1. **Create a Supabase project** at https://supabase.com
+2. **Create storage buckets**:
+   - `boxer-photos` (public, 5MB file size limit)
+   - `boxer-videos` (public, 100MB file size limit)
+3. **Get your credentials** from Dashboard > Settings > API
+
+For detailed setup instructions, see [Supabase Setup Guide](docs/SUPABASE_SETUP.md).
+
+### 3. Install Dependencies
 
 ```bash
-# First time setup - installs all dependencies, starts Docker, and sets up the database
-npm run setup
-
-# Start the application (Docker + backend + frontend)
-npm run start
+# Install all dependencies (root, backend, frontend)
+npm run install:all
 ```
 
-That's it! The app will be available at:
+### 4. Configure Environment Variables
+
+```bash
+# Backend configuration
+cd backend
+cp .env.example .env
+
+# Edit .env and add your Supabase credentials:
+# - SUPABASE_URL
+# - SUPABASE_ANON_KEY
+# - SUPABASE_SERVICE_ROLE_KEY
+# - Set STORAGE_PROVIDER=supabase
+```
+
+See the [Environment Variables](#environment-variables) section below for complete configuration details.
+
+### 5. Setup Database
+
+```bash
+# Generate Prisma client and push schema to Supabase
+npm run db:setup
+```
+
+### 6. Start the Application
+
+```bash
+# Start both backend and frontend
+npm run dev
+```
+
+The app will be available at:
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:3001
 
@@ -61,30 +98,15 @@ That's it! The app will be available at:
 
 | Command | Description |
 |---------|-------------|
-| `npm run setup` | First-time setup (install deps, start Docker, setup DB) |
-| `npm run start` | Start Docker containers + both servers |
-| `npm run dev` | Start both servers (assumes Docker is already running) |
-| `npm run stop` | Stop Docker containers |
-| `npm run docker:up` | Start only Docker containers |
-| `npm run docker:down` | Stop Docker containers |
+| `npm run dev` | Start both backend and frontend servers |
 | `npm run install:all` | Install all dependencies (root, backend, frontend) |
-| `npm run db:setup` | Generate Prisma client and push schema to DB |
+| `npm run db:setup` | Generate Prisma client and push schema to database |
 
-### Manual Setup (Alternative)
+### Alternative: Step-by-Step Setup
 
 If you prefer to set up each component manually:
 
-#### Start Infrastructure Services
-
-```bash
-docker-compose up -d
-```
-
-This will start:
-- PostgreSQL on port `5432`
-- Redis on port `6379`
-
-#### Setup Backend
+#### Backend
 
 ```bash
 cd backend
@@ -92,14 +114,16 @@ cd backend
 # Install dependencies
 npm install
 
-# Copy environment template and configure
+# Copy environment template
 cp .env.example .env
+
+# Edit .env with your Supabase credentials
 
 # Generate Prisma client
 npm run prisma:generate
 
-# Run database migrations
-npm run prisma:migrate
+# Push database schema to Supabase
+npm run prisma:db:push
 
 # Start development server
 npm run dev
@@ -107,7 +131,7 @@ npm run dev
 
 The backend API will be available at `http://localhost:3001`
 
-#### Setup Frontend
+#### Frontend
 
 ```bash
 cd frontend
@@ -171,12 +195,12 @@ BoxerConnect/
 │   ├── API.md                 # API documentation
 │   ├── DATABASE.md            # Database schema documentation
 │   ├── DEVELOPMENT.md         # Development guide
+│   ├── SUPABASE_SETUP.md      # Supabase setup guide
 │   ├── api/                   # Endpoint-specific documentation
 │   │   └── profile-photo.md   # Profile photo upload API
 │   └── architecture/          # Architecture documentation
 │       └── storage.md         # Storage system architecture
 │
-├── docker-compose.yml          # Docker services configuration
 └── README.md                   # This file
 ```
 
@@ -221,13 +245,16 @@ Create a `.env` file in the `/backend` directory:
 # Server Configuration
 NODE_ENV=development
 PORT=3001
-HOST=0.0.0.0
+HOST=localhost
 
-# Database (PostgreSQL)
-DATABASE_URL=postgresql://boxer:boxer_dev_password@localhost:5432/boxerconnect
+# Supabase Database
+DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
 
-# Redis
-REDIS_URL=redis://localhost:6379
+# Supabase Configuration
+STORAGE_PROVIDER=supabase
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # JWT Authentication (use strong random secrets in production)
 JWT_SECRET=your-super-secret-jwt-key-min-32-chars
@@ -245,6 +272,8 @@ CORS_ORIGIN=http://localhost:5173
 # Logging
 LOG_LEVEL=info
 ```
+
+**Important:** Replace the placeholder values with your actual Supabase credentials. See [Supabase Setup Guide](docs/SUPABASE_SETUP.md) for details on obtaining these values.
 
 ### Frontend
 
@@ -330,8 +359,10 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ---
 
 For more detailed documentation:
+- [Supabase Setup Guide](docs/SUPABASE_SETUP.md) - Complete Supabase configuration guide
 - [API Documentation](docs/API.md)
 - [Profile Photo API](docs/api/profile-photo.md)
 - [Database Schema](docs/DATABASE.md)
 - [Development Guide](docs/DEVELOPMENT.md)
 - [Storage Architecture](docs/architecture/storage.md)
+- [Migration Scripts](backend/scripts/README.md) - Database and file migration tools
