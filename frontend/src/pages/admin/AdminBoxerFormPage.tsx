@@ -219,7 +219,25 @@ export const AdminBoxerFormPage: React.FC = () => {
 
       <Card className="max-w-3xl">
         <CardHeader>
-          <CardTitle>Boxer Information</CardTitle>
+          <div className="flex items-center gap-4">
+            {isEditing && selectedBoxer?.profilePhotoUrl && (
+              <div className="h-20 w-20 rounded-full overflow-hidden bg-muted flex-shrink-0 border-2 border-border">
+                <img
+                  src={selectedBoxer.profilePhotoUrl}
+                  alt={selectedBoxer.name}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
+            <div>
+              <CardTitle>Boxer Information</CardTitle>
+              {isEditing && selectedBoxer && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  {selectedBoxer.name} &bull; {selectedBoxer.wins}-{selectedBoxer.losses}-{selectedBoxer.draws}
+                </p>
+              )}
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           {error && (
