@@ -296,6 +296,160 @@ export async function getBoxerFights(boxerId: string): Promise<FightHistoryListR
 }
 
 // ============================================================================
+// Coach/Gym Owner Methods - For managing linked boxer's fights
+// ============================================================================
+
+/**
+ * Create a new fight history entry for a specific boxer.
+ * Used by coaches and gym owners to manage their linked boxer's fights.
+ * Authorization is handled by the controller/middleware.
+ *
+ * @param boxerId - The ID of the boxer
+ * @param data - The fight history data
+ * @returns The created fight history entry
+ */
+export async function createFightForBoxer(
+  boxerId: string,
+  data: CreateFightHistoryInput
+): Promise<FightHistoryResult> {
+  const boxer = await prisma.boxer.findUnique({
+    where: { id: boxerId },
+    select: { id: true },
+  });
+
+  if (!boxer) {
+    throw new Error('Boxer not found');
+  }
+
+  const fight = await prisma.$transaction(async (tx) => {
+    const newFight = await tx.fightHistory.create({
+      data: {
+        boxerId: boxer.id,
+        opponentName: data.opponentName,
+        date: new Date(data.date),
+        venue: data.venue || null,
+        result: data.result,
+        method: data.method || null,
+        round: data.round || null,
+        notes: data.notes || null,
+      },
+    });
+
+    await recalculateBoxerRecord(boxer.id, tx);
+
+    return newFight;
+  });
+
+  return mapToResult(fight);
+}
+
+/**
+ * Update a fight history entry for a specific boxer.
+ * Used by coaches and gym owners to manage their linked boxer's fights.
+ * Authorization is handled by the controller/middleware.
+ *
+ * @param boxerId - The ID of the boxer (for verification)
+ * @param fightId - The ID of the fight to update
+ * @param data - The update data
+ * @returns The updated fight history entry
+ */
+export async function updateFightForBoxer(
+  boxerId: string,
+  fightId: string,
+  data: UpdateFightHistoryInput
+): Promise<FightHistoryResult> {
+  const boxer = await prisma.boxer.findUnique({
+    where: { id: boxerId },
+    select: { id: true },
+  });
+
+  if (!boxer) {
+    throw new Error('Boxer not found');
+  }
+
+  const existingFight = await prisma.fightHistory.findUnique({
+    where: { id: fightId },
+  });
+
+  if (!existingFight) {
+    throw new Error('Fight not found');
+  }
+
+  // Verify the fight belongs to the specified boxer
+  if (existingFight.boxerId !== boxer.id) {
+    throw new Error('Fight does not belong to this boxer');
+  }
+
+  const resultChanged = data.result !== undefined && data.result !== existingFight.result;
+
+  const fight = await prisma.$transaction(async (tx) => {
+    const updatedFight = await tx.fightHistory.update({
+      where: { id: fightId },
+      data: {
+        ...(data.opponentName !== undefined && { opponentName: data.opponentName }),
+        ...(data.date !== undefined && { date: new Date(data.date) }),
+        ...(data.venue !== undefined && { venue: data.venue }),
+        ...(data.result !== undefined && { result: data.result }),
+        ...(data.method !== undefined && { method: data.method }),
+        ...(data.round !== undefined && { round: data.round }),
+        ...(data.notes !== undefined && { notes: data.notes }),
+      },
+    });
+
+    if (resultChanged) {
+      await recalculateBoxerRecord(boxer.id, tx);
+    }
+
+    return updatedFight;
+  });
+
+  return mapToResult(fight);
+}
+
+/**
+ * Delete a fight history entry for a specific boxer.
+ * Used by coaches and gym owners to manage their linked boxer's fights.
+ * Authorization is handled by the controller/middleware.
+ *
+ * @param boxerId - The ID of the boxer (for verification)
+ * @param fightId - The ID of the fight to delete
+ */
+export async function deleteFightForBoxer(
+  boxerId: string,
+  fightId: string
+): Promise<void> {
+  const boxer = await prisma.boxer.findUnique({
+    where: { id: boxerId },
+    select: { id: true },
+  });
+
+  if (!boxer) {
+    throw new Error('Boxer not found');
+  }
+
+  const existingFight = await prisma.fightHistory.findUnique({
+    where: { id: fightId },
+  });
+
+  if (!existingFight) {
+    throw new Error('Fight not found');
+  }
+
+  // Verify the fight belongs to the specified boxer
+  if (existingFight.boxerId !== boxer.id) {
+    throw new Error('Fight does not belong to this boxer');
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.fightHistory.delete({
+      where: { id: fightId },
+    });
+
+    await recalculateBoxerRecord(boxer.id, tx);
+  });
+}
+
+// ============================================================================
 // Export
 // ============================================================================
 
@@ -305,4 +459,7 @@ export default {
   updateFight,
   deleteFight,
   getBoxerFights,
+  createFightForBoxer,
+  updateFightForBoxer,
+  deleteFightForBoxer,
 };

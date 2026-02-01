@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyBoxer, updateBoxer, createBoxer } from '@/features/boxer/boxerSlice';
 import { BoxerProfile, BoxerForm, VideoUpload, VideoList, FightHistoryList } from '@/components/boxer';
@@ -65,39 +65,19 @@ export const ProfilePage: React.FC = () => {
   }, [myBoxer]);
 
   // Handle video upload
-  const handleVideoUploaded = useCallback((video: BoxerVideo) => {
+  const handleVideoUploaded = (video: BoxerVideo) => {
     setVideos((prev) => [video, ...prev]);
     setVideoCount((prev) => prev + 1);
-  }, []);
+  };
 
   // Handle video deletion
-  const handleVideoDeleted = useCallback((videoId: string) => {
+  const handleVideoDeleted = (videoId: string) => {
     setVideos((prev) => prev.filter((v) => v.id !== videoId));
     setVideoCount((prev) => prev - 1);
-  }, []);
+  };
 
-  // Handle fight created - add to list and refetch boxer to update record
-  const handleFightCreated = useCallback((fight: FightHistory) => {
-    setFights((prev) => [fight, ...prev]);
-    // Refetch boxer profile to get updated wins/losses/draws
-    dispatch(fetchMyBoxer());
-  }, [dispatch]);
-
-  // Handle fight updated - update in list and refetch boxer if result might have changed
-  const handleFightUpdated = useCallback((updatedFight: FightHistory) => {
-    setFights((prev) =>
-      prev.map((f) => (f.id === updatedFight.id ? updatedFight : f))
-    );
-    // Refetch boxer profile to get updated wins/losses/draws
-    dispatch(fetchMyBoxer());
-  }, [dispatch]);
-
-  // Handle fight deleted - remove from list and refetch boxer to update record
-  const handleFightDeleted = useCallback((fightId: string) => {
-    setFights((prev) => prev.filter((f) => f.id !== fightId));
-    // Refetch boxer profile to get updated wins/losses/draws
-    dispatch(fetchMyBoxer());
-  }, [dispatch]);
+  // Note: Fight management callbacks removed - boxers can no longer manage their own fights.
+  // Fight history is now managed by coaches and gym owners only.
 
   // Handle creating/updating boxer profile
   const handleSubmit = async (data: CreateBoxerData | UpdateBoxerData) => {
@@ -174,14 +154,11 @@ export const ProfilePage: React.FC = () => {
         onEdit={() => setIsEditing(true)}
       />
 
-      {/* Fight History Section */}
+      {/* Fight History Section (read-only for boxers - managed by coaches/gym owners) */}
       {myBoxer && (
         <FightHistoryList
           fights={fights}
-          isOwner={true}
-          onFightCreated={handleFightCreated}
-          onFightUpdated={handleFightUpdated}
-          onFightDeleted={handleFightDeleted}
+          canManageFights={false}
           isLoading={fightsLoading}
         />
       )}

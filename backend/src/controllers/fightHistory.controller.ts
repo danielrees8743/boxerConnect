@@ -8,6 +8,9 @@ import {
   updateFight as updateFightService,
   deleteFight as deleteFightService,
   getBoxerFights as getBoxerFightsService,
+  createFightForBoxer as createFightForBoxerService,
+  updateFightForBoxer as updateFightForBoxerService,
+  deleteFightForBoxer as deleteFightForBoxerService,
 } from '../services/fightHistory.service';
 import {
   createFightHistorySchema,
@@ -206,6 +209,166 @@ export async function getBoxerFights(
 }
 
 // ============================================================================
+// Coach/Gym Owner Methods - For managing linked boxer's fights
+// ============================================================================
+
+/**
+ * Create a fight history entry for a specific boxer
+ * POST /api/v1/boxers/:boxerId/fights
+ * Requires FIGHT_MANAGE_LINKED permission (coach/gym owner only)
+ */
+export async function createFightForBoxer(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { boxerId } = req.params;
+
+    if (!boxerId) {
+      return next(new BadRequestError('Boxer ID is required'));
+    }
+
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(boxerId)) {
+      return next(new BadRequestError('Invalid boxer ID format'));
+    }
+
+    const validationResult = createFightHistorySchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return next(
+        new BadRequestError(
+          validationResult.error.errors[0]?.message || 'Invalid request data'
+        )
+      );
+    }
+
+    const result = await createFightForBoxerService(boxerId, validationResult.data);
+
+    sendCreated(
+      res,
+      { fight: result },
+      'Fight history created successfully'
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Boxer not found') {
+        return next(new NotFoundError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
+/**
+ * Update a fight history entry for a specific boxer
+ * PUT /api/v1/boxers/:boxerId/fights/:fightId
+ * Requires FIGHT_MANAGE_LINKED permission (coach/gym owner only)
+ */
+export async function updateFightForBoxer(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { boxerId, fightId } = req.params;
+
+    if (!boxerId) {
+      return next(new BadRequestError('Boxer ID is required'));
+    }
+
+    if (!fightId) {
+      return next(new BadRequestError('Fight ID is required'));
+    }
+
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(boxerId)) {
+      return next(new BadRequestError('Invalid boxer ID format'));
+    }
+    if (!uuidRegex.test(fightId)) {
+      return next(new BadRequestError('Invalid fight ID format'));
+    }
+
+    const bodyValidation = updateFightHistorySchema.safeParse(req.body);
+    if (!bodyValidation.success) {
+      return next(
+        new BadRequestError(
+          bodyValidation.error.errors[0]?.message || 'Invalid request data'
+        )
+      );
+    }
+
+    const result = await updateFightForBoxerService(boxerId, fightId, bodyValidation.data);
+
+    sendSuccess(res, { fight: result }, 'Fight history updated successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Boxer not found') {
+        return next(new NotFoundError(error.message));
+      }
+      if (error.message === 'Fight not found') {
+        return next(new NotFoundError(error.message));
+      }
+      if (error.message === 'Fight does not belong to this boxer') {
+        return next(new ForbiddenError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
+/**
+ * Delete a fight history entry for a specific boxer
+ * DELETE /api/v1/boxers/:boxerId/fights/:fightId
+ * Requires FIGHT_MANAGE_LINKED permission (coach/gym owner only)
+ */
+export async function deleteFightForBoxer(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { boxerId, fightId } = req.params;
+
+    if (!boxerId) {
+      return next(new BadRequestError('Boxer ID is required'));
+    }
+
+    if (!fightId) {
+      return next(new BadRequestError('Fight ID is required'));
+    }
+
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(boxerId)) {
+      return next(new BadRequestError('Invalid boxer ID format'));
+    }
+    if (!uuidRegex.test(fightId)) {
+      return next(new BadRequestError('Invalid fight ID format'));
+    }
+
+    await deleteFightForBoxerService(boxerId, fightId);
+
+    sendSuccess(res, null, 'Fight history deleted successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Boxer not found') {
+        return next(new NotFoundError(error.message));
+      }
+      if (error.message === 'Fight not found') {
+        return next(new NotFoundError(error.message));
+      }
+      if (error.message === 'Fight does not belong to this boxer') {
+        return next(new ForbiddenError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
+// ============================================================================
 // Export
 // ============================================================================
 
@@ -215,4 +378,7 @@ export default {
   updateFight,
   deleteFight,
   getBoxerFights,
+  createFightForBoxer,
+  updateFightForBoxer,
+  deleteFightForBoxer,
 };

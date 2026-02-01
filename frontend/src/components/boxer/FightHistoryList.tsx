@@ -57,8 +57,10 @@ function formatMethod(method: string | null): string {
 export interface FightHistoryListProps {
   /** List of fights to display */
   fights: FightHistory[];
-  /** Whether the current user owns these fights */
-  isOwner?: boolean;
+  /** Whether the current user can manage these fights (coach/gym owner/admin) */
+  canManageFights?: boolean;
+  /** The boxer ID - required for coach/gym owner to manage fights */
+  boxerId?: string;
   /** Callback when a fight is created */
   onFightCreated?: (fight: FightHistory) => void;
   /** Callback when a fight is updated */
@@ -81,7 +83,8 @@ export interface FightHistoryListProps {
  */
 export const FightHistoryList: React.FC<FightHistoryListProps> = ({
   fights,
-  isOwner = false,
+  canManageFights = false,
+  boxerId,
   onFightCreated,
   onFightUpdated,
   onFightDeleted,
@@ -123,10 +126,22 @@ export const FightHistoryList: React.FC<FightHistoryListProps> = ({
 
     try {
       if (formMode === 'create') {
-        const newFight = await boxerService.createFight(data as CreateFightHistoryData);
+        // Coach/gym owner managing a boxer's fights
+        if (!boxerId) {
+          throw new Error('Boxer ID is required to create fights');
+        }
+        const newFight = await boxerService.createFightForBoxer(
+          boxerId,
+          data as CreateFightHistoryData
+        );
         onFightCreated?.(newFight);
       } else if (editingFight) {
-        const updatedFight = await boxerService.updateFight(
+        // Coach/gym owner updating a boxer's fights
+        if (!boxerId) {
+          throw new Error('Boxer ID is required to update fights');
+        }
+        const updatedFight = await boxerService.updateFightForBoxer(
+          boxerId,
           editingFight.id,
           data as UpdateFightHistoryData
         );
@@ -146,7 +161,11 @@ export const FightHistoryList: React.FC<FightHistoryListProps> = ({
     setDeleteError(null);
 
     try {
-      await boxerService.deleteFight(fightId);
+      // Coach/gym owner deleting a boxer's fights
+      if (!boxerId) {
+        throw new Error('Boxer ID is required to delete fights');
+      }
+      await boxerService.deleteFightForBoxer(boxerId, fightId);
       setDeleteDialogOpen(null);
       onFightDeleted?.(fightId);
     } catch (err) {
@@ -169,7 +188,7 @@ export const FightHistoryList: React.FC<FightHistoryListProps> = ({
             <Trophy className="h-5 w-5" />
             Fight History
           </CardTitle>
-          {isOwner && (
+          {canManageFights && (
             <Button onClick={handleOpenCreate} size="sm">
               <Plus className="h-4 w-4 mr-1" />
               Add Fight
@@ -188,8 +207,8 @@ export const FightHistoryList: React.FC<FightHistoryListProps> = ({
           <div className="text-center py-8">
             <Trophy className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
             <p className="text-muted-foreground">
-              {isOwner
-                ? 'No fights recorded yet. Add your first fight!'
+              {canManageFights
+                ? 'No fights recorded yet. Add the first fight!'
                 : 'No fight history available.'}
             </p>
           </div>
@@ -230,8 +249,8 @@ export const FightHistoryList: React.FC<FightHistoryListProps> = ({
                     )}
                   </div>
 
-                  {/* Action buttons for owner */}
-                  {isOwner && (
+                  {/* Action buttons for users with management permission */}
+                  {canManageFights && (
                     <div className="flex items-center gap-1">
                       <Button
                         variant="ghost"

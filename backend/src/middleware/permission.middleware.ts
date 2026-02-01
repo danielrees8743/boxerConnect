@@ -7,6 +7,7 @@ import {
   hasPermission,
   hasAnyPermission,
   hasAllPermissions,
+  checkFightManagePermissionForBoxer,
   type PermissionContext,
   type ResourceContext,
 } from '../services/permission.service';
@@ -312,4 +313,68 @@ export async function checkAnyPermissionInController(
   };
 
   return hasAnyPermission(context, permissions, resourceContext);
+}
+
+// ============================================================================
+// Fight History Management Permission Middleware
+// ============================================================================
+
+/**
+ * Middleware that checks if a user can manage a specific boxer's fight history.
+ * Uses custom authorization logic for coaches (MANAGE_FIGHT_HISTORY permission)
+ * and gym owners (boxer must be in their club).
+ *
+ * @param boxerIdParam - The request parameter name containing the boxer ID (default: 'boxerId')
+ *
+ * @example
+ * router.post('/:boxerId/fights',
+ *   authenticate,
+ *   requireFightManagePermission('boxerId'),
+ *   handler(createFightForBoxer)
+ * );
+ */
+// UUID validation regex
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function requireFightManagePermission(boxerIdParam: string = 'boxerId') {
+  return async (
+    req: AuthenticatedRequest,
+    _res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      // Check if user is authenticated
+      if (!req.user) {
+        throw new UnauthorizedError('Authentication required');
+      }
+
+      // Get boxer ID from params
+      const boxerId = req.params[boxerIdParam];
+      if (!boxerId) {
+        throw new ForbiddenError('Boxer ID is required');
+      }
+
+      // Validate UUID format before database query
+      if (!UUID_REGEX.test(boxerId)) {
+        throw new ForbiddenError('Invalid boxer ID format');
+      }
+
+      // Build permission context
+      const context: PermissionContext = {
+        userId: req.user.userId,
+        role: req.user.role,
+      };
+
+      // Check fight management permission
+      const result = await checkFightManagePermissionForBoxer(context, boxerId);
+
+      if (!result.allowed) {
+        throw new ForbiddenError(result.reason || 'Not authorized to manage this boxer\'s fight history');
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
 }

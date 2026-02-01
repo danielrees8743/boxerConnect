@@ -20,7 +20,7 @@ import { Permission } from './Permission.enum';
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   // ============================================================================
   // BOXER Role
-  // Fighters - can view/update their own profile, but do NOT manage matches/availability
+  // Fighters - can view/update their own profile, but do NOT manage matches/availability/fights
   // ============================================================================
   [UserRole.BOXER]: [
     // Boxer profile management (self-service)
@@ -32,11 +32,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.BOXER_UPLOAD_PHOTO,
     Permission.BOXER_UPLOAD_VIDEO,
 
-    // Fight history management (self-service)
-    Permission.FIGHT_CREATE,
+    // Fight history (read-only for boxers - coaches/gym owners manage)
     Permission.FIGHT_READ,
-    Permission.FIGHT_UPDATE,
-    Permission.FIGHT_DELETE,
 
     // Can VIEW their own matches/availability (read-only)
     Permission.MATCH_READ_OWN_REQUESTS,
@@ -46,13 +43,13 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.CLUB_READ_PUBLIC,
     Permission.CLUB_READ_MEMBERS,
 
-    // NOTE: Boxers CANNOT create/accept/decline matches or manage availability
-    // That's handled by their coach or gym owner
+    // NOTE: Boxers CANNOT create/accept/decline matches, manage availability,
+    // or manage fight history. That's handled by their coach or gym owner.
   ],
 
   // ============================================================================
   // COACH Role
-  // Trainers - manage linked boxers' matches, availability, and profiles
+  // Trainers - manage linked boxers' matches, availability, fight history, and profiles
   // ============================================================================
   [UserRole.COACH]: [
     // Can view/manage linked boxers
@@ -72,6 +69,10 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.AVAILABILITY_UPDATE,
     Permission.AVAILABILITY_DELETE,
 
+    // Manage boxer's fight history (on their behalf)
+    Permission.FIGHT_READ,
+    Permission.FIGHT_MANAGE_LINKED,
+
     // Coach-specific operations
     Permission.COACH_LINK_BOXER,
     Permission.COACH_UNLINK_BOXER,
@@ -84,7 +85,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
 
   // ============================================================================
   // GYM_OWNER Role
-  // Club managers - manage club members, can also manage boxer matches/availability
+  // Club managers - manage club members, can also manage boxer matches/availability/fights
   // ============================================================================
   [UserRole.GYM_OWNER]: [
     // Can view boxer profiles
@@ -102,6 +103,10 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.AVAILABILITY_READ,
     Permission.AVAILABILITY_UPDATE,
     Permission.AVAILABILITY_DELETE,
+
+    // Manage boxer's fight history (for club members)
+    Permission.FIGHT_READ,
+    Permission.FIGHT_MANAGE_LINKED,
 
     // Club management
     Permission.CLUB_READ_PUBLIC,

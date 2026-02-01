@@ -47,6 +47,9 @@ export enum Permission {
   /** Delete a fight history entry */
   FIGHT_DELETE = 'fight:delete',
 
+  /** Manage a linked boxer's fight history (coach/gym owner) */
+  FIGHT_MANAGE_LINKED = 'fight:manage:linked',
+
   // ============================================================================
   // Match Request Operations
   // ============================================================================

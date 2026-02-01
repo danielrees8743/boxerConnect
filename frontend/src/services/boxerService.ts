@@ -158,20 +158,6 @@ export const boxerService = {
   // ============================================================================
 
   /**
-   * Create a new fight history entry for the current user's boxer profile.
-   */
-  async createFight(data: CreateFightHistoryData): Promise<FightHistory> {
-    const response = await apiClient.post<ApiResponse<{ fight: FightHistory }>>(
-      '/boxers/me/fights',
-      data
-    );
-    if (!response.data.data?.fight) {
-      throw new Error(response.data.message || 'Failed to create fight history');
-    }
-    return response.data.data.fight;
-  },
-
-  /**
    * Get all fight history for the current user's boxer profile.
    */
   async getMyFights(): Promise<{ fights: FightHistory[]; count: number }> {
@@ -185,24 +171,27 @@ export const boxerService = {
   },
 
   /**
-   * Update a fight history entry.
+   * @deprecated Boxers can no longer manage their own fight history.
+   * Use createFightForBoxer() instead (requires coach/gym owner role).
    */
-  async updateFight(fightId: string, data: UpdateFightHistoryData): Promise<FightHistory> {
-    const response = await apiClient.put<ApiResponse<{ fight: FightHistory }>>(
-      `/boxers/me/fights/${fightId}`,
-      data
-    );
-    if (!response.data.data?.fight) {
-      throw new Error(response.data.message || 'Failed to update fight history');
-    }
-    return response.data.data.fight;
+  async createFight(_data: CreateFightHistoryData): Promise<FightHistory> {
+    throw new Error('Boxers cannot manage their own fight history. Please contact your coach or gym owner.');
   },
 
   /**
-   * Delete a fight history entry.
+   * @deprecated Boxers can no longer manage their own fight history.
+   * Use updateFightForBoxer() instead (requires coach/gym owner role).
    */
-  async deleteFight(fightId: string): Promise<void> {
-    await apiClient.delete(`/boxers/me/fights/${fightId}`);
+  async updateFight(_fightId: string, _data: UpdateFightHistoryData): Promise<FightHistory> {
+    throw new Error('Boxers cannot manage their own fight history. Please contact your coach or gym owner.');
+  },
+
+  /**
+   * @deprecated Boxers can no longer manage their own fight history.
+   * Use deleteFightForBoxer() instead (requires coach/gym owner role).
+   */
+  async deleteFight(_fightId: string): Promise<void> {
+    throw new Error('Boxers cannot manage their own fight history. Please contact your coach or gym owner.');
   },
 
   /**
@@ -216,6 +205,52 @@ export const boxerService = {
       throw new Error(response.data.message || 'Failed to get fight history');
     }
     return response.data.data;
+  },
+
+  // ============================================================================
+  // Coach/Gym Owner Fight Management Methods
+  // ============================================================================
+
+  /**
+   * Create a fight history entry for a linked boxer (coach/gym owner only).
+   */
+  async createFightForBoxer(
+    boxerId: string,
+    data: CreateFightHistoryData
+  ): Promise<FightHistory> {
+    const response = await apiClient.post<ApiResponse<{ fight: FightHistory }>>(
+      `/boxers/${boxerId}/fights`,
+      data
+    );
+    if (!response.data.data?.fight) {
+      throw new Error(response.data.message || 'Failed to create fight history');
+    }
+    return response.data.data.fight;
+  },
+
+  /**
+   * Update a fight history entry for a linked boxer (coach/gym owner only).
+   */
+  async updateFightForBoxer(
+    boxerId: string,
+    fightId: string,
+    data: UpdateFightHistoryData
+  ): Promise<FightHistory> {
+    const response = await apiClient.put<ApiResponse<{ fight: FightHistory }>>(
+      `/boxers/${boxerId}/fights/${fightId}`,
+      data
+    );
+    if (!response.data.data?.fight) {
+      throw new Error(response.data.message || 'Failed to update fight history');
+    }
+    return response.data.data.fight;
+  },
+
+  /**
+   * Delete a fight history entry for a linked boxer (coach/gym owner only).
+   */
+  async deleteFightForBoxer(boxerId: string, fightId: string): Promise<void> {
+    await apiClient.delete(`/boxers/${boxerId}/fights/${fightId}`);
   },
 };
 
