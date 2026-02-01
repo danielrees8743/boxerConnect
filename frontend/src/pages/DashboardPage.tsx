@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Calendar, TrendingUp, ChevronRight } from 'lucide-react';
+import { Users, Calendar, TrendingUp, ChevronRight, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { fetchMyBoxer } from '@/features/boxer/boxerSlice';
 
@@ -23,7 +24,7 @@ export const DashboardPage: React.FC = () => {
 
   // Calculate profile completion
   const profileCompletion = useMemo(() => {
-    if (!myBoxer) return { percentage: 0, items: [] };
+    if (!myBoxer) return { percentage: 0, items: [], incompleteItems: [] };
 
     const items = [
       {
@@ -46,8 +47,9 @@ export const DashboardPage: React.FC = () => {
 
     const completedCount = items.filter((item) => item.completed).length;
     const percentage = Math.round((completedCount / items.length) * 100);
+    const incompleteItems = items.filter((item) => !item.completed);
 
-    return { percentage, items };
+    return { percentage, items, incompleteItems };
   }, [myBoxer]);
 
   // Stats for boxers (without pending requests - that's for gym owners)
@@ -125,6 +127,27 @@ export const DashboardPage: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* Profile Completion Alert */}
+      {profileCompletion.percentage < 100 && profileCompletion.incompleteItems.length > 0 && (
+        <Alert className="border-yellow-500/50 bg-yellow-500/10">
+          <AlertCircle className="h-4 w-4 text-yellow-500" />
+          <AlertTitle className="text-yellow-500">Complete your profile</AlertTitle>
+          <AlertDescription className="text-muted-foreground">
+            Your profile is {profileCompletion.percentage}% complete. To get more matches and visibility, please:{' '}
+            {profileCompletion.incompleteItems.map((item, index) => (
+              <span key={index}>
+                {index > 0 && (index === profileCompletion.incompleteItems.length - 1 ? ' and ' : ', ')}
+                <span className="lowercase">{item.label}</span>
+              </span>
+            ))}
+            .{' '}
+            <Link to="/profile" className="font-medium text-yellow-500 hover:underline">
+              Update now →
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-3">
