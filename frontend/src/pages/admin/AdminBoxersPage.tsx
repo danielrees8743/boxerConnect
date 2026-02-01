@@ -115,15 +115,30 @@ export const AdminBoxersPage: React.FC = () => {
 
   const columns: Column<BoxerProfile>[] = [
     {
-      header: 'Name',
+      header: 'Boxer',
       cell: (boxer) => (
-        <div>
-          <p className="font-medium">{boxer.name}</p>
-          <p className="text-sm text-muted-foreground">
-            {boxer.city && boxer.country
-              ? `${boxer.city}, ${boxer.country}`
-              : boxer.city || boxer.country || '-'}
-          </p>
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-full overflow-hidden bg-muted flex-shrink-0">
+            {boxer.profilePhotoUrl ? (
+              <img
+                src={boxer.profilePhotoUrl}
+                alt={boxer.name}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="h-full w-full flex items-center justify-center text-muted-foreground text-sm font-medium">
+                {boxer.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <div>
+            <p className="font-medium">{boxer.name}</p>
+            <p className="text-sm text-muted-foreground">
+              {boxer.city && boxer.country
+                ? `${boxer.city}, ${boxer.country}`
+                : boxer.city || boxer.country || '-'}
+            </p>
+          </div>
         </div>
       ),
     },
