@@ -3,6 +3,7 @@ import authReducer from '@/features/auth/authSlice';
 import boxerReducer from '@/features/boxer/boxerSlice';
 import matchingReducer from '@/features/matching/matchingSlice';
 import requestsReducer from '@/features/requests/requestsSlice';
+import adminReducer from '@/features/admin/adminSlice';
 
 /**
  * Redux store configuration for BoxerConnect.
@@ -14,6 +15,7 @@ export const store = configureStore({
     boxer: boxerReducer,
     matching: matchingReducer,
     requests: requestsReducer,
+    admin: adminReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
