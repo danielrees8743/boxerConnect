@@ -53,3 +53,6 @@ backend/uploads/**/*
 # Claude Code
 .claude/
 CLAUDE.md
+
+# Test credentials (do not commit)
+TEST_CREDENTIALS.md
