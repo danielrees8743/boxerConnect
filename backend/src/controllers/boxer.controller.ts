@@ -10,6 +10,8 @@ import {
   searchBoxers as searchBoxersService,
   deleteBoxer as deleteBoxerService,
 } from '../services/boxer.service';
+import { hasPermission } from '../services/coach.service';
+import { CoachPermission } from '@prisma/client';
 import {
   findCompatibleBoxers,
   getSuggestedMatches,
@@ -111,6 +113,10 @@ export async function getBoxer(
 /**
  * Update boxer profile
  * PUT /api/v1/boxers/:id
+ *
+ * Authorization:
+ * - Boxer owner can always update their own profile
+ * - Coach with EDIT_PROFILE or FULL_ACCESS permission can update their boxer's profile
  */
 export async function updateBoxer(
   req: AuthenticatedUserRequest,
@@ -122,13 +128,37 @@ export async function updateBoxer(
     const { id } = boxerIdSchema.parse(req.params);
     const validatedData = updateBoxerSchema.parse(req.body);
 
-    // Update boxer (service verifies ownership)
-    const boxer = await updateBoxerService(id, req.user.userId, validatedData);
+    // First, get the boxer to check ownership
+    const boxer = await getBoxerByIdService(id);
+    if (!boxer) {
+      return next(new NotFoundError('Boxer profile not found'));
+    }
+
+    // Check authorization: boxer owner OR coach with EDIT_PROFILE/FULL_ACCESS
+    const isOwner = boxer.userId === req.user.userId;
+    let isAuthorizedCoach = false;
+
+    if (!isOwner && req.user.role === 'COACH') {
+      isAuthorizedCoach = await hasPermission(
+        req.user.userId,
+        id,
+        CoachPermission.EDIT_PROFILE
+      );
+    }
+
+    if (!isOwner && !isAuthorizedCoach) {
+      return next(new ForbiddenError('Not authorized to update this profile'));
+    }
+
+    // Update boxer (skip ownership check since we verified above)
+    const updatedBoxer = await updateBoxerService(id, req.user.userId, validatedData, {
+      skipOwnershipCheck: isAuthorizedCoach,
+    });
 
     // Invalidate match cache since profile changed
     await invalidateMatchCache(id);
 
-    sendSuccess(res, { boxer }, 'Boxer profile updated successfully');
+    sendSuccess(res, { boxer: updatedBoxer }, 'Boxer profile updated successfully');
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === 'Boxer profile not found') {

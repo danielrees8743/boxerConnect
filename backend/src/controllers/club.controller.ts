@@ -9,10 +9,25 @@ import {
   getRegions as getRegionsService,
   searchClubsByName as searchClubsByNameService,
   getClubStats as getClubStatsService,
+  getClubWithMembers as getClubWithMembersService,
+  assignBoxerToClub as assignBoxerToClubService,
+  removeBoxerFromClub as removeBoxerFromClubService,
+  assignCoachToClub as assignCoachToClubService,
+  removeCoachFromClub as removeCoachFromClubService,
+  setClubOwner as setClubOwnerService,
+  isClubOwner as isClubOwnerService,
 } from '../services/club.service';
 import { sendSuccess, sendPaginated } from '../utils';
-import { NotFoundError } from '../middleware';
+import { NotFoundError, ForbiddenError, BadRequestError } from '../middleware';
 import { z } from 'zod';
+import type { AuthenticatedUserRequest } from '../types';
+import {
+  clubIdSchema,
+  clubBoxerParamsSchema,
+  clubCoachParamsSchema,
+  assignCoachSchema,
+  setClubOwnerSchema,
+} from '../validators/club.validators';
 
 // ============================================================================
 // Validation Schemas
@@ -24,10 +39,6 @@ const clubSearchSchema = z.object({
   postcode: z.string().optional(),
   page: z.coerce.number().int().positive().optional().default(1),
   limit: z.coerce.number().int().positive().max(100).optional().default(50),
-});
-
-const clubIdSchema = z.object({
-  id: z.string().uuid(),
 });
 
 const regionParamSchema = z.object({
@@ -188,6 +199,208 @@ export async function getClubStats(
   }
 }
 
+// ============================================================================
+// Club Member Management (Protected Routes)
+// ============================================================================
+
+/**
+ * Get club with all members
+ * GET /api/v1/clubs/:id/members
+ */
+export async function getClubMembers(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id } = clubIdSchema.parse(req.params);
+
+    const club = await getClubWithMembersService(id);
+
+    if (!club) {
+      return next(new NotFoundError('Club not found'));
+    }
+
+    sendSuccess(res, { club }, 'Club members retrieved successfully');
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Add boxer to club
+ * POST /api/v1/clubs/:id/boxers/:boxerId
+ */
+export async function addBoxerToClub(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id, boxerId } = clubBoxerParamsSchema.parse(req.params);
+
+    // Check if user is club owner or admin
+    const isOwner = await isClubOwnerService(req.user.userId, id);
+    const isAdmin = req.user.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
+      return next(new ForbiddenError('Only the club owner or admin can add boxers'));
+    }
+
+    const boxer = await assignBoxerToClubService(boxerId, id);
+
+    sendSuccess(res, { boxer }, 'Boxer added to club successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Boxer not found' || error.message === 'Club not found') {
+        return next(new NotFoundError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
+/**
+ * Remove boxer from club
+ * DELETE /api/v1/clubs/:id/boxers/:boxerId
+ */
+export async function removeBoxerFromClub(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id, boxerId } = clubBoxerParamsSchema.parse(req.params);
+
+    // Check if user is club owner or admin
+    const isOwner = await isClubOwnerService(req.user.userId, id);
+    const isAdmin = req.user.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
+      return next(new ForbiddenError('Only the club owner or admin can remove boxers'));
+    }
+
+    const boxer = await removeBoxerFromClubService(boxerId, id);
+
+    sendSuccess(res, { boxer }, 'Boxer removed from club successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Boxer not found' || error.message === 'Boxer is not a member of this club') {
+        return next(new NotFoundError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
+/**
+ * Add coach to club
+ * POST /api/v1/clubs/:id/coaches/:coachId
+ */
+export async function addCoachToClub(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id, coachId } = clubCoachParamsSchema.parse(req.params);
+    const { isHead } = assignCoachSchema.parse({ ...req.body, coachUserId: coachId });
+
+    // Check if user is club owner or admin
+    const isOwner = await isClubOwnerService(req.user.userId, id);
+    const isAdmin = req.user.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
+      return next(new ForbiddenError('Only the club owner or admin can add coaches'));
+    }
+
+    const clubCoach = await assignCoachToClubService(coachId, id, isHead);
+
+    sendSuccess(res, { clubCoach }, 'Coach added to club successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'User not found' || error.message === 'Club not found') {
+        return next(new NotFoundError(error.message));
+      }
+      if (
+        error.message === 'User is not a coach' ||
+        error.message === 'Coach is already assigned to this club' ||
+        error.message === 'Coach is already assigned to another club'
+      ) {
+        return next(new BadRequestError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
+/**
+ * Remove coach from club
+ * DELETE /api/v1/clubs/:id/coaches/:coachId
+ */
+export async function removeCoachFromClub(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id, coachId } = clubCoachParamsSchema.parse(req.params);
+
+    // Check if user is club owner or admin
+    const isOwner = await isClubOwnerService(req.user.userId, id);
+    const isAdmin = req.user.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
+      return next(new ForbiddenError('Only the club owner or admin can remove coaches'));
+    }
+
+    await removeCoachFromClubService(coachId, id);
+
+    sendSuccess(res, null, 'Coach removed from club successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Coach is not assigned to this club') {
+        return next(new NotFoundError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
+/**
+ * Set club owner (ADMIN only)
+ * PUT /api/v1/clubs/:id/owner
+ */
+export async function setClubOwner(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id } = clubIdSchema.parse(req.params);
+    const { ownerUserId } = setClubOwnerSchema.parse(req.body);
+
+    // Only admin can set club owner
+    if (req.user.role !== 'ADMIN') {
+      return next(new ForbiddenError('Only admins can set club ownership'));
+    }
+
+    const club = await setClubOwnerService(id, ownerUserId);
+
+    sendSuccess(res, { club }, 'Club owner set successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'User not found' || error.message === 'Club not found') {
+        return next(new NotFoundError(error.message));
+      }
+      if (error.message === 'User must be a GYM_OWNER to own a club') {
+        return next(new BadRequestError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
 // Export all controller methods
 export default {
   getClubs,
@@ -196,4 +409,10 @@ export default {
   getRegions,
   searchClubs,
   getClubStats,
+  getClubMembers,
+  addBoxerToClub,
+  removeBoxerFromClub,
+  addCoachToClub,
+  removeCoachFromClub,
+  setClubOwner,
 };
