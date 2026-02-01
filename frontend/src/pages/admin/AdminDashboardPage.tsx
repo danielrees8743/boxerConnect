@@ -72,6 +72,7 @@ export const AdminDashboardPage: React.FC = () => {
           value={stats?.totalUsers ?? 0}
           icon={Users}
           description={`${stats?.activeUsers ?? 0} active users`}
+          href="/admin/users"
         />
         <StatsCard
           title="Total Boxers"
@@ -79,6 +80,7 @@ export const AdminDashboardPage: React.FC = () => {
           icon={UserCircle}
           description={`${stats?.verifiedBoxers ?? 0} verified`}
           iconClassName="bg-boxing-gold-100 text-boxing-gold-600"
+          href="/admin/boxers"
         />
         <StatsCard
           title="Total Clubs"
@@ -86,12 +88,14 @@ export const AdminDashboardPage: React.FC = () => {
           icon={Building2}
           description={`${stats?.verifiedClubs ?? 0} verified`}
           iconClassName="bg-blue-100 text-blue-600"
+          href="/admin/clubs"
         />
         <StatsCard
           title="Pending Verifications"
           value={stats?.pendingVerifications ?? 0}
           icon={Clock}
           iconClassName="bg-yellow-100 text-yellow-600"
+          href="/admin/boxers?isVerified=false"
         />
       </div>
 
@@ -102,18 +106,21 @@ export const AdminDashboardPage: React.FC = () => {
           value={stats?.totalCoaches ?? 0}
           icon={Briefcase}
           iconClassName="bg-green-100 text-green-600"
+          href="/admin/users?role=COACH"
         />
         <StatsCard
           title="Gym Owners"
           value={stats?.totalGymOwners ?? 0}
           icon={Building2}
           iconClassName="bg-purple-100 text-purple-600"
+          href="/admin/users?role=GYM_OWNER"
         />
         <StatsCard
           title="Admins"
           value={stats?.totalAdmins ?? 0}
           icon={Shield}
           iconClassName="bg-red-100 text-red-600"
+          href="/admin/users?role=ADMIN"
         />
         <StatsCard
           title="Recent Signups"
@@ -121,6 +128,7 @@ export const AdminDashboardPage: React.FC = () => {
           icon={UserCheck}
           description="Last 7 days"
           iconClassName="bg-teal-100 text-teal-600"
+          href="/admin/users"
         />
       </div>
 
