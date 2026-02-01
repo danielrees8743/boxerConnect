@@ -1,0 +1,2640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>WABA - Interactive Club Map </name>
+    <description/>
+    <Style id="icon-1761-01579B-normal">
+      <IconStyle>
+        <color>ff9b5701</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1761-01579B-highlight">
+      <IconStyle>
+        <color>ff9b5701</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1761-01579B">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1761-01579B-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1761-01579B-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1761-A52714-normal">
+      <IconStyle>
+        <color>ff1427a5</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1761-A52714-highlight">
+      <IconStyle>
+        <color>ff1427a5</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1761-A52714">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1761-A52714-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1761-A52714-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1761-F57C00-normal">
+      <IconStyle>
+        <color>ff007cf5</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1761-F57C00-highlight">
+      <IconStyle>
+        <color>ff007cf5</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1761-F57C00">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1761-F57C00-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1761-F57C00-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>North Division</name>
+      <Placemark>
+        <name>Caernarfon ABC</name>
+        <description><![CDATA[Caernarfon ABC<br>LL55 2BL<br><br>Main Contact: Terri Owen<br><br>Email: owendecorators@hotmail.co.uk   <br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -4.2335615,53.1378468,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Clwyd ABC</name>
+        <description><![CDATA[Clwyd ABC<br>LL18 2EW<br><br>Main Contact: Darryl Jones<br><br>Email: clwydboxing@hotmail.com     <br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.4834654,53.316386,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dyffryn ABC</name>
+        <description><![CDATA[Dyffryn ABC<br>LL29 8EA<br><br>Main Contact: Wesley Jones<br><br>Email: wezjones1974@hotmail.co.uk <br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.7207247,53.294585,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Holyhead & Angelesey ABC]]></name>
+        <description><![CDATA[Holyhead & Angelesey ABC<br> LL65 1HS <br><br>Main Contact: Anthony Maguire<br><br>Mobile: 07888 763167<br>Email: tonymag11@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -4.6326238,53.3153256,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llandudno ABC</name>
+        <description><![CDATA[Llandudno ABC<br>LL28 4YL<br><br>Main Contact: Mike Hogan<br><br>Email: mikehoganskips@aol.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.8252199,53.3177529,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llangefni ABC
+</name>
+        <description><![CDATA[Llangefni ABC<br>LL77 7HR<br><br>Main Contact: Sian Williams<br><br>Email: derwyn.williams@tiscali.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -4.2908803,53.2536135,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llay ABC</name>
+        <description><![CDATA[Llay ABC<br>LL12 0RL<br><br>Main Contact: Donna Price Lewis<br><br>Email: llayboxing@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -2.9997153,53.0911027,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pwllheli ABC</name>
+        <description><![CDATA[Pwllheli ABC<br>LL53 5HD<br><br>Main Contact: Vic Barma<br><br>Email: vicbarma@btinternet.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -4.4231102,52.8803696,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Maes G ABC</name>
+        <description><![CDATA[Maes G ABC<br>LL57 1LR<br><br>Main Contact: Brian Williams<br><br>Email: maesgabc1@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -4.1160115,53.2240548,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Newtown ABC</name>
+        <description><![CDATA[Newtown ABC<br>SY16 1BS<br><br>Main Contact: Stephen Evans<br><br>Email: steve11evans@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.309827,52.512948,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rhyl Youth ABC</name>
+        <description><![CDATA[Rhyl Youth ABC<br>LL18 2AE<br><br>Main Contact: Dan Andrews<br><br>Email: rhylyouthboxing@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.4918774,53.3151487,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Shotton ABC</name>
+        <description><![CDATA[Shotton ABC<br>CH5 1PP<br><br>Main Contact: Diane Doran<br><br>Email: diane.doran01@btinternet.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.03538900000001,53.2116486,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Welshpool ABC</name>
+        <description><![CDATA[Welshpool ABC<br>SY21 7NA<br><br>Main Contact: Mike Sinden<br><br>Email: mdsinden@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.157499,52.6615922,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Wrexham ABC</name>
+        <description><![CDATA[Wrexham ABC<br>LL12 7AU<br><br>Main Contact: Stephen Williams<br><br>Email: stevetheboxer77@yahoo.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -2.9901951,53.0539383,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Maelor ABC</name>
+        <description><![CDATA[Maelor ABC<br>LL14 3BH<br><br>Main Contact: David 'Butch' Jones<br><br>Email: butchmaelorboxing@yahoo.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.07570439999995,52.9746578,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Buckley ABC</name>
+        <description><![CDATA[Buckley ABC<br>CH7 3DZ<br><br>Main contact: Mark Field:<br><br>Email: Markfield64@outlook.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.068124,53.1734188,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Denbigh & District ABC]]></name>
+        <description><![CDATA[Denbigh & District ABC<br>c/o Myddelton College, Peakes Lane, Dendigh LL16 3EN<br><br>Main Contact: Nathan Hanika<br><br>Mobile: 07776 202855<br>Email: nathan.hanika@talktalk.net]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.415439,53.182817,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Deva ABC</name>
+        <description><![CDATA[Deva ABC<br>CH4 8SL<br><br>Main contact: Michelle Boynton-Newall<br><br>Email: shellyboyntondeva@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -2.935473,53.180497,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Harleys ABC</name>
+        <description><![CDATA[Harleys ABC<br>LL65 4ULF<br><br>Main Contact: Anthony Dean Byfield<br><br>Email: anthonybyfield2@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -4.6201735,53.2986125,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Draig Goch ABC</name>
+        <description><![CDATA[Draig Goch ABC<br>LL65 1HL<br><br>Main Contact: Ryan Gibbs<br><br>Email: ryangibbs1991boxing@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -4.6482461,53.3021369,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Evolution ABC</name>
+        <description><![CDATA[Evolution ABC<br>LL11 5AP<br><br>Main Contact: Nigel Brett<br><br>Email: brettnigel77@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -3.0504871,53.0768896,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mold ABC</name>
+        <description><![CDATA[Mold ABC<br>CH7 1HS<br><br>Main Contact: Michael Phillips<br><br>Email: michaeljohnphillips@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -2.866497,53.1473142,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Queens Park ABC</name>
+        <description><![CDATA[Queens Park ABC<br>LL13 8UH<br><br>Main Contact: Gareth Harper<br><br>Email: garethharper10@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <Point>
+          <coordinates>
+            -2.9894201,53.0430899,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>South Division</name>
+      <Placemark>
+        <name>Aberaman ABC</name>
+        <description><![CDATA[Address: <br>description: Aberaman ABC<br>CF44 6DF<br><br>Main Contact: Jeffery Edwards<br><br>Email: jedwardsk@aol.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Aberaman ABC
+CF44 6DF
+
+Main Contact: Jeffery Edwards
+
+Email: jedwardsk@aol.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.424978,51.7022229,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ANA ABC</name>
+        <description><![CDATA[Address: <br>description: ANA ABC<br>CF45 3SH<br><br>Main contact: Paul Thomas<br><br>Email: anaboxingclub@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>ANA ABC
+CF45 3SH
+
+Main contact: Paul Thomas
+
+Email: anaboxingclub@hotmail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.368418,51.6723022,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Caerau Dragons ABC</name>
+        <description><![CDATA[Address: <br>description: Caerau Dragons ABC<br>CF34 0PB<br><br>Main contact: Tudor Davies<br><br>Email: leondavies@talktalk.net<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Caerau Dragons ABC
+CF34 0PB
+
+Main contact: Tudor Davies
+
+Email: leondavies@talktalk.net
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.64952,51.6380416,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Caerau Ely ABC</name>
+        <description><![CDATA[Address: <br>description: Caerau Ely ABC<br> CF5 5AQ<br><br>Main contact: Mark Atkins<br><br>Email: mark_atkins@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Caerau Ely ABC
+ CF5 5AQ
+
+Main contact: Mark Atkins
+
+Email: mark_atkins@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.23081630000001,51.478612,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Cardiff University ABC</name>
+        <description><![CDATA[Address: <br>description: Cardiff University ABC<br>CF24 3BD<br><br>Main contact: Jameel Sandham<br><br>Email: boxing@cardiff.ac.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Cardiff University ABC
+CF24 3BD
+
+Main contact: Jameel Sandham
+
+Email: boxing@cardiff.ac.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.17740960000003,51.4884705,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Colcot ABC</name>
+        <description><![CDATA[Address: <br>description: Colcot ABC<br>CF62 9PX<br><br>Main contact: Wayne Gurd<br><br>Email: waynegurd@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Colcot ABC
+CF62 9PX
+
+Main contact: Wayne Gurd
+
+Email: waynegurd@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.28294289999997,51.4161833,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dowlais ABC</name>
+        <description><![CDATA[Address: <br>description: Dowlais ABC<br>CF48 3LP<br><br>Main contact: Sean Jones<br><br>Email: seanjones74@live.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Dowlais ABC
+CF48 3LP
+
+Main contact: Sean Jones
+
+Email: seanjones74@live.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.35526830000003,51.7631311,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gilfach Goch ABC</name>
+        <description><![CDATA[Address: <br>description: Gilfach Goch ABC:<br>44 CAmbrian Avenue, Gilfach Goch, CF39 8TG<br><br>Main Contact Collwyn Williams<br>Tel: 07414573967<br>Email: cossy1@hotmail.co.uk]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Gilfach Goch ABC:
+44 CAmbrian Avenue, Gilfach Goch, CF39 8TG
+
+Main Contact Collwyn Williams
+Tel: 07414573967
+Email: cossy1@hotmail.co.uk</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.4704858,51.5838501,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Grange ABC</name>
+        <description><![CDATA[Address: <br>description: Grange ABC:<br>CF11 6JB<br><br>Main contact: Qasim Khan<br><br>Email:mqkkhan@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Grange ABC:
+CF11 6JB
+
+Main contact: Qasim Khan
+
+Email:mqkkhan@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1952377,51.4772733,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Hope & Glory ABC]]></name>
+        <description><![CDATA[Address: <br>description: Hope & Glory ABC<br>CF45 3SH<br><br>Main contact: Lee Griffiths<br><br>Email: l.griffiths31@btinternet.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value><![CDATA[Hope & Glory ABC
+CF45 3SH
+
+Main contact: Lee Griffiths
+
+Email: l.griffiths31@btinternet.com
+
+Alternatively, please contact: info@welshboxing.org]]></value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.36939589999997,51.6741814,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Apollos ABC</name>
+        <description><![CDATA[Address: <br>description: Apollos ABC<br>CF23 9US<br><br>Main contact: Nicola Wheten<br><br>Email: llanederynpentwynabc@aol.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Apollos ABC
+CF23 9US
+
+Main contact: Nicola Wheten
+
+Email: llanederynpentwynabc@aol.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1491688,51.5133638,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llanharan ABC</name>
+        <description><![CDATA[Address: <br>description: Llanharan ABC<br>CF72 9RA<br><br>Main contact: Stuart Trowbridge<br><br>Email: llanharan.abc@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Llanharan ABC
+CF72 9RA
+
+Main contact: Stuart Trowbridge
+
+Email: llanharan.abc@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.44089439999993,51.5359947,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llanrumney Phoenix ABC</name>
+        <description><![CDATA[Address: <br>description: Llanrumney Phoenix ABC<br>CF4 5NX<br><br>Main contact: Tony Richards<br><br>Email: boxingtony88@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Llanrumney Phoenix ABC
+CF4 5NX
+
+Main contact: Tony Richards
+
+Email: boxingtony88@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.126027,51.5260603,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llantwit Major ABC</name>
+        <description><![CDATA[Address: <br>description: Llantwit Major ABC<br>CF61 1PP<br><br>Main contact: Mickey Dixon<br><br>Email: mbdixon36@aol.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Llantwit Major ABC
+CF61 1PP
+
+Main contact: Mickey Dixon
+
+Email: mbdixon36@aol.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.4791893,51.4080683,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Maerdy ABC</name>
+        <description><![CDATA[Address: <br>description: Maerdy ABC<br>CF43 4DP<br><br>Main contact: Brett Parry<br><br>Email: brettparry999@btinternet.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Maerdy ABC
+CF43 4DP
+
+Main contact: Brett Parry
+
+Email: brettparry999@btinternet.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.4851653,51.6753398,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Maesteg ABC</name>
+        <description><![CDATA[Address: <br>description: Maesteg ABC<br>CF34 9EJ<br><br>Main contact: Ray Watts<br><br>Email: invicta7777@yahoo.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Maesteg ABC
+CF34 9EJ
+
+Main contact: Ray Watts
+
+Email: invicta7777@yahoo.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.6505039,51.60556,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Merthyr Ex-Servicemen's ABC]]></name>
+        <description><![CDATA[Address: <br>description: Merthyr Ex ABC<br>CF47 8EB<br><br>Main contact: Gareth Donovan<br><br>Email: garethturley@btinternet.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Merthyr Ex ABC
+CF47 8EB
+
+Main contact: Gareth Donovan
+
+Email: garethturley@btinternet.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.3768618,51.7419882,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Penarth ABC</name>
+        <description><![CDATA[Address: <br>description: Penarth ABC<br>CF64 3EE<br><br>Main contact: Neil Munn<br><br>Email: neilmunn7@live.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Penarth ABC
+CF64 3EE
+
+Main contact: Neil Munn
+
+Email: neilmunn7@live.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1749522,51.4355246,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pencoed ABC</name>
+        <description><![CDATA[Address: <br>description: Pencoed ABC<br>CF35 5LZ<br><br>Main contact: John Jones<br><br>Email: rosejones21@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Pencoed ABC
+CF35 5LZ
+
+Main contact: John Jones
+
+Email: rosejones21@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.5029953,51.5200561,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pontyclun ABC</name>
+        <description><![CDATA[Address: <br>description: Pontyclun ABC<br>CF72 9HG<br><br>Main contact: Matthew Robinson<br><br>Email: mathewlee123@me.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Pontyclun ABC
+CF72 9HG
+
+Main contact: Matthew Robinson
+
+Email: mathewlee123@me.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.4008915,51.531911,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pontypridd ABC</name>
+        <description><![CDATA[Address: <br>description: Pontypridd ABC<br>CF37 5LN<br><br>Main contact: Grant Briggs<br><br>Email: grantbriggs@ntlworld.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Pontypridd ABC
+CF37 5LN
+
+Main contact: Grant Briggs
+
+Email: grantbriggs@ntlworld.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.3091812,51.5828845,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Porthcawl & Pyle ABC]]></name>
+        <description><![CDATA[Address: <br>description: Porthcawl & Pyle ABC<br>CF36 5DN<br><br>Main contact: Tim Yorke<br><br>Email: porthcawlpumas@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value><![CDATA[Porthcawl & Pyle ABC
+CF36 5DN
+
+Main contact: Tim Yorke
+
+Email: porthcawlpumas@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+]]></value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.6948867,51.4823233,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Prince of Wales ABC</name>
+        <description><![CDATA[Address: <br>description: Prince of Wales ABC<br>CF11 8TF<br><br>Main contact: Carl Pesticcio<br><br>Email: pestboxing@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Prince of Wales ABC
+CF11 8TF
+
+Main contact: Carl Pesticcio
+
+Email: pestboxing@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1925148,51.4695318,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rhondda ABC</name>
+        <description><![CDATA[Address: <br>description: Rhondda ABC<br>CF40 1LL<br><br>Main contact: John Wynne<br><br>Email: rhonddaabc@yahoo.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Rhondda ABC
+CF40 1LL
+
+Main contact: John Wynne
+
+Email: rhonddaabc@yahoo.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.4515052,51.6165362,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rhoose ABC</name>
+        <description><![CDATA[Address: <br>description: Rhoose ABC<br>CF62 3DR<br><br>Main contact: Michael Smyth<br><br>Email: barrybomber123@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br><br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Rhoose ABC
+CF62 3DR
+
+Main contact: Michael Smyth
+
+Email: barrybomber123@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.3492171,51.3891832,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Splott Adventure ABC</name>
+        <description><![CDATA[Address: <br>description: Splott Adventure ABC<br>CF24 2LJ<br><br>Main contact: James Mwasigallah<br><br>Email: mwasigallah@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Splott Adventure ABC
+CF24 2LJ
+
+Main contact: James Mwasigallah
+
+Email: mwasigallah@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1459761,51.4809976,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>St Clares ABC</name>
+        <description><![CDATA[Address: <br>description: St Clares ABC<br>CF5 3JX<br><br>Main contact: Kelly Gadd<br><br>Email: Kelly_11_00@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>St Clares ABC
+CF5 3JX
+
+Main contact: Kelly Gadd
+
+Email: Kelly_11_00@hotmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.2534545,51.4984149,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[St Joseph's ABC]]></name>
+        <description><![CDATA[Address: <br>description: St Joseph's ABC<br>CF14 3XG<br><br>Main contact: Robin Powell<br><br>Email: chairman@stjosephsabc.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value><![CDATA[St Joseph's ABC
+CF14 3XG
+
+Main contact: Robin Powell
+
+Email: chairman@stjosephsabc.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+]]></value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1893262,51.4986255,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tiger Bay ABC</name>
+        <description><![CDATA[Address: <br>description: Tiger Bay ABC<br> CF10 5LB<br><br>Main contact: Wasem Said<br><br>Email: wasimsaid151@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Tiger Bay ABC
+ CF10 5LB
+
+Main contact: Wasem Said
+
+Email: wasimsaid151@hotmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1691614,51.4678987,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tonteg ABC</name>
+        <description><![CDATA[Address: <br>description: Tonteg ABC<br>CF38 1ND<br><br>Main contact: Sarah Matthews<br><br>Email: sarahmattews46@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Tonteg ABC
+CF38 1ND
+
+Main contact: Sarah Matthews
+
+Email: sarahmattews46@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.3107526,51.5691885,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tonyrefail ABC</name>
+        <description><![CDATA[Address: <br>description: Tonyrefail ABC<br>CF39 8PX<br><br>Main contact: Alan Blackburn<br><br>Email: tonyrefailabc@outlook.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Tonyrefail ABC
+CF39 8PX
+
+Main contact: Alan Blackburn
+
+Email: tonyrefailabc@outlook.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.42706,51.5838559,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Trelewis ABC</name>
+        <description><![CDATA[Address: <br>description: Trelewis ABC<br>CF46 6NF<br><br>Main contact: Richard Bebb<br><br>Email: bebb1970@aol.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Trelewis ABC
+CF46 6NF
+
+Main contact: Richard Bebb
+
+Email: bebb1970@aol.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.2818931,51.6505758,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tylorstown ABC</name>
+        <description><![CDATA[Address: <br>description: Tylorstown ABC<br>CF43 3BW<br><br>Main contact: Harrison Davies<br><br>Email: harrisondavies354@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Tylorstown ABC
+CF43 3BW
+
+Main contact: Harrison Davies
+
+Email: harrisondavies354@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.438564,51.6551901,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Aberdare ABC</name>
+        <description><![CDATA[Address: <br>description: Aberdare ABC<br>CF44 8EZ<br><br>Main contact: Ryan Christopher<br><br>Email: ryanchris236@sky.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Aberdare ABC
+CF44 8EZ
+
+Main contact: Ryan Christopher
+
+Email: ryanchris236@sky.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1478785,51.4724241,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Barry West End ABC</name>
+        <description><![CDATA[Address: <br>description: Barry West End ABC<br>CF63 4LU<br><br>Main Contact: Glen Mclaggon<br><br>Email: glen.mclaggon@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Barry West End ABC
+CF63 4LU
+
+Main Contact: Glen Mclaggon
+
+Email: glen.mclaggon@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.2589423,51.4095784,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mynydd Cynffig ABC</name>
+        <description><![CDATA[Address: <br>description: Mynydd Cynffig ABC<br>CF33 4AS<br><br>Main contact: Ryan Osgood<br><br>Email: rosgood8@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Mynydd Cynffig ABC
+CF33 4AS
+
+Main contact: Ryan Osgood
+
+Email: rosgood8@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.6779139,51.5321751,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ogmore Valley Dragons ABC</name>
+        <description><![CDATA[Address: <br>description: Ogmore Valley Dragons  ABC<br>CF32 7AB<br><br>Main contact: Dean Morgan<br><br>Email: Nantyboxing@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value/>
+          </Data>
+          <Data name="description">
+            <value>Ogmore Valley Dragons  ABC
+CF32 7AB
+
+Main contact: Dean Morgan
+
+Email: Nantyboxing@hotmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.541254,51.602093,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ely Warriors ABC</name>
+        <description><![CDATA[Address: CF5 4BS<br>description: Ely Warriors ABC<br><br>Main contact: Peter Sullivan<br><br>Email: elypete@googlemail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>CF5 4BS</value>
+          </Data>
+          <Data name="description">
+            <value>Ely Warriors ABC
+
+Main contact: Peter Sullivan
+
+Email: elypete@googlemail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.2233925,51.4976706,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llanishen ABC</name>
+        <description><![CDATA[Address: CF14 5YL<br>description: Llanishen ABC<br>CF14 5YL<br><br>Main Contact: Luke Richards<br><br>Email: lukerichards1927@yahoo.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>CF14 5YL</value>
+          </Data>
+          <Data name="description">
+            <value>Llanishen ABC
+CF14 5YL
+
+Main Contact: Luke Richards
+
+Email: lukerichards1927@yahoo.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1903969,51.5286692,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Llynfi Valley ABC</name>
+        <description><![CDATA[Address: CF34 9DW<br>description: Llynfi Valley ABC<br>CF34 9DW<br><br>Main Contact: Adrian Shearan<br><br>Email: adrian@ancoascaffolding.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>CF34 9DW</value>
+          </Data>
+          <Data name="description">
+            <value>Llynfi Valley ABC
+CF34 9DW
+
+Main Contact: Adrian Shearan
+
+Email: adrian@ancoascaffolding.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.6269287,51.5902959,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Robinson's ABC]]></name>
+        <description><![CDATA[Address: CF24 5EB<br>description: Robinson's ABC<br>CF24 5EB<br><br>Main Contact: Stephen Robinson<br><br>Email: stevochamp7@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>CF24 5EB</value>
+          </Data>
+          <Data name="description">
+            <value><![CDATA[Robinson's ABC
+CF24 5EB
+
+Main Contact: Stephen Robinson
+
+Email: stevochamp7@gmail.com
+
+Alternatively, please contact: info@welshboxing.org]]></value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1429321,51.4844363,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Welsh Warriors ABC</name>
+        <description><![CDATA[Address: CF31 3AP<br>description: Welsh Warriors ABC<br>CF31 3AP<br><br>Main Contact: Lee Rodgers<br><br>Email: welshwarriorsabc@yahoo.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>CF31 3AP</value>
+          </Data>
+          <Data name="description">
+            <value>Welsh Warriors ABC
+CF31 3AP
+
+Main Contact: Lee Rodgers
+
+Email: welshwarriorsabc@yahoo.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.5771307,51.5103584,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Cefn Cribwr ABC</name>
+        <description><![CDATA[Address: Cefn Cribwr Sports & Social Club, Bridgend, CF32 0AY<br>description: ]]></description>
+        <ExtendedData>
+          <Data name="Address">
+            <value><![CDATA[Cefn Cribwr Sports & Social Club, Bridgend, CF32 0AY]]></value>
+          </Data>
+          <Data name="description">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Cefn Cribwr ABC</name>
+        <description><![CDATA[Address: Cefn Cribwr Sports & Social Club<br>description: Main Contact: Byron John or Sean Evans<br><br>Email: sean.evs90@aol.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value><![CDATA[Cefn Cribwr Sports & Social Club]]></value>
+          </Data>
+          <Data name="description">
+            <value>Main Contact: Byron John or Sean Evans
+
+Email: sean.evs90@aol.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.6376041,51.5255522,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Heath Warriors ABC</name>
+        <description><![CDATA[Address: Lancaster House, Maes y Coed Road<br>description: Main Contact: Thomas Bowen<br><br>Email: team@celtic-warriors.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>Lancaster House, Maes y Coed Road</value>
+          </Data>
+          <Data name="description">
+            <value>Main Contact: Thomas Bowen
+
+Email: team@celtic-warriors.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1518385,51.4831371,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Guerrilla ABC</name>
+        <description><![CDATA[Address: 22 Commercial Road, Port Talbot<br>description: Main Contact: Chris Houlihan<br><br>Email: b3xingevents1@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>22 Commercial Road, Port Talbot</value>
+          </Data>
+          <Data name="description">
+            <value>Main Contact: Chris Houlihan
+
+Email: b3xingevents1@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.8033756,51.5973867,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hayers ABC</name>
+        <description><![CDATA[Address: Upper School House<br>description: Main Contact: Ricky Hayer<br><br>Email: taff600@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>Upper School House</value>
+          </Data>
+          <Data name="description">
+            <value>Main Contact: Ricky Hayer
+
+Email: taff600@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.2805617,51.7540347,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Barry East End ABC</name>
+        <description><![CDATA[Address: CF63 3RF<br>description: Barry East End ABC<br><br>Main Contact: Alan Lamb<br><br>Email: alan.lamb@nssgroup.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-A52714</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>CF63 3RF</value>
+          </Data>
+          <Data name="description">
+            <value>Barry East End ABC
+
+Main Contact: Alan Lamb
+
+Email: alan.lamb@nssgroup.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.24452,51.4011199,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>West Division</name>
+      <Placemark>
+        <name>Aberystwyth ABC</name>
+        <description><![CDATA[Aberystwyth ABC<br><br>Main Contact: Jamie Beasley<br>Email: jay.beasley9585@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+        <Point>
+          <coordinates>
+            -4.0777701,52.4044132,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Afan Spartans ABC</name>
+        <address>Afan Spartans ABC
+SA13 2BN
+
+Main Contact: Ian Jenkins
+Email: ian.afanboxingclub@hotmail.co.uk
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Afan Spartans ABC<br>SA13 2BN<br><br>Main Contact: Ian Jenkins<br>Email: ian.afanboxingclub@hotmail.co.uk<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Bonymaen ABC</name>
+        <address>Bonymaen ABC
+SA1 7DG
+
+Main Contact: Eddie Jay
+Email: eddiej2015@outlook.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Bonymaen ABC<br>SA1 7DG<br><br>Main Contact: Eddie Jay<br>Email: eddiej2015@outlook.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Briton Ferry ABC</name>
+        <address>Briton Ferry ABC
+SA11 2PB
+
+Main Contact: Pappy Jones
+Email: fairfieldboxing@hotmail.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Briton Ferry ABC<br>SA11 2PB<br><br>Main Contact: Pappy Jones<br>Email: fairfieldboxing@hotmail.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Cardigan ABC</name>
+        <address>Cardigan ABC
+SA43 1NR
+
+Main Contact: Guy Croft
+Email: lizcroft@hotmail.co.uk
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Cardigan ABC<br>SA43 1NR<br><br>Main Contact: Guy Croft<br>Email: lizcroft@hotmail.co.uk<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>St Clears ABC</name>
+        <address>St Clears ABC
+SA33 4AX
+
+Main Contact: Robert Couzens
+
+Email: robert.couzens.1705@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[St Clears ABC<br>SA33 4AX<br><br>Main Contact: Robert Couzens<br><br>Email: robert.couzens.1705@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Cwmavon Hornets ABC</name>
+        <address>Cwmavon Hornets ABC
+SA12 9DF
+
+Main Contact: Nigel Davies
+Email: cwmavonhornets@aol.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Cwmavon Hornets ABC<br>SA12 9DF<br><br>Main Contact: Nigel Davies<br>Email: cwmavonhornets@aol.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Cwmgors ABC</name>
+        <address>Cwmgors ABC
+SA18 1UN
+
+Main Contact: Steph Davies
+Email: cwmgorsboxing@gmail.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Cwmgors ABC<br>SA18 1UN<br><br>Main Contact: Steph Davies<br>Email: cwmgorsboxing@gmail.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Cwmgwrach ABC</name>
+        <address>Cwmgwrach ABC
+SA11 5TE
+
+Main Contact: Neil Summerhayes
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Cwmgwrach ABC<br>SA11 5TE<br><br>Main Contact: Neil Summerhayes<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>DJ Boxing ABC</name>
+        <address>DJ Boxing
+SA6 5HR
+
+Main Contact: Pele Greenall
+Email: pelegreenall@outlook.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[DJ Boxing<br>SA6 5HR<br><br>Main Contact: Pele Greenall<br>Email: pelegreenall@outlook.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Dockers ABC</name>
+        <address>Dockers ABC
+SA72 6WT
+
+Main Contact: Carl Keane
+Email: carlkeane@hotmail.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Dockers ABC<br>SA72 6WT<br><br>Main Contact: Carl Keane<br>Email: carlkeane@hotmail.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Gwent Swansea ABC</name>
+        <address>Gwent Swansea ABC
+SA1 6NF
+
+Main Contact: Terry Grey
+Email: terrygrey1946@yahoo.co.uk
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Gwent Swansea ABC<br>SA1 6NF<br><br>Main Contact: Terry Grey<br>Email: terrygrey1946@yahoo.co.uk<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Gwynfi ABC</name>
+        <address>Gwynfi ABC
+SA13 3TE
+
+Gwynfi ABC
+Main Contact: Owain Davies
+Email: gwynfi.boxing@hotmail.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Gwynfi ABC<br>SA13 3TE<br><br>Gwynfi ABC<br>Main Contact: Owain Davies<br>Email: gwynfi.boxing@hotmail.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Narberth ABC</name>
+        <address>The Bus Stop Charity, The Car Park, Narberth
+
+Narberth ABC
+
+Main contact: Lorraine Haines
+
+Email: Lola1955@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[The Bus Stop Charity, The Car Park, Narberth<br><br>Narberth ABC<br><br>Main contact: Lorraine Haines<br><br>Email: Lola1955@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Neath & Melyn ABC]]></name>
+        <address><![CDATA[Neath & Melyn ABC
+Parish Hall, Old Road, Melyn, Neath
+
+Main Contact: Denzil Holmes Jr
+Email: neath_melyn_abc_@hotmail.co.uk
+Alternatively, please contact: info@welshboxing.org]]></address>
+        <description><![CDATA[Neath & Melyn ABC<br>Parish Hall, Old Road, Melyn, Neath<br><br>Main Contact: Denzil Holmes Jr<br>Email: neath_melyn_abc_@hotmail.co.uk<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Pembroke ABC</name>
+        <address><![CDATA[Pembroke & P. Dock ABC
+SA72 6DN
+
+Main Contact: C McEwen
+Email: mcewen_71@hotmail.com
+Alternatively, please contact: info@welshboxing.org]]></address>
+        <description><![CDATA[Pembroke & P. Dock ABC<br>SA72 6DN<br><br>Main Contact: C McEwen<br>Email: mcewen_71@hotmail.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Penyrheol ABC</name>
+        <address>Penyrheol ABC
+SA4 4YL
+
+Main Contact: Chris Reece
+Email: chrisreece18@yahoo.co.uk
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Penyrheol ABC<br>SA4 4YL<br><br>Main Contact: Chris Reece<br>Email: chrisreece18@yahoo.co.uk<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Port Talbot ABC</name>
+        <address>Port Talbot ABC
+SA12 7PA
+
+Main Contact: Simon Jones
+Email: simonwe2@msn.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Port Talbot ABC<br>SA12 7PA<br><br>Main Contact: Simon Jones<br>Email: simonwe2@msn.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Portmead & Blaenymaes ABC]]></name>
+        <address><![CDATA[Portmead & Blaenymaes ABC
+SA5 8HB
+
+Main Contact: Paul Grenfell
+Email: paulgrenfell@live.co.uk
+Alternatively, please contact: info@welshboxing.org]]></address>
+        <description><![CDATA[Portmead & Blaenymaes ABC<br>SA5 8HB<br><br>Main Contact: Paul Grenfell<br>Email: paulgrenfell@live.co.uk<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Premier ABC</name>
+        <address>Premier ABC
+SA1 2NA
+
+Main Contact: Steven Brophy
+Email: premierabc@hotmail.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Premier ABC<br>SA1 2NA<br><br>Main Contact: Steven Brophy<br>Email: premierabc@hotmail.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Prizefighter ABC</name>
+        <address>Prizefighter ABC
+Unit 23, Cillfwr Industrial Estate, Johnstown, Carmarthen
+
+Main Contact: Kevin Evans
+Email: 
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Prizefighter ABC<br>Unit 23, Cillfwr Industrial Estate, Johnstown, Carmarthen<br><br>Main Contact: Kevin Evans<br>Email: <br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Swansea Uni ABC</name>
+        <address>Swansea University ABC
+SA2 8QB
+
+Main Contact: Ryan Thornhill
+Email: 
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Swansea University ABC<br>SA2 8QB<br><br>Main Contact: Ryan Thornhill<br>Email: <br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Trostre ABC</name>
+        <address>Tata Works, Trostre, Llanelli
+
+Trostre ABC
+
+Main Contact: Del Phillips
+Email: trostre_abc@btinternet.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Tata Works, Trostre, Llanelli<br><br>Trostre ABC<br><br>Main Contact: Del Phillips<br>Email: trostre_abc@btinternet.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Warehouse ABC</name>
+        <address>Warehouse ABC
+SA1 4EH
+
+Main Contact: Chris Houlihan or David Owen
+Email: warehouseabc2021@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Warehouse ABC<br>SA1 4EH<br><br>Main Contact: Chris Houlihan or David Owen<br>Email: warehouseabc2021@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Jay Jay's ABC]]></name>
+        <description><![CDATA[Chalybate Street, Aberystwyth<br><br>Jay Jay'sABC:<br><br>Main Contact: Jason Spencer<br>Email: spencerjason667@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+        <Point>
+          <coordinates>
+            -4.0824508,52.420733,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Towy ABC</name>
+        <address><![CDATA[Towy ABC
+SA14 7NT
+
+Main Contact: David 'Cass' Davies
+Email: anthony242@btinternet.com
+Alternatively, please contact: info@welshboxing.org]]></address>
+        <description><![CDATA[Towy ABC<br>SA14 7NT<br><br>Main Contact: David 'Cass' Davies<br>Email: anthony242@btinternet.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Merlins Bridge ABC</name>
+        <address>Merlins Bridge ABC
+Merlins Bridge, Haverfordwest, Pembrokeshire
+
+Main Contact: Graham Brockway
+Email: merlinsbridgeabc@gmail.com
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Merlins Bridge ABC<br>Merlins Bridge, Haverfordwest, Pembrokeshire<br><br>Main Contact: Graham Brockway<br>Email: merlinsbridgeabc@gmail.com<br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Jack 2 A King Boxing Gym</name>
+        <address>Jack 2 A King Boxing Club
+
+Main contact: Jason Hughes
+
+Email: ajack2king@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Jack 2 A King Boxing Club<br><br>Main contact: Jason Hughes<br><br>Email: ajack2king@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Bobby's Gym ABC]]></name>
+        <address><![CDATA[SA14 7AD
+
+Bobby's Gym ABC
+
+Main contact: Dai Bunford
+
+Email: daibunford@gmail.com
+
+Alternatively, please contact: info@welshboxing.org]]></address>
+        <description><![CDATA[SA14 7AD<br><br>Bobby's Gym ABC<br><br>Main contact: Dai Bunford<br><br>Email: daibunford@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Celtic Warriors</name>
+        <address>SA6 5BQ
+
+Celtic Warriors ABC
+
+Main contact: Paul Kennedy
+
+Email: paul.kennedy@wolseley.co.uk
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[SA6 5BQ<br><br>Celtic Warriors ABC<br><br>Main contact: Paul Kennedy<br><br>Email: paul.kennedy@wolseley.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Tenby Sharks ABC</name>
+        <address>Tenby Sharks ABC
+
+Main contact: Mark Davies
+
+Email: daviemarxs@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Tenby Sharks ABC<br><br>Main contact: Mark Davies<br><br>Email: daviemarxs@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Stallion ABC</name>
+        <address>Stallion ABC
+SA14 8NA
+
+Main contact: Angelo Dragone
+Email: stallionboxingfitness@gmail.com
+
+Alternatively, please contact:
+info@welshboxing.org</address>
+        <description><![CDATA[Stallion ABC<br>SA14 8NA<br><br>Main contact: Angelo Dragone<br>Email: stallionboxingfitness@gmail.com<br><br>Alternatively, please contact:<br>info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Box of Fists ABC</name>
+        <address>Llandeilo, SA19 6BU
+
+Main contact: Ryan Redfern
+
+Email: ryanredfern33@hotmail.com
+
+Alternatively, please contact:
+info@welshboxing.org</address>
+        <description><![CDATA[Llandeilo, SA19 6BU<br><br>Main contact: Ryan Redfern<br><br>Email: ryanredfern33@hotmail.com<br><br>Alternatively, please contact:<br>info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Positive Vibes ABC</name>
+        <address>SA4 8PD
+
+Main contact: Allyn Wood
+
+Email: info@positivevibesboxing.co.uk
+
+Alternatively, please contact:
+info@welshboxing.org</address>
+        <description><![CDATA[SA4 8PD<br><br>Main contact: Allyn Wood<br><br>Email: info@positivevibesboxing.co.uk<br><br>Alternatively, please contact:<br>info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Haus of Boxing</name>
+        <address>Haus of Boxing, 60, SA13 1LZ
+
+Main contact: Harley Griffiths
+
+Email: harleybusiness0800@gmail.com
+
+Alternatively, please contact:
+info@welshboxing.org</address>
+        <description><![CDATA[Haus of Boxing, 60, SA13 1LZ<br><br>Main contact: Harley Griffiths<br><br>Email: harleybusiness0800@gmail.com<br><br>Alternatively, please contact:<br>info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Llanelli ABC</name>
+        <address>Llanelli ABC
+
+Main Contact: Jaimie Ryan
+Email: jaimieryan_214@yahoo.com
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Llanelli ABC<br><br>Main Contact: Jaimie Ryan<br>Email: jaimieryan_214@yahoo.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>MB Boxing ABC</name>
+        <address>MB Boxing ABC
+
+Main Contact: Morgan Baxter
+Email: mbboxing123@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[MB Boxing ABC<br><br>Main Contact: Morgan Baxter<br>Email: mbboxing123@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Skewen ABC</name>
+        <address>Skewen ABC
+
+Main Contact: John Kaighin
+Email: jakfitnessjk@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Skewen ABC<br><br>Main Contact: John Kaighin<br>Email: jakfitnessjk@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-F57C00</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>RKB Fitness</name>
+        <description><![CDATA[This is a non contact gym<br><br>Main Contact: Runa Khanom-Bakshi<br><br>Email: runabakshi01@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>East Division</name>
+      <Placemark>
+        <name>All Saints ABC</name>
+        <address>Virginia Park, Caerphilly, CF83 3HE</address>
+        <description><![CDATA[Addresses: Virginia Park, Caerphilly, CF83 3HE<br> : All Saints ABC<br><br>Main Contact: Sweed Johnson<br><br>Email: heathjohnson68@icloud.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Virginia Park, Caerphilly, CF83 3HE</value>
+          </Data>
+          <Data name=" ">
+            <value>All Saints ABC
+
+Main Contact: Sweed Johnson
+
+Email: heathjohnson68@icloud.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Alway ABC</name>
+        <address>The Ambulance Hall, Ladyhill Road, Newport NP19 9RY</address>
+        <description><![CDATA[Addresses: The Ambulance Hall, Ladyhill Road, Newport NP19 9RY<br> : Alway ABC<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>The Ambulance Hall, Ladyhill Road, Newport NP19 9RY</value>
+          </Data>
+          <Data name=" ">
+            <value>Alway ABC
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Bargoed ABC</name>
+        <address>William Street, Gilfach, Bargoed</address>
+        <description><![CDATA[Addresses: William Street, Gilfach, Bargoed<br> : Bargoed ABC<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>William Street, Gilfach, Bargoed</value>
+          </Data>
+          <Data name=" ">
+            <value>Bargoed ABC
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Brecon Phoenix ABC</name>
+        <description><![CDATA[Addresses: Market Street, Brecon LD3 8AH.<br> : Brecon Phoenix ABC<br><br>Main Contact: Dave Gilbert<br><br>Email: giblet185@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Market Street, Brecon LD3 8AH.</value>
+          </Data>
+          <Data name=" ">
+            <value>Brecon Phoenix ABC
+
+Main Contact: Dave Gilbert
+
+Email: giblet185@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.3929189,51.948679,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Caerphilly ABC</name>
+        <address>Station Terrace, Caerphilly, CF83 1HD</address>
+        <description><![CDATA[Addresses: Station Terrace, Caerphilly, CF83 1HD<br> : Caerphilly ABC<br><br>Main contact: Mark Atkins<br><br>Email: mark_atkins@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br> ]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Station Terrace, Caerphilly, CF83 1HD</value>
+          </Data>
+          <Data name=" ">
+            <value>Caerphilly ABC
+
+Main contact: Mark Atkins
+
+Email: mark_atkins@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+ </value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Chepstow ABC</name>
+        <address>Lower Church Street, Chepstow, NP16 5HJ</address>
+        <description><![CDATA[Addresses: Lower Church Street, Chepstow, NP16 5HJ<br> : Chepstow ABC<br><br>Main contact: Steve Woods<br><br>Email: stevewoods1965@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Lower Church Street, Chepstow, NP16 5HJ</value>
+          </Data>
+          <Data name=" ">
+            <value>Chepstow ABC
+
+Main contact: Steve Woods
+
+Email: stevewoods1965@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Coedeva ABC</name>
+        <address>Penlyan Fields, Coed eva.</address>
+        <description><![CDATA[Addresses: Penlyan Fields, Coed eva.<br> : Coedeva ABC<br><br>Main contact: Jason Speirs<br><br>Email: jspeirs1970@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Penlyan Fields, Coed eva.</value>
+          </Data>
+          <Data name=" ">
+            <value>Coedeva ABC
+
+Main contact: Jason Speirs
+
+Email: jspeirs1970@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Cwmbran ABC</name>
+        <address>Wayfield Crescent, Pontnewydd, Cwmbran NP44 1NJ</address>
+        <description><![CDATA[Addresses: Wayfield Crescent, Pontnewydd, Cwmbran NP44 1NJ<br> : Cwmbran ABC<br><br>Main contact: Keith Jefferies<br><br>Email: keithcwmbranabc@outlook.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Wayfield Crescent, Pontnewydd, Cwmbran NP44 1NJ</value>
+          </Data>
+          <Data name=" ">
+            <value>Cwmbran ABC
+
+Main contact: Keith Jefferies
+
+Email: keithcwmbranabc@outlook.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Cwmcarn ABC</name>
+        <address>Cwmcarn ABC
+
+Main contact: Steve Hammett
+
+Email: stevehammett_2@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</address>
+        <description><![CDATA[Addresses: Cwmcarn ABC<br><br>Main contact: Steve Hammett<br><br>Email: stevehammett_2@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br><br> : ]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Cwmcarn ABC
+
+Main contact: Steve Hammett
+
+Email: stevehammett_2@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+          <Data name=" ">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Fleur-De-Lys ABC</name>
+        <address>Ivor Street, Pengam, NP12 3AB</address>
+        <description><![CDATA[Addresses: Ivor Street, Pengam, NP12 3AB<br> : Fleur-De-Lys ABC<br><br>Main contact: Ross Turner<br>Email: rossturner09@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Ivor Street, Pengam, NP12 3AB</value>
+          </Data>
+          <Data name=" ">
+            <value>Fleur-De-Lys ABC
+
+Main contact: Ross Turner
+Email: rossturner09@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Gelligaer ABC</name>
+        <address>Dan y Gaer Road, Gelligaer, Hengoed CF82 8EP</address>
+        <description><![CDATA[Addresses: Dan y Gaer Road, Gelligaer, Hengoed CF82 8EP<br> : Gelligaer ABC<br><br>Main contact: Brian Martin<br><br>Email: brian.martin.gelligaer.boxing@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Dan y Gaer Road, Gelligaer, Hengoed CF82 8EP</value>
+          </Data>
+          <Data name=" ">
+            <value>Gelligaer ABC
+
+Main contact: Brian Martin
+
+Email: brian.martin.gelligaer.boxing@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Goodes A.B.A ABC</name>
+        <address>Goodes Fitness Centre, Edlogan Way, Cwmbran, NP44 2JJ</address>
+        <description><![CDATA[Addresses: Goodes Fitness Centre, Edlogan Way, Cwmbran, NP44 2JJ<br> : Goodes Amateur Boxing Academy<br><br>Main contact: Jon Manning<br><br>Email: podhome@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Goodes Fitness Centre, Edlogan Way, Cwmbran, NP44 2JJ</value>
+          </Data>
+          <Data name=" ">
+            <value>Goodes Amateur Boxing Academy
+
+Main contact: Jon Manning
+
+Email: podhome@hotmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Heads Of Valleys ABC</name>
+        <address>Garfield Terrace, Willowtown, Ebbw Vale</address>
+        <description><![CDATA[Addresses: Garfield Terrace, Willowtown, Ebbw Vale<br> : Heads of Valleys ABC<br><br>Main contact: Mel Hamer<br><br>Email: melvyn.hamer@yahoo.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Garfield Terrace, Willowtown, Ebbw Vale</value>
+          </Data>
+          <Data name=" ">
+            <value>Heads of Valleys ABC
+
+Main contact: Mel Hamer
+
+Email: melvyn.hamer@yahoo.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Newport Sporting ABC</name>
+        <address><![CDATA[St Mary's Street, Baneswell, Newport, NP20 4DA]]></address>
+        <description><![CDATA[Addresses: St Mary's Street, Baneswell, Newport, NP20 4DA<br> : Main Contact: Dai Foster<br>Email: davidfoster610@msn.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value><![CDATA[St Mary's Street, Baneswell, Newport, NP20 4DA]]></value>
+          </Data>
+          <Data name=" ">
+            <value>Main Contact: Dai Foster
+Email: davidfoster610@msn.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Pantside ABC</name>
+        <address>Linden Court Pantside, Pantside , Newbridge , Gwent NP115LX</address>
+        <description><![CDATA[Addresses: Linden Court Pantside, Pantside , Newbridge , Gwent NP115LX<br> : Pantside ABC<br><br>Main contact: Gavin Rees<br><br>Email: gavinmrees@yahoo.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Linden Court Pantside, Pantside , Newbridge , Gwent NP115LX</value>
+          </Data>
+          <Data name=" ">
+            <value>Pantside ABC
+
+Main contact: Gavin Rees
+
+Email: gavinmrees@yahoo.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Planet Fitness ABC</name>
+        <address>Unit 2A – 2B, Sirhowy Industrial Estate, Tredegar, NP22 4QZ</address>
+        <description><![CDATA[Addresses: Unit 2A – 2B, Sirhowy Industrial Estate, Tredegar, NP22 4QZ<br> : Planet Fitness ABC<br><br>Main contact: Jason Paynter<br><br>Email: jasonpaynter1971@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Unit 2A – 2B, Sirhowy Industrial Estate, Tredegar, NP22 4QZ</value>
+          </Data>
+          <Data name=" ">
+            <value>Planet Fitness ABC
+
+Main contact: Jason Paynter
+
+Email: jasonpaynter1971@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Pontypool ABC</name>
+        <address>6 Pavilion Industrial Estate, Pontnewynydd NP4 6NF</address>
+        <description><![CDATA[Addresses: 6 Pavilion Industrial Estate, Pontnewynydd NP4 6NF<br> : Pontypool ABC:<br><br>Main contact: Dale Cooper<br><br>Email: dale@pontypoolboxing.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>6 Pavilion Industrial Estate, Pontnewynydd NP4 6NF</value>
+          </Data>
+          <Data name=" ">
+            <value>Pontypool ABC:
+
+Main contact: Dale Cooper
+
+Email: dale@pontypoolboxing.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Somerton Rascals ABC</name>
+        <address>9 Poplar Road, Somerton, Newport NP19 9AX</address>
+        <description><![CDATA[Addresses: 9 Poplar Road, Somerton, Newport NP19 9AX<br> : Somerton Rascals ABC<br><br>Main contact: Mark James<br><br>Email: mark1963james@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>9 Poplar Road, Somerton, Newport NP19 9AX</value>
+          </Data>
+          <Data name=" ">
+            <value>Somerton Rascals ABC
+
+Main contact: Mark James
+
+Email: mark1963james@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[KB Boxing & Fitness Gym]]></name>
+        <address>Unit 34, Albany Trading Estate, Newport, NP20 5NQ</address>
+        <description><![CDATA[Addresses: Unit 34, Albany Trading Estate, Newport, NP20 5NQ<br> : Main contact: Kate Porter<br>Email: kbboxing1@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Unit 34, Albany Trading Estate, Newport, NP20 5NQ</value>
+          </Data>
+          <Data name=" ">
+            <value>Main contact: Kate Porter
+Email: kbboxing1@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>St Josephs ABC</name>
+        <address>82 George Street, Newport, Gwent NP20</address>
+        <description><![CDATA[Addresses: 82 George Street, Newport, Gwent NP20<br> : St. Josephs ABC<br><br>Main contact: David Exton<br><br>Email: sueanddaveexton@yahoo.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>82 George Street, Newport, Gwent NP20</value>
+          </Data>
+          <Data name=" ">
+            <value>St. Josephs ABC
+
+Main contact: David Exton
+
+Email: sueanddaveexton@yahoo.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Torfaen Warriors ABC</name>
+        <address>Beaverstock Tools, Grange Industrial Estate, Llanyravon, Cwnbran NP44 8HQ</address>
+        <description><![CDATA[Addresses: Beaverstock Tools, Grange Industrial Estate, Llanyravon, Cwnbran NP44 8HQ<br> : Torfaen Warriors ABC<br><br>Main contact: Simon Weaver<br><br>Email: champsboxinguk@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Beaverstock Tools, Grange Industrial Estate, Llanyravon, Cwnbran NP44 8HQ</value>
+          </Data>
+          <Data name=" ">
+            <value>Torfaen Warriors ABC
+
+Main contact: Simon Weaver
+
+Email: champsboxinguk@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Eastside ABC</name>
+        <address>2 Nash Road, Lliswerrey, Newport, Gwent NP19 4NG</address>
+        <description><![CDATA[Addresses: 2 Nash Road, Lliswerrey, Newport, Gwent NP19 4NG<br> : Eastside ABC<br><br>Main contact: : Joe McKenzie<br><br>Email: joseph.mckenzie1@aol.co.uk<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>2 Nash Road, Lliswerrey, Newport, Gwent NP19 4NG</value>
+          </Data>
+          <Data name=" ">
+            <value>Eastside ABC
+
+Main contact: : Joe McKenzie
+
+Email: joseph.mckenzie1@aol.co.uk
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Ashley Brace Boxing Academy</name>
+        <address>NP23 5PP</address>
+        <description><![CDATA[Addresses: NP23 5PP<br> : Ashley Brace Boxing Academy<br><br>Main contact: Catherine Callaghan<br><br>Email: ashleybracesboxingacademy@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>NP23 5PP</value>
+          </Data>
+          <Data name=" ">
+            <value>Ashley Brace Boxing Academy
+
+Main contact: Catherine Callaghan
+
+Email: ashleybracesboxingacademy@gmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Newbridge ABC</name>
+        <description><![CDATA[Addresses: Prince of Wales Estate, NP11 5AR<br> : Calzaghe Academy<br><br>Please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Prince of Wales Estate, NP11 5AR</value>
+          </Data>
+          <Data name=" ">
+            <value>Calzaghe Academy
+
+Please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -3.1358576,51.6440544,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Abergavenny</name>
+        <address>NP7 7RL</address>
+        <description><![CDATA[Addresses: NP7 7RL<br> : Abergavenny ABC<br><br>Main contact: Kieran Gething<br><br>Email: gething123@hotmail.co.uk<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>NP7 7RL</value>
+          </Data>
+          <Data name=" ">
+            <value>Abergavenny ABC
+
+Main contact: Kieran Gething
+
+Email: gething123@hotmail.co.uk
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>St Michaels ABC</name>
+        <address>NP20 5NQ</address>
+        <description><![CDATA[Addresses: NP20 5NQ<br> : St Michaels ABC<br><br>Main contact: Luis Evans<br>Email: luisevans1980@hotmail.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>NP20 5NQ</value>
+          </Data>
+          <Data name=" ">
+            <value>St Michaels ABC
+
+Main contact: Luis Evans
+Email: luisevans1980@hotmail.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>MCL St Brides Boxing Academy</name>
+        <address>NP10 8SH</address>
+        <description><![CDATA[Addresses: NP10 8SH<br> : Main contact: Tom Janes<br><br>Email: tom93 jones@icloud.com<br><br>Alternatively, please contact:<br>info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>NP10 8SH</value>
+          </Data>
+          <Data name=" ">
+            <value>Main contact: Tom Janes
+
+Email: tom93 jones@icloud.com
+
+Alternatively, please contact:
+info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Highcross</name>
+        <address>The Woodlands, Brickyard Lane, Newport, NP20 5ES</address>
+        <description><![CDATA[Addresses: The Woodlands, Brickyard Lane, Newport, NP20 5ES<br> : Highcross ABC<br><br>Main Contact: Ashley Edwards<br><br>Email: highcross.abc@outlook.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>The Woodlands, Brickyard Lane, Newport, NP20 5ES</value>
+          </Data>
+          <Data name=" ">
+            <value>Highcross ABC
+
+Main Contact: Ashley Edwards
+
+Email: highcross.abc@outlook.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Pontnewynydd Boxing Gym</name>
+        <address>Hanbury Road, Pontnewynydd, Pontypool, NP4 7UF</address>
+        <description><![CDATA[Addresses: Hanbury Road, Pontnewynydd, Pontypool, NP4 7UF<br> : Pontnewynydd ABC<br><br>Main Contact: Steve Mayley<br><br>Email: sjmdanny@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Hanbury Road, Pontnewynydd, Pontypool, NP4 7UF</value>
+          </Data>
+          <Data name=" ">
+            <value>Pontnewynydd ABC
+
+Main Contact: Steve Mayley
+
+Email: sjmdanny@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Silurian ABC</name>
+        <address>Coach Bach, Tredegar, Blaenau, Gwent, NP22 4RW</address>
+        <description><![CDATA[Addresses: Coach Bach, Tredegar, Blaenau, Gwent, NP22 4RW<br> : Silurian ABC<br><br>Main Contact: Steven Aherne<br><br>Email: silurianboxing@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Coach Bach, Tredegar, Blaenau, Gwent, NP22 4RW</value>
+          </Data>
+          <Data name=" ">
+            <value>Silurian ABC
+
+Main Contact: Steven Aherne
+
+Email: silurianboxing@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>Toe 2 Toe ABC</name>
+        <address>Community Hall, Cocker Avenue, Two Locks, Cwmbran, NP44 7JJ</address>
+        <description><![CDATA[Addresses: Community Hall, Cocker Avenue, Two Locks, Cwmbran, NP44 7JJ<br> : Toe 2 Toe ABC<br><br>Main Contact: Neil Davies<br><br>Email: neil93718@gmail.com<br><br>Alternatively, please contact: info@welshboxing.org]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>Community Hall, Cocker Avenue, Two Locks, Cwmbran, NP44 7JJ</value>
+          </Data>
+          <Data name=" ">
+            <value>Toe 2 Toe ABC
+
+Main Contact: Neil Davies
+
+Email: neil93718@gmail.com
+
+Alternatively, please contact: info@welshboxing.org</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>NCJM Boxing Club</name>
+        <address>63 Stow Hill, Newport, NP20 4DX</address>
+        <description><![CDATA[Addresses: 63 Stow Hill, Newport, NP20 4DX<br> : This is a non-contact boxing gym<br><br>Main Contact: Nazrul Islam<br><br>Email: naz.islam7c@outlook.com<br><br>Alternatively, please contact: info@welshboxing.org<br>]]></description>
+        <styleUrl>#icon-1761-01579B</styleUrl>
+        <ExtendedData>
+          <Data name="Addresses">
+            <value>63 Stow Hill, Newport, NP20 4DX</value>
+          </Data>
+          <Data name=" ">
+            <value>This is a non-contact boxing gym
+
+Main Contact: Nazrul Islam
+
+Email: naz.islam7c@outlook.com
+
+Alternatively, please contact: info@welshboxing.org
+</value>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

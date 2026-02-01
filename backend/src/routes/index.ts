@@ -8,6 +8,7 @@ import availabilityRoutes, { boxerAvailabilityRouter } from './availability.rout
 import matchRequestRoutes from './matchRequest.routes';
 import coachRoutes from './coach.routes';
 import adminRoutes from './admin.routes';
+import clubRoutes from './club.routes';
 
 const router = Router();
 
@@ -56,5 +57,11 @@ router.use('/coach', coachRoutes);
  * Base path: /api/v1/admin
  */
 router.use('/admin', adminRoutes);
+
+/**
+ * Club routes
+ * Base path: /api/v1/clubs
+ */
+router.use('/clubs', clubRoutes);
 
 export default router;

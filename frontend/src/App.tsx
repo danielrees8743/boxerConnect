@@ -15,6 +15,7 @@ import { BoxersPage } from '@/pages/BoxersPage';
 import { BoxerDetailPage } from '@/pages/BoxerDetailPage';
 import { MatchesPage } from '@/pages/MatchesPage';
 import { RequestsPage } from '@/pages/RequestsPage';
+import { ClubsPage } from '@/pages/ClubsPage';
 
 /**
  * Protected route component that redirects to login if not authenticated.
@@ -82,6 +83,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/clubs" element={<ClubsPage />} />
 
         {/* Protected Routes */}
         <Route

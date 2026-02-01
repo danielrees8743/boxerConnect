@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, User, Home, Users, Calendar, Settings } from 'lucide-react';
+import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     { to: '/matches', label: 'Matches', icon: Calendar },
   ];
 
+  const publicLinks = [
+    { to: '/clubs', label: 'Clubs', icon: Building2 },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -49,6 +53,18 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:flex-1 md:items-center md:justify-between">
             <div className="flex items-center space-x-6">
+              {/* Public links - always visible */}
+              {publicLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="flex items-center space-x-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <link.icon className="h-4 w-4" />
+                  <span>{link.label}</span>
+                </Link>
+              ))}
+              {/* Authenticated links */}
               {isAuthenticated &&
                 navLinks.map((link) => (
                   <Link
@@ -115,6 +131,18 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <nav className="container space-y-4 pb-4">
             {isAuthenticated ? (
               <>
+                {/* Public links in mobile menu */}
+                {publicLinks.map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <link.icon className="h-4 w-4" />
+                    <span>{link.label}</span>
+                  </Link>
+                ))}
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
@@ -150,6 +178,14 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               </>
             ) : (
               <>
+                <Link
+                  to="/clubs"
+                  className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Building2 className="h-4 w-4" />
+                  <span>Clubs</span>
+                </Link>
                 <Link
                   to="/login"
                   className="block text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
