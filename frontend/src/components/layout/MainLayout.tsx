@@ -4,6 +4,7 @@ import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2 } fro
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
+import { Logo } from '@/components/ui/Logo';
 import { ThemeToggleDropdown, ThemeToggle } from '@/components/theme';
 import { cn } from '@/lib/utils';
 
@@ -47,7 +48,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <div className="container flex h-16 items-center">
           {/* Logo */}
           <Link to="/" className="mr-6 flex items-center space-x-2">
-            <span className="text-xl font-bold text-boxing-red">BoxerConnect</span>
+            <Logo size="md" />
           </Link>
 
           {/* Desktop Navigation */}

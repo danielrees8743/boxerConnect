@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <!--
+    BoxerConnect Icon
+    Boxing glove with connection symbol
+  -->
+
+  <!-- Main Glove Body -->
+  <path d="M6 12c0-4.418 3.582-8 8-8h6c4.418 0 8 3.582 8 8v10c0 4.418-3.582 8-8 8h-6c-4.418 0-8-3.582-8-8V12z" fill="#DC2626"/>
+
+  <!-- Thumb -->
+  <path d="M3 14c0-2.209 1.791-4 4-4h2v12H7c-2.209 0-4-1.791-4-4v-4z" fill="#DC2626"/>
+
+  <!-- Stitching Details -->
+  <path d="M10 8h12M10 14h12M10 20h12" stroke="#991B1B" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Wrist Cuff -->
+  <rect x="6" y="26" width="22" height="5" rx="2" fill="#1E293B"/>
+
+  <!-- Gold Accent - Connection Symbol -->
+  <circle cx="26" cy="14" r="2.5" fill="#F59E0B"/>
+  <path d="M29 14h4" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="35" cy="14" r="1.5" fill="#F59E0B" opacity="0.5"/>
+</svg>
