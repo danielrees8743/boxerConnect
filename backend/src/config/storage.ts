@@ -1,7 +1,9 @@
 // Storage Configuration
 // Defines file upload constraints and paths for profile photos
 
+import fs from 'fs';
 import path from 'path';
+import { storageEnvConfig, serverConfig } from './env';
 
 // ============================================================================
 // File Upload Configuration
@@ -28,14 +30,52 @@ export const ALLOWED_MIME_TYPES = [
 export type AllowedMimeType = (typeof ALLOWED_MIME_TYPES)[number];
 
 /**
- * Upload directory for profile photos (relative to backend root)
+ * Upload directory for profile photos (relative to storage root)
  */
-export const UPLOAD_DIR = 'uploads/profile-photos';
+export const UPLOAD_DIR = 'profile-photos';
+
+/**
+ * Validates and returns the storage base path
+ * Warns in production if external storage is not configured
+ */
+function getStorageBasePath(): string {
+  const externalPath = storageEnvConfig.uploadPath;
+  const fallbackPath = path.join(process.cwd(), 'uploads');
+
+  if (!externalPath) {
+    if (serverConfig.isProduction) {
+      console.warn('WARNING: UPLOAD_PATH not set in production. Using local uploads directory.');
+    }
+    return fallbackPath;
+  }
+
+  // Validate the external path exists and is writable
+  try {
+    // Check if path exists, create if it doesn't
+    if (!fs.existsSync(externalPath)) {
+      console.warn(`Storage path ${externalPath} does not exist. Attempting to create...`);
+      fs.mkdirSync(externalPath, { recursive: true });
+    }
+    // Check write access
+    fs.accessSync(externalPath, fs.constants.W_OK);
+    console.log(`Using external storage path: ${externalPath}`);
+    return externalPath;
+  } catch (error) {
+    console.error(`ERROR: Cannot access storage path ${externalPath}:`, error);
+    console.warn('Falling back to local uploads directory.');
+    return fallbackPath;
+  }
+}
+
+/**
+ * Base storage path - uses UPLOAD_PATH env variable or falls back to local uploads
+ */
+export const STORAGE_BASE_PATH = getStorageBasePath();
 
 /**
  * Absolute path to upload directory
  */
-export const UPLOAD_PATH = path.join(process.cwd(), UPLOAD_DIR);
+export const UPLOAD_PATH = path.join(STORAGE_BASE_PATH, UPLOAD_DIR);
 
 /**
  * URL path prefix for serving uploaded files
@@ -70,6 +110,7 @@ export const storageConfig = {
   maxFileSize: MAX_FILE_SIZE,
   allowedMimeTypes: ALLOWED_MIME_TYPES,
   uploadDir: UPLOAD_DIR,
+  storageBasePath: STORAGE_BASE_PATH,
   uploadPath: UPLOAD_PATH,
   uploadUrlPrefix: UPLOAD_URL_PREFIX,
   image: {

@@ -1,6 +1,7 @@
 // Environment Configuration with Zod Validation
 // Ensures all required environment variables are present and correctly typed
 
+import path from 'path';
 import { z } from 'zod';
 import type { EnvironmentConfig } from '../types';
 
@@ -38,6 +39,15 @@ const envSchema = z.object({
   LOG_LEVEL: z
     .enum(['error', 'warn', 'info', 'debug', 'trace'])
     .default('info'),
+
+  // Storage - must be an absolute path if provided
+  UPLOAD_PATH: z
+    .string()
+    .optional()
+    .refine(
+      (p) => !p || path.isAbsolute(p),
+      { message: 'UPLOAD_PATH must be an absolute path' }
+    ),
 });
 
 // Parse and validate environment variables
@@ -98,4 +108,8 @@ export const corsConfig = {
 
 export const loggingConfig = {
   level: env.LOG_LEVEL,
+} as const;
+
+export const storageEnvConfig = {
+  uploadPath: env.UPLOAD_PATH,
 } as const;

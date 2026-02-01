@@ -4,8 +4,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import path from 'path';
-import { corsConfig, serverConfig, checkDatabaseHealth, checkRedisHealth } from './config';
+import { corsConfig, serverConfig, checkDatabaseHealth, checkRedisHealth, storageConfig } from './config';
 import { errorHandler, notFoundHandler, standardLimiter } from './middleware';
 import { sendSuccess } from './utils';
 import routes from './routes';
@@ -57,8 +56,9 @@ app.use(standardLimiter);
 // Static File Serving
 // ============================================================================
 
-// Serve uploaded files (profile photos, etc.)
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+// Serve profile photo uploads only from the specific subdirectory
+// Uses external storage path if configured, otherwise falls back to local uploads
+app.use('/uploads/profile-photos', express.static(storageConfig.uploadPath));
 
 // ============================================================================
 // Request Logging (Development)

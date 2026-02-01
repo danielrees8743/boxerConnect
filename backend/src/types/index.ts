@@ -147,6 +147,9 @@ export interface EnvironmentConfig {
 
   // Logging
   LOG_LEVEL: string;
+
+  // Storage
+  UPLOAD_PATH?: string | undefined;
 }
 
 // ============================================================================
