@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchUsers, updateUserStatus, deleteUser } from '@/features/admin/adminSlice';
 import {
@@ -38,6 +38,7 @@ const statusOptions = [
 
 export const AdminUsersPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { users } = useAppSelector((state) => state.admin);
 
@@ -264,6 +265,7 @@ export const AdminUsersPage: React.FC = () => {
         data={filteredData}
         pagination={users.pagination}
         onPageChange={handlePageChange}
+        onRowClick={(user) => navigate(`/admin/users/${user.id}/edit`)}
         isLoading={users.loading}
         emptyMessage="No users found"
         keyExtractor={(user) => user.id}

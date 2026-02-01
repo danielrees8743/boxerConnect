@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchClubs, deleteClub } from '@/features/admin/adminSlice';
 import {
@@ -29,6 +29,7 @@ const verificationOptions = [
 
 export const AdminClubsPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { clubs } = useAppSelector((state) => state.admin);
 
@@ -228,6 +229,7 @@ export const AdminClubsPage: React.FC = () => {
         data={filteredData}
         pagination={clubs.pagination}
         onPageChange={handlePageChange}
+        onRowClick={(club) => navigate(`/admin/clubs/${club.id}/edit`)}
         isLoading={clubs.loading}
         emptyMessage="No clubs found"
         keyExtractor={(club) => club.id}
