@@ -32,6 +32,12 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.BOXER_UPLOAD_PHOTO,
     Permission.BOXER_UPLOAD_VIDEO,
 
+    // Fight history management (self-service)
+    Permission.FIGHT_CREATE,
+    Permission.FIGHT_READ,
+    Permission.FIGHT_UPDATE,
+    Permission.FIGHT_DELETE,
+
     // Can VIEW their own matches/availability (read-only)
     Permission.MATCH_READ_OWN_REQUESTS,
     Permission.AVAILABILITY_READ,

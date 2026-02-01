@@ -74,3 +74,12 @@ export {
   type AdminBoxerIdInput,
   type PaginationInput,
 } from './admin.validators';
+
+export {
+  createFightHistorySchema,
+  updateFightHistorySchema,
+  fightHistoryIdSchema,
+  type CreateFightHistoryInput,
+  type UpdateFightHistoryInput,
+  type FightHistoryIdInput,
+} from './fightHistory.validators';

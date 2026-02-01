@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyBoxer, updateBoxer, createBoxer } from '@/features/boxer/boxerSlice';
-import { BoxerProfile, BoxerForm, VideoUpload, VideoList } from '@/components/boxer';
+import { BoxerProfile, BoxerForm, VideoUpload, VideoList, FightHistoryList } from '@/components/boxer';
 import { Alert, AlertDescription, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Video } from 'lucide-react';
 import { boxerService } from '@/services/boxerService';
-import type { CreateBoxerData, UpdateBoxerData, BoxerVideo } from '@/types';
+import type { CreateBoxerData, UpdateBoxerData, BoxerVideo, FightHistory } from '@/types';
 
 /**
  * ProfilePage displays and manages the current user's boxer profile.
@@ -20,6 +20,8 @@ export const ProfilePage: React.FC = () => {
   const [videoCount, setVideoCount] = useState(0);
   const [maxVideos, setMaxVideos] = useState(5);
   const [videosLoading, setVideosLoading] = useState(false);
+  const [fights, setFights] = useState<FightHistory[]>([]);
+  const [fightsLoading, setFightsLoading] = useState(false);
 
   // Fetch boxer profile on mount
   useEffect(() => {
@@ -45,6 +47,23 @@ export const ProfilePage: React.FC = () => {
     fetchVideos();
   }, [myBoxer]);
 
+  // Fetch fight history when boxer profile is loaded
+  useEffect(() => {
+    const fetchFights = async () => {
+      if (!myBoxer) return;
+      setFightsLoading(true);
+      try {
+        const result = await boxerService.getMyFights();
+        setFights(result.fights);
+      } catch (err) {
+        console.error('Failed to fetch fight history:', err);
+      } finally {
+        setFightsLoading(false);
+      }
+    };
+    fetchFights();
+  }, [myBoxer]);
+
   // Handle video upload
   const handleVideoUploaded = useCallback((video: BoxerVideo) => {
     setVideos((prev) => [video, ...prev]);
@@ -56,6 +75,29 @@ export const ProfilePage: React.FC = () => {
     setVideos((prev) => prev.filter((v) => v.id !== videoId));
     setVideoCount((prev) => prev - 1);
   }, []);
+
+  // Handle fight created - add to list and refetch boxer to update record
+  const handleFightCreated = useCallback((fight: FightHistory) => {
+    setFights((prev) => [fight, ...prev]);
+    // Refetch boxer profile to get updated wins/losses/draws
+    dispatch(fetchMyBoxer());
+  }, [dispatch]);
+
+  // Handle fight updated - update in list and refetch boxer if result might have changed
+  const handleFightUpdated = useCallback((updatedFight: FightHistory) => {
+    setFights((prev) =>
+      prev.map((f) => (f.id === updatedFight.id ? updatedFight : f))
+    );
+    // Refetch boxer profile to get updated wins/losses/draws
+    dispatch(fetchMyBoxer());
+  }, [dispatch]);
+
+  // Handle fight deleted - remove from list and refetch boxer to update record
+  const handleFightDeleted = useCallback((fightId: string) => {
+    setFights((prev) => prev.filter((f) => f.id !== fightId));
+    // Refetch boxer profile to get updated wins/losses/draws
+    dispatch(fetchMyBoxer());
+  }, [dispatch]);
 
   // Handle creating/updating boxer profile
   const handleSubmit = async (data: CreateBoxerData | UpdateBoxerData) => {
@@ -124,13 +166,25 @@ export const ProfilePage: React.FC = () => {
 
       <BoxerProfile
         boxer={myBoxer}
-        fightHistory={myBoxer?.fightHistory || []}
+        fightHistory={fights}
         availability={myBoxer?.availability || []}
         videos={videos}
         isOwner={true}
         isLoading={isLoading}
         onEdit={() => setIsEditing(true)}
       />
+
+      {/* Fight History Section */}
+      {myBoxer && (
+        <FightHistoryList
+          fights={fights}
+          isOwner={true}
+          onFightCreated={handleFightCreated}
+          onFightUpdated={handleFightUpdated}
+          onFightDeleted={handleFightDeleted}
+          isLoading={fightsLoading}
+        />
+      )}
 
       {/* Training Videos Section */}
       {myBoxer && (

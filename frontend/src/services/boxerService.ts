@@ -8,6 +8,9 @@ import type {
   BoxerSearchParams,
   ApiResponse,
   PaginatedResponse,
+  FightHistory,
+  CreateFightHistoryData,
+  UpdateFightHistoryData,
 } from '@/types';
 
 /**
@@ -146,6 +149,71 @@ export const boxerService = {
     const response = await apiClient.get<ApiResponse<BoxerVideoList>>(`/boxers/${boxerId}/videos`);
     if (!response.data.data) {
       throw new Error(response.data.message || 'Failed to get videos');
+    }
+    return response.data.data;
+  },
+
+  // ============================================================================
+  // Fight History Methods
+  // ============================================================================
+
+  /**
+   * Create a new fight history entry for the current user's boxer profile.
+   */
+  async createFight(data: CreateFightHistoryData): Promise<FightHistory> {
+    const response = await apiClient.post<ApiResponse<{ fight: FightHistory }>>(
+      '/boxers/me/fights',
+      data
+    );
+    if (!response.data.data?.fight) {
+      throw new Error(response.data.message || 'Failed to create fight history');
+    }
+    return response.data.data.fight;
+  },
+
+  /**
+   * Get all fight history for the current user's boxer profile.
+   */
+  async getMyFights(): Promise<{ fights: FightHistory[]; count: number }> {
+    const response = await apiClient.get<
+      ApiResponse<{ fights: FightHistory[]; count: number }>
+    >('/boxers/me/fights');
+    if (!response.data.data) {
+      throw new Error(response.data.message || 'Failed to get fight history');
+    }
+    return response.data.data;
+  },
+
+  /**
+   * Update a fight history entry.
+   */
+  async updateFight(fightId: string, data: UpdateFightHistoryData): Promise<FightHistory> {
+    const response = await apiClient.put<ApiResponse<{ fight: FightHistory }>>(
+      `/boxers/me/fights/${fightId}`,
+      data
+    );
+    if (!response.data.data?.fight) {
+      throw new Error(response.data.message || 'Failed to update fight history');
+    }
+    return response.data.data.fight;
+  },
+
+  /**
+   * Delete a fight history entry.
+   */
+  async deleteFight(fightId: string): Promise<void> {
+    await apiClient.delete(`/boxers/me/fights/${fightId}`);
+  },
+
+  /**
+   * Get fight history for a boxer by ID (public).
+   */
+  async getBoxerFights(boxerId: string): Promise<{ fights: FightHistory[]; count: number }> {
+    const response = await apiClient.get<
+      ApiResponse<{ fights: FightHistory[]; count: number }>
+    >(`/boxers/${boxerId}/fights`);
+    if (!response.data.data) {
+      throw new Error(response.data.message || 'Failed to get fight history');
     }
     return response.data.data;
   },

@@ -23,6 +23,13 @@ import {
   getBoxerVideos,
 } from '../controllers/video.controller';
 import {
+  createFight,
+  getMyFights,
+  updateFight,
+  deleteFight,
+  getBoxerFights,
+} from '../controllers/fightHistory.controller';
+import {
   authenticate,
   optionalAuth,
   standardLimiter,
@@ -150,6 +157,62 @@ router.delete(
   handler(deleteVideo)
 );
 
+// ============================================================================
+// Fight History Routes
+// ============================================================================
+
+/**
+ * POST /api/v1/boxers/me/fights
+ * Create a fight history entry
+ * Requires: authentication + FIGHT_CREATE permission
+ */
+router.post(
+  '/me/fights',
+  createResourceLimiter,
+  authenticate,
+  requirePermission(Permission.FIGHT_CREATE),
+  handler(createFight)
+);
+
+/**
+ * GET /api/v1/boxers/me/fights
+ * Get my fight history
+ * Requires: authentication + FIGHT_READ permission
+ */
+router.get(
+  '/me/fights',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.FIGHT_READ),
+  handler(getMyFights)
+);
+
+/**
+ * PUT /api/v1/boxers/me/fights/:id
+ * Update a fight history entry
+ * Requires: authentication + FIGHT_UPDATE permission
+ */
+router.put(
+  '/me/fights/:id',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.FIGHT_UPDATE),
+  handler(updateFight)
+);
+
+/**
+ * DELETE /api/v1/boxers/me/fights/:id
+ * Delete a fight history entry
+ * Requires: authentication + FIGHT_DELETE permission
+ */
+router.delete(
+  '/me/fights/:id',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.FIGHT_DELETE),
+  handler(deleteFight)
+);
+
 /**
  * POST /api/v1/boxers
  * Create or complete boxer profile
@@ -235,6 +298,18 @@ router.get(
   standardLimiter,
   optionalAuth,
   handler(getBoxerVideos)
+);
+
+/**
+ * GET /api/v1/boxers/:id/fights
+ * Get fight history for a boxer (public)
+ * Optional auth for future personalization
+ */
+router.get(
+  '/:id/fights',
+  standardLimiter,
+  optionalAuth,
+  handler(getBoxerFights)
 );
 
 export default router;

@@ -13,3 +13,5 @@ export { BoxerList } from './BoxerList';
 export { PhotoUpload } from './PhotoUpload';
 export { VideoUpload } from './VideoUpload';
 export { VideoList } from './VideoList';
+export { FightHistoryForm } from './FightHistoryForm';
+export { FightHistoryList } from './FightHistoryList';

@@ -32,6 +32,22 @@ export enum Permission {
   BOXER_UPLOAD_VIDEO = 'boxer:upload:video',
 
   // ============================================================================
+  // Fight History Operations
+  // ============================================================================
+
+  /** Create a fight history entry */
+  FIGHT_CREATE = 'fight:create',
+
+  /** Read fight history entries */
+  FIGHT_READ = 'fight:read',
+
+  /** Update a fight history entry */
+  FIGHT_UPDATE = 'fight:update',
+
+  /** Delete a fight history entry */
+  FIGHT_DELETE = 'fight:delete',
+
+  // ============================================================================
   // Match Request Operations
   // ============================================================================
 
