@@ -219,7 +219,7 @@ export const DashboardPage: React.FC = () => {
               ))}
             </ul>
             <Button className="mt-4 w-full" variant="outline" asChild>
-              <Link to="/profile/edit">Complete Profile</Link>
+              <Link to="/profile">Complete Profile</Link>
             </Button>
           </div>
         </div>
