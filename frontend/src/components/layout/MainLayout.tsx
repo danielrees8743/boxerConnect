@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2 } from 'lucide-react';
+import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2, Shield } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
@@ -83,6 +83,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <ThemeToggleDropdown />
               {isAuthenticated ? (
                 <>
+                  {user?.role === 'ADMIN' && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center space-x-2 text-sm font-medium text-boxing-red-500 transition-colors hover:text-boxing-red-600"
+                    >
+                      <Shield className="h-4 w-4" />
+                      <span>Admin</span>
+                    </Link>
+                  )}
                   <Link
                     to="/profile"
                     className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -155,6 +164,16 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     <span>{link.label}</span>
                   </Link>
                 ))}
+                {user?.role === 'ADMIN' && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center space-x-2 text-sm font-medium text-boxing-red-500 transition-colors hover:text-boxing-red-600"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span>Admin</span>
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
