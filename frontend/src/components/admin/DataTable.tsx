@@ -24,6 +24,7 @@ interface DataTableProps<T> {
   data: T[];
   pagination?: PaginationInfo | null;
   onPageChange?: (page: number) => void;
+  onRowClick?: (item: T) => void;
   isLoading?: boolean;
   emptyMessage?: string;
   keyExtractor: (item: T) => string;
@@ -34,6 +35,7 @@ export function DataTable<T>({
   data,
   pagination,
   onPageChange,
+  onRowClick,
   isLoading = false,
   emptyMessage = 'No data found',
   keyExtractor,
@@ -124,7 +126,11 @@ export function DataTable<T>({
           </TableHeader>
           <TableBody>
             {data.map((item) => (
-              <TableRow key={keyExtractor(item)}>
+              <TableRow
+                key={keyExtractor(item)}
+                onClick={() => onRowClick?.(item)}
+                className={onRowClick ? 'cursor-pointer hover:bg-muted/50' : ''}
+              >
                 {columns.map((column, colIndex) => (
                   <TableCell key={colIndex} className={column.className}>
                     {renderCell(item, column)}

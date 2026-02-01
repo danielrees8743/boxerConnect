@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchBoxers, verifyBoxer, deleteBoxer } from '@/features/admin/adminSlice';
 import {
@@ -29,6 +29,7 @@ const verificationOptions = [
 
 export const AdminBoxersPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { boxers } = useAppSelector((state) => state.admin);
 
@@ -268,6 +269,7 @@ export const AdminBoxersPage: React.FC = () => {
         data={filteredData}
         pagination={boxers.pagination}
         onPageChange={handlePageChange}
+        onRowClick={(boxer) => navigate(`/admin/boxers/${boxer.id}/edit`)}
         isLoading={boxers.loading}
         emptyMessage="No boxers found"
         keyExtractor={(boxer) => boxer.id}
