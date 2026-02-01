@@ -11,9 +11,10 @@ import {
 } from '../controllers/admin.controller';
 import {
   authenticate,
-  requireAdmin,
   standardLimiter,
+  requirePermission,
 } from '../middleware';
+import { Permission } from '../permissions';
 
 const router = Router();
 
@@ -21,11 +22,12 @@ const router = Router();
 const handler = (fn: unknown): RequestHandler => fn as RequestHandler;
 
 // ============================================================================
-// All Admin Routes Require Authentication and ADMIN Role
+// All Admin Routes Require Authentication
+// Individual routes specify required permissions
 // ============================================================================
 
-// Apply authentication and admin role requirement to all routes
-router.use(authenticate, requireAdmin);
+// Apply authentication to all routes
+router.use(authenticate);
 
 // ============================================================================
 // User Management Routes
@@ -35,17 +37,27 @@ router.use(authenticate, requireAdmin);
  * GET /api/v1/admin/users
  * Get all users with optional filtering and pagination
  * Query params: role, isActive, page, limit
- * Rate limited by standardLimiter
+ * Requires: ADMIN_READ_ALL_USERS permission
  */
-router.get('/users', standardLimiter, handler(getUsers));
+router.get(
+  '/users',
+  standardLimiter,
+  requirePermission(Permission.ADMIN_READ_ALL_USERS),
+  handler(getUsers)
+);
 
 /**
  * PUT /api/v1/admin/users/:id/status
  * Activate or deactivate a user
  * Body: { isActive: boolean }
- * Rate limited by standardLimiter
+ * Requires: ADMIN_UPDATE_USER_STATUS permission
  */
-router.put('/users/:id/status', standardLimiter, handler(updateUserStatus));
+router.put(
+  '/users/:id/status',
+  standardLimiter,
+  requirePermission(Permission.ADMIN_UPDATE_USER_STATUS),
+  handler(updateUserStatus)
+);
 
 // ============================================================================
 // Boxer Verification Routes
@@ -55,17 +67,27 @@ router.put('/users/:id/status', standardLimiter, handler(updateUserStatus));
  * GET /api/v1/admin/boxers/pending-verification
  * Get boxers pending verification
  * Query params: page, limit
- * Rate limited by standardLimiter
+ * Requires: ADMIN_VERIFY_BOXER permission
  */
-router.get('/boxers/pending-verification', standardLimiter, handler(getPendingVerifications));
+router.get(
+  '/boxers/pending-verification',
+  standardLimiter,
+  requirePermission(Permission.ADMIN_VERIFY_BOXER),
+  handler(getPendingVerifications)
+);
 
 /**
  * PUT /api/v1/admin/boxers/:id/verify
  * Verify or unverify a boxer
  * Body: { isVerified: boolean }
- * Rate limited by standardLimiter
+ * Requires: ADMIN_VERIFY_BOXER permission
  */
-router.put('/boxers/:id/verify', standardLimiter, handler(verifyBoxer));
+router.put(
+  '/boxers/:id/verify',
+  standardLimiter,
+  requirePermission(Permission.ADMIN_VERIFY_BOXER),
+  handler(verifyBoxer)
+);
 
 // ============================================================================
 // Statistics Routes
@@ -74,8 +96,13 @@ router.put('/boxers/:id/verify', standardLimiter, handler(verifyBoxer));
 /**
  * GET /api/v1/admin/stats
  * Get system-wide statistics
- * Rate limited by standardLimiter
+ * Requires: ADMIN_READ_SYSTEM_STATS permission
  */
-router.get('/stats', standardLimiter, handler(getStats));
+router.get(
+  '/stats',
+  standardLimiter,
+  requirePermission(Permission.ADMIN_READ_SYSTEM_STATS),
+  handler(getStats)
+);
 
 export default router;

@@ -124,3 +124,17 @@ export {
   type UploadOptions,
   type StorageProvider,
 } from './storage';
+
+// Permission Service
+export {
+  hasPermission as checkPermission,
+  hasAnyPermission as checkAnyPermission,
+  hasAllPermissions as checkAllPermissions,
+  invalidateUserPermissionCache,
+  invalidateBoxerPermissionCache,
+  invalidateClubPermissionCache,
+  invalidateAllPermissionCaches,
+  type PermissionContext,
+  type ResourceContext,
+  type PermissionCheckResult,
+} from './permission.service';
