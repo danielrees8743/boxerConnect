@@ -34,13 +34,15 @@ export const strictLimiter: RateLimitRequestHandler = rateLimit({
   legacyHeaders: false,
 });
 
-// Very strict rate limiter for login attempts
+// Rate limiter for login attempts
+// More permissive in development, strict in production
+const isProduction = process.env.NODE_ENV === 'production';
 export const authLimiter: RateLimitRequestHandler = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // 5 failed login attempts per hour
+  windowMs: isProduction ? 60 * 60 * 1000 : 15 * 60 * 1000, // 1 hour in prod, 15 min in dev
+  max: isProduction ? 5 : 50, // 5 in prod, 50 in dev
   message: {
     success: false,
-    error: 'Too many login attempts. Please try again in 1 hour.',
+    error: 'Too many login attempts. Please try again later.',
   } as ApiResponse,
   standardHeaders: true,
   legacyHeaders: false,
