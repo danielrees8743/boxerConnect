@@ -205,6 +205,7 @@ async function seedBoxers() {
     const experienceLevel = randomElement(experienceLevels);
     const record = generateFightRecord(experienceLevel);
 
+    const assignedClub = clubs.length > 0 ? randomElement(clubs) : null;
     boxersToCreate.push({
       email,
       password,
@@ -219,7 +220,8 @@ async function seedBoxers() {
       country: 'United Kingdom',
       bio: generateBio(name, experienceLevel, record, 'MALE'),
       profilePhotoUrl: getProfilePhotoUrl('MALE', i),
-      clubId: clubs.length > 0 ? randomElement(clubs).id : null,
+      clubId: assignedClub?.id || null,
+      gymAffiliation: assignedClub?.name || null,
       isVerified: Math.random() > 0.3, // 70% verified
       isSearchable: true,
     });
@@ -241,6 +243,7 @@ async function seedBoxers() {
     const experienceLevel = randomElement(experienceLevels);
     const record = generateFightRecord(experienceLevel);
 
+    const assignedClub = clubs.length > 0 ? randomElement(clubs) : null;
     boxersToCreate.push({
       email,
       password,
@@ -255,7 +258,8 @@ async function seedBoxers() {
       country: 'United Kingdom',
       bio: generateBio(name, experienceLevel, record, 'FEMALE'),
       profilePhotoUrl: getProfilePhotoUrl('FEMALE', i),
-      clubId: clubs.length > 0 ? randomElement(clubs).id : null,
+      clubId: assignedClub?.id || null,
+      gymAffiliation: assignedClub?.name || null,
       isVerified: Math.random() > 0.3, // 70% verified
       isSearchable: true,
     });
@@ -293,6 +297,7 @@ async function seedBoxers() {
           wins: boxer.wins,
           losses: boxer.losses,
           draws: boxer.draws,
+          gymAffiliation: boxer.gymAffiliation,
           bio: boxer.bio,
           profilePhotoUrl: boxer.profilePhotoUrl,
           clubId: boxer.clubId,
