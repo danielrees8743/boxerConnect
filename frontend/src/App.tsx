@@ -29,13 +29,15 @@ import {
 
 /**
  * Protected route component that redirects to login if not authenticated.
+ * Optionally redirects admin users to admin dashboard.
  */
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  redirectAdminTo?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading, token } = useAppSelector((state) => state.auth);
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, redirectAdminTo }) => {
+  const { isAuthenticated, isLoading, token, user } = useAppSelector((state) => state.auth);
 
   if (isLoading) {
     return (
@@ -47,6 +49,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (!isAuthenticated && !token) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Redirect admin users to admin area if specified
+  if (redirectAdminTo && user?.role === 'ADMIN') {
+    return <Navigate to={redirectAdminTo} replace />;
   }
 
   return <>{children}</>;
@@ -99,7 +106,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute redirectAdminTo="/admin">
               <DashboardPage />
             </ProtectedRoute>
           }
