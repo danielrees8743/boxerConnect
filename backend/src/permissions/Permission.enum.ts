@@ -116,4 +116,31 @@ export enum Permission {
 
   /** Read system statistics and metrics */
   ADMIN_READ_SYSTEM_STATS = 'admin:read:stats',
+
+  /** Create a new user */
+  ADMIN_CREATE_USER = 'admin:create:user',
+
+  /** Update user details (name, email, role) */
+  ADMIN_UPDATE_USER = 'admin:update:user',
+
+  /** Delete a user (soft delete) */
+  ADMIN_DELETE_USER = 'admin:delete:user',
+
+  /** Create a boxer profile for any user */
+  ADMIN_CREATE_BOXER = 'admin:create:boxer',
+
+  /** Update any boxer profile */
+  ADMIN_UPDATE_BOXER = 'admin:update:boxer',
+
+  /** Delete any boxer profile */
+  ADMIN_DELETE_BOXER = 'admin:delete:boxer',
+
+  /** Create a new club */
+  ADMIN_CREATE_CLUB = 'admin:create:club',
+
+  /** Update any club details */
+  ADMIN_UPDATE_CLUB = 'admin:update:club',
+
+  /** Delete a club */
+  ADMIN_DELETE_CLUB = 'admin:delete:club',
 }

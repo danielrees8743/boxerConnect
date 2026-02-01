@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2 } from 'lucide-react';
+import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2, Shield } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
@@ -54,8 +54,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:flex-1 md:items-center md:justify-between">
             <div className="flex items-center space-x-6">
-              {/* Public links - always visible */}
-              {publicLinks.map((link) => (
+              {/* Public links - visible for non-admin users */}
+              {user?.role !== 'ADMIN' && publicLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
@@ -65,8 +65,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   <span>{link.label}</span>
                 </Link>
               ))}
-              {/* Authenticated links */}
-              {isAuthenticated &&
+              {/* Authenticated links - visible for non-admin users */}
+              {isAuthenticated && user?.role !== 'ADMIN' &&
                 navLinks.map((link) => (
                   <Link
                     key={link.to}
@@ -83,6 +83,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <ThemeToggleDropdown />
               {isAuthenticated ? (
                 <>
+                  {user?.role === 'ADMIN' && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center space-x-2 text-sm font-medium text-boxing-red-500 transition-colors hover:text-boxing-red-600"
+                    >
+                      <Shield className="h-4 w-4" />
+                      <span>Admin</span>
+                    </Link>
+                  )}
                   <Link
                     to="/profile"
                     className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -132,8 +141,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <nav className="container space-y-4 pb-4">
             {isAuthenticated ? (
               <>
-                {/* Public links in mobile menu */}
-                {publicLinks.map((link) => (
+                {/* Public links in mobile menu - for non-admin users */}
+                {user?.role !== 'ADMIN' && publicLinks.map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}
@@ -144,7 +153,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     <span>{link.label}</span>
                   </Link>
                 ))}
-                {navLinks.map((link) => (
+                {/* Nav links - for non-admin users */}
+                {user?.role !== 'ADMIN' && navLinks.map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}
@@ -155,6 +165,16 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     <span>{link.label}</span>
                   </Link>
                 ))}
+                {user?.role === 'ADMIN' && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center space-x-2 text-sm font-medium text-boxing-red-500 transition-colors hover:text-boxing-red-600"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span>Admin</span>
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"

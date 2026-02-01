@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { fetchCurrentUser } from '@/features/auth/authSlice';
 import { ThemeProvider } from '@/components/theme';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { AdminLayout } from '@/components/admin/AdminLayout';
 import { HomePage } from '@/pages/HomePage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
@@ -16,6 +17,15 @@ import { BoxerDetailPage } from '@/pages/BoxerDetailPage';
 import { MatchesPage } from '@/pages/MatchesPage';
 import { RequestsPage } from '@/pages/RequestsPage';
 import { ClubsPage } from '@/pages/ClubsPage';
+import {
+  AdminDashboardPage,
+  AdminUsersPage,
+  AdminUserFormPage,
+  AdminBoxersPage,
+  AdminBoxerFormPage,
+  AdminClubsPage,
+  AdminClubFormPage,
+} from '@/pages/admin';
 
 /**
  * Protected route component that redirects to login if not authenticated.
@@ -156,6 +166,28 @@ const AppRoutes: React.FC = () => {
 };
 
 /**
+ * Admin routes component - separated from main layout.
+ */
+const AdminRoutes: React.FC = () => {
+  return (
+    <Routes>
+      <Route element={<AdminLayout />}>
+        <Route index element={<AdminDashboardPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="users/new" element={<AdminUserFormPage />} />
+        <Route path="users/:id/edit" element={<AdminUserFormPage />} />
+        <Route path="boxers" element={<AdminBoxersPage />} />
+        <Route path="boxers/new" element={<AdminBoxerFormPage />} />
+        <Route path="boxers/:id/edit" element={<AdminBoxerFormPage />} />
+        <Route path="clubs" element={<AdminClubsPage />} />
+        <Route path="clubs/new" element={<AdminClubFormPage />} />
+        <Route path="clubs/:id/edit" element={<AdminClubFormPage />} />
+      </Route>
+    </Routes>
+  );
+};
+
+/**
  * Root App component with providers.
  */
 const App: React.FC = () => {
@@ -164,7 +196,12 @@ const App: React.FC = () => {
       <ThemeProvider defaultTheme="system">
         <BrowserRouter>
           <AuthInitializer>
-            <AppRoutes />
+            <Routes>
+              {/* Admin routes have their own layout */}
+              <Route path="/admin/*" element={<AdminRoutes />} />
+              {/* All other routes use main layout */}
+              <Route path="/*" element={<AppRoutes />} />
+            </Routes>
           </AuthInitializer>
         </BrowserRouter>
       </ThemeProvider>
