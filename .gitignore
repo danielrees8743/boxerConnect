@@ -49,3 +49,7 @@ backend/prisma/*.db-journal
 # Uploads (keep .gitkeep files)
 backend/uploads/**/*
 !backend/uploads/**/.gitkeep
+
+# Claude Code
+.claude/
+CLAUDE.md
