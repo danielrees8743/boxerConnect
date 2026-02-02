@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    // Relaxed rules for seed/utility scripts - unused variables common in test data generation
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "outDir": "./dist-scripts"
+  },
+  "include": [
+    "prisma/**/*",
+    "scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-scripts"
+  ]
+}

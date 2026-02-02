@@ -19,7 +19,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:prod": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:seed": "ts-node --project tsconfig.scripts.json prisma/seed.ts",
+    "seed:boxers": "ts-node --project tsconfig.scripts.json scripts/seed-boxers.ts",
     "db:reset": "prisma migrate reset"
   },
   "keywords": [

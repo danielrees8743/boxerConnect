@@ -54,6 +54,8 @@ module.exports = {
     'node_modules/',
     'dist/',
     'coverage/',
+    'prisma/',
+    'scripts/',
     '*.js',
     '!.eslintrc.js',
     '!jest.config.js',

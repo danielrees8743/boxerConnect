@@ -1,5 +1,6 @@
 import { PrismaClient, UserRole, CoachPermission } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { withSystemContext } from '../src/utils/database-context';
 
 const prisma = new PrismaClient();
 
@@ -84,27 +85,38 @@ async function seedUsers(users: UserData[], label: string): Promise<string[]> {
   const createdIds: string[] = [];
 
   for (const userData of users) {
-    const existingUser = await prisma.user.findUnique({
-      where: { email: userData.email },
-    });
+    const existingUser = await withSystemContext(
+      async (tx) => {
+        return await tx.user.findUnique({
+          where: { email: userData.email },
+        });
+      },
+      `Database seeding - checking for existing ${label}`
+    );
 
     if (existingUser) {
       console.log(`  ${userData.name} already exists, skipping...`);
+      createdIds.push(existingUser.id);
       continue;
     }
 
     const passwordHash = await hashPassword(userData.password);
 
-    const user = await prisma.user.create({
-      data: {
-        email: userData.email,
-        passwordHash,
-        name: userData.name,
-        role: userData.role,
-        isActive: true,
-        emailVerified: true,
+    const user = await withSystemContext(
+      async (tx) => {
+        return await tx.user.create({
+          data: {
+            email: userData.email,
+            passwordHash,
+            name: userData.name,
+            role: userData.role,
+            isActive: true,
+            emailVerified: true,
+          },
+        });
       },
-    });
+      `Database seeding - creating ${label}: ${userData.name}`
+    );
 
     createdIds.push(user.id);
     console.log(`  Created: ${userData.name} (${userData.email})`);
@@ -126,45 +138,68 @@ async function main() {
   // Link some coaches to boxers
   if (createdCoaches.length > 0) {
     // Get first few boxers
-    const boxers = await prisma.boxer.findMany({ take: 4 });
+    const boxers = await withSystemContext(
+      async (tx) => {
+        return await tx.boxer.findMany({ take: 4 });
+      },
+      'Database seeding - fetching boxers for coach assignments'
+    );
 
     if (boxers.length > 0) {
       // Freddie Roach coaches Mike Tyson (if exists)
       const mikeTypson = boxers.find((b) => b.name.includes('Tyson'));
       if (mikeTypson && createdCoaches[0]) {
-        await prisma.coachBoxer.create({
-          data: {
-            coachUserId: createdCoaches[0],
-            boxerId: mikeTypson.id,
-            permissions: CoachPermission.FULL_ACCESS,
+        const coachId = createdCoaches[0];
+        await withSystemContext(
+          async (tx) => {
+            return await tx.coachBoxer.create({
+              data: {
+                coachUserId: coachId,
+                boxerId: mikeTypson.id,
+                permissions: CoachPermission.FULL_ACCESS,
+              },
+            });
           },
-        });
+          'Database seeding - linking Freddie Roach to boxer'
+        );
         console.log(`Linked Freddie Roach to ${mikeTypson.name}`);
       }
 
       // Emanuel Steward coaches Lennox Lewis (if exists)
       const lennoxLewis = boxers.find((b) => b.name.includes('Lewis'));
       if (lennoxLewis && createdCoaches[1]) {
-        await prisma.coachBoxer.create({
-          data: {
-            coachUserId: createdCoaches[1],
-            boxerId: lennoxLewis.id,
-            permissions: CoachPermission.FULL_ACCESS,
+        const coachId = createdCoaches[1];
+        await withSystemContext(
+          async (tx) => {
+            return await tx.coachBoxer.create({
+              data: {
+                coachUserId: coachId,
+                boxerId: lennoxLewis.id,
+                permissions: CoachPermission.FULL_ACCESS,
+              },
+            });
           },
-        });
+          'Database seeding - linking Emanuel Steward to boxer'
+        );
         console.log(`Linked Emanuel Steward to ${lennoxLewis.name}`);
       }
 
       // Cus D'Amato coaches Canelo (if exists)
       const canelo = boxers.find((b) => b.name.includes('Canelo'));
       if (canelo && createdCoaches[2]) {
-        await prisma.coachBoxer.create({
-          data: {
-            coachUserId: createdCoaches[2],
-            boxerId: canelo.id,
-            permissions: CoachPermission.MANAGE_AVAILABILITY,
+        const coachId = createdCoaches[2];
+        await withSystemContext(
+          async (tx) => {
+            return await tx.coachBoxer.create({
+              data: {
+                coachUserId: coachId,
+                boxerId: canelo.id,
+                permissions: CoachPermission.MANAGE_AVAILABILITY,
+              },
+            });
           },
-        });
+          'Database seeding - linking Cus D\'Amato to boxer'
+        );
         console.log(`Linked Cus D'Amato to ${canelo.name}`);
       }
     }
