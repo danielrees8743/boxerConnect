@@ -50,4 +50,18 @@ module.exports = {
   testTimeout: 30000,
   clearMocks: true,
   restoreMocks: true,
+  // Support for multiple test configurations
+  projects: [
+    {
+      displayName: 'unit',
+      testMatch: ['<rootDir>/tests/services/**/*.test.ts', '<rootDir>/tests/utils/**/*.test.ts'],
+      setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+    },
+    {
+      displayName: 'integration',
+      testMatch: ['<rootDir>/tests/integration/**/*.test.ts'],
+      setupFilesAfterEnv: ['<rootDir>/tests/integration/setup.ts'],
+      testTimeout: 60000, // Integration tests need more time
+    },
+  ],
 };
