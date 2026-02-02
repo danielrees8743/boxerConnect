@@ -11,6 +11,7 @@ module.exports = {
   transform: {
     '^.+\\.ts$': ['ts-jest', {
       tsconfig: 'tsconfig.json',
+      isolatedModules: true,
       diagnostics: {
         // Ignore type errors in source files during testing
         // These are source code issues that should be fixed separately

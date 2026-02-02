@@ -9,6 +9,7 @@ import {
   getRegions,
   searchClubs,
   getClubStats,
+  getMyClubs,
   getClubMembers,
   addBoxerToClub,
   removeBoxerFromClub,
@@ -58,6 +59,23 @@ router.get('/stats', standardLimiter, getClubStats);
  */
 router.get('/region/:region', standardLimiter, getClubsByRegion);
 
+// ============================================================================
+// Protected Routes - Authentication Required
+// ============================================================================
+
+/**
+ * GET /api/v1/clubs/my-clubs
+ * Get all clubs owned by the authenticated user
+ * Requires: authentication only (filtered by user ID in service)
+ * IMPORTANT: Must be before /:id route to avoid route conflict
+ */
+router.get(
+  '/my-clubs',
+  standardLimiter,
+  authenticate,
+  handler(getMyClubs)
+);
+
 /**
  * GET /api/v1/clubs
  * List all clubs with optional filtering
@@ -70,10 +88,6 @@ router.get('/', searchLimiter, getClubs);
  * Get club by ID
  */
 router.get('/:id', standardLimiter, getClub);
-
-// ============================================================================
-// Protected Routes - Authentication Required
-// ============================================================================
 
 /**
  * GET /api/v1/clubs/:id/members

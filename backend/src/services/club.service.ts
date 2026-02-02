@@ -429,11 +429,19 @@ export async function isClubOwner(
 }
 
 /**
- * Get clubs owned by a user
+ * Get clubs owned by a user with member counts
  */
 export async function getClubsByOwner(ownerId: string): Promise<Club[]> {
   return prisma.club.findMany({
     where: { ownerId },
+    include: {
+      _count: {
+        select: {
+          boxers: true,
+          coaches: true,
+        },
+      },
+    },
     orderBy: { name: 'asc' },
   });
 }

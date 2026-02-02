@@ -16,6 +16,7 @@ import {
   removeCoachFromClub as removeCoachFromClubService,
   setClubOwner as setClubOwnerService,
   isClubOwner as isClubOwnerService,
+  getClubsByOwner as getClubsByOwnerService,
 } from '../services/club.service';
 import { sendSuccess, sendPaginated } from '../utils';
 import { NotFoundError, ForbiddenError, BadRequestError } from '../middleware';
@@ -195,6 +196,29 @@ export async function getClubStats(
 
     sendSuccess(res, { stats }, 'Club statistics retrieved successfully');
   } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Get clubs owned by authenticated user
+ * GET /api/v1/clubs/my-clubs
+ */
+export async function getMyClubs(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    // Verify user is a gym owner
+    if (req.user.role !== 'GYM_OWNER') {
+      return next(new ForbiddenError('Only gym owners can access this endpoint'));
+    }
+
+    const clubs = await getClubsByOwnerService(req.user.userId);
+
+    sendSuccess(res, { clubs }, 'Clubs retrieved successfully');
+  } catch (error: unknown) {
     next(error);
   }
 }
@@ -409,6 +433,7 @@ export default {
   getRegions,
   searchClubs,
   getClubStats,
+  getMyClubs,
   getClubMembers,
   addBoxerToClub,
   removeBoxerFromClub,
