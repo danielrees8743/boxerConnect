@@ -8,10 +8,17 @@ A modern web platform that connects boxers with sparring partners and facilitate
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js with TypeScript
 - **Database**: Supabase (PostgreSQL) with Prisma ORM
+- **Cache/Sessions**: Redis (centralized on Raspberry Pi)
 - **Storage**: Supabase Storage (profile photos, videos)
-- **Authentication**: JWT (access + refresh tokens)
+- **Authentication**: JWT (access + refresh tokens stored in database)
 - **Validation**: Zod
 - **Security**: Helmet, CORS, Rate Limiting
+
+### Infrastructure
+- **Development Redis**: Raspberry Pi (192.168.0.216:6379)
+- **Production Deployment**: Docker Compose with Traefik reverse proxy
+- **SSL/TLS**: Let's Encrypt (production)
+- **Container Orchestration**: Docker + Docker Compose
 
 ### Frontend
 - **Framework**: React 18 with TypeScript
@@ -31,6 +38,7 @@ Before you begin, ensure you have the following installed:
 - **npm** or **yarn**
 - **Git**
 - **Supabase Account** (free tier available at https://supabase.com)
+- **Access to Development Redis** (currently running on Raspberry Pi at 192.168.0.216)
 
 ## Quick Start
 
@@ -250,6 +258,9 @@ HOST=localhost
 # Supabase Database
 DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
 
+# Redis (Centralized on Raspberry Pi)
+REDIS_URL=redis://192.168.0.216:6379
+
 # Supabase Configuration
 STORAGE_PROVIDER=supabase
 SUPABASE_URL=https://your-project-id.supabase.co
@@ -273,7 +284,11 @@ CORS_ORIGIN=http://localhost:5173
 LOG_LEVEL=info
 ```
 
-**Important:** Replace the placeholder values with your actual Supabase credentials. See [Supabase Setup Guide](docs/SUPABASE_SETUP.md) for details on obtaining these values.
+**Important Notes:**
+- Replace the placeholder values with your actual Supabase credentials
+- Redis is centralized on the Raspberry Pi (192.168.0.216:6379) - ensure you're on the same network
+- Auth tokens are stored in the database, not Redis (Redis is used for caching and rate limiting)
+- See [Supabase Setup Guide](docs/SUPABASE_SETUP.md) for details on obtaining credentials
 
 ### Frontend
 
@@ -358,7 +373,45 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
+## Production Deployment
+
+BoxerConnect includes complete Docker-based production deployment infrastructure optimized for Raspberry Pi.
+
+### Quick Production Deploy
+
+```bash
+# On Raspberry Pi
+git clone <repository-url>
+cd BoxerConnect
+git checkout feat/raspberry-pi-docker-deployment
+
+# Run initial setup
+./scripts/deployment/setup-pi.sh
+
+# Configure environment
+cp .env.production.example .env.production
+# Edit .env.production with your domain and secrets
+
+# Deploy
+./scripts/deployment/deploy.sh
+```
+
+For complete deployment documentation, see [Deployment Guide](docs/DEPLOYMENT_GUIDE.md).
+
+### Production Features
+- ✅ Multi-stage Docker builds for optimized images
+- ✅ Traefik reverse proxy with automatic SSL/TLS (Let's Encrypt)
+- ✅ Network isolation (database not exposed to internet)
+- ✅ Non-root containers with security hardening
+- ✅ Resource limits tuned for Raspberry Pi
+- ✅ Automated backup system
+- ✅ Health checks and graceful shutdown
+- ✅ Comprehensive security headers (HSTS, CSP, etc.)
+
+---
+
 For more detailed documentation:
+- [Deployment Guide](docs/DEPLOYMENT_GUIDE.md) - Complete production deployment on Raspberry Pi
 - [Supabase Setup Guide](docs/SUPABASE_SETUP.md) - Complete Supabase configuration guide
 - [API Documentation](docs/API.md)
 - [Profile Photo API](docs/api/profile-photo.md)
@@ -366,3 +419,4 @@ For more detailed documentation:
 - [Development Guide](docs/DEVELOPMENT.md)
 - [Storage Architecture](docs/architecture/storage.md)
 - [Migration Scripts](backend/scripts/README.md) - Database and file migration tools
+- [Auth Token Migration](docs/AUTH_TOKEN_MIGRATION.md) - Token storage migration to database

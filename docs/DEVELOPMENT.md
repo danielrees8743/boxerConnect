@@ -22,8 +22,11 @@ Ensure you have the following installed:
 
 - **Node.js** 18.0.0 or higher ([Download](https://nodejs.org/))
 - **npm** (comes with Node.js) or **yarn**
-- **Docker** and **Docker Compose** ([Download](https://www.docker.com/))
 - **Git** ([Download](https://git-scm.com/))
+- **Access to Development Redis** - Redis is centralized on Raspberry Pi (192.168.0.216:6379)
+- **Supabase Account** - For database and storage ([Sign up](https://supabase.com))
+
+**Note:** Docker is optional for local development. PostgreSQL (Supabase) and Redis (Raspberry Pi) are externally hosted.
 
 ### Initial Setup
 
@@ -34,25 +37,30 @@ git clone <repository-url>
 cd BoxerConnect
 ```
 
-#### 2. Start Infrastructure Services
+#### 2. Infrastructure Services
 
-Start PostgreSQL and Redis containers:
+**BoxerConnect uses centralized infrastructure:**
+
+| Service | Location | Status |
+|---------|----------|--------|
+| **Database** | Supabase Cloud | Managed PostgreSQL |
+| **Redis** | Raspberry Pi | 192.168.0.216:6379 |
+| **Storage** | Supabase Storage | Profile photos/videos |
+
+**Verify Redis Connection:**
 
 ```bash
-docker-compose up -d
+# Test Redis connectivity
+redis-cli -h 192.168.0.216 -p 6379 ping
+# Should return: PONG
 ```
 
-Verify services are running:
+**If you need local Redis for testing:**
 
 ```bash
-docker-compose ps
-```
-
-Expected output:
-```
-NAME                    STATUS
-boxerconnect-postgres   Up (healthy)
-boxerconnect-redis      Up (healthy)
+# Optional: Run Redis locally instead
+docker run -d -p 6379:6379 --name local-redis redis:7-alpine
+# Then use REDIS_URL=redis://localhost:6379 in .env
 ```
 
 #### 3. Setup Backend
@@ -72,11 +80,21 @@ Edit `.env` with your configuration:
 ```env
 NODE_ENV=development
 PORT=3001
-HOST=0.0.0.0
+HOST=localhost
 
-DATABASE_URL=postgresql://boxer:boxer_dev_password@localhost:5432/boxerconnect
-REDIS_URL=redis://localhost:6379
+# Supabase Database (get credentials from Supabase Dashboard)
+DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
 
+# Redis (Centralized on Raspberry Pi)
+REDIS_URL=redis://192.168.0.216:6379
+
+# Supabase Storage
+STORAGE_PROVIDER=supabase
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# JWT Secrets (generate with: openssl rand -base64 32)
 JWT_SECRET=development-jwt-secret-min-32-characters
 JWT_EXPIRES_IN=15m
 JWT_REFRESH_SECRET=development-refresh-secret-min-32-chars
@@ -89,6 +107,12 @@ CORS_ORIGIN=http://localhost:5173
 
 LOG_LEVEL=debug
 ```
+
+**Important Configuration Notes:**
+- **DATABASE_URL**: Get from Supabase Dashboard → Settings → Database → Connection string
+- **REDIS_URL**: Points to centralized Redis on Raspberry Pi (ensure you're on the same network)
+- **Supabase credentials**: Get from Supabase Dashboard → Settings → API
+- **Auth tokens**: Stored in database, not Redis (see [AUTH_TOKEN_MIGRATION.md](AUTH_TOKEN_MIGRATION.md))
 
 Generate Prisma client and run migrations:
 
@@ -146,68 +170,60 @@ Expected response:
 
 ---
 
-## Docker Commands
+## Infrastructure Management
 
-### Basic Commands
-
-```bash
-# Start all services
-docker-compose up -d
-
-# Stop all services
-docker-compose down
-
-# View logs
-docker-compose logs -f
-
-# View logs for specific service
-docker-compose logs -f postgres
-docker-compose logs -f redis
-
-# Restart a service
-docker-compose restart postgres
-
-# Check service status
-docker-compose ps
-```
-
-### Database Commands
+### Redis Commands (Raspberry Pi)
 
 ```bash
-# Connect to PostgreSQL
-docker exec -it boxerconnect-postgres psql -U boxer -d boxerconnect
-
-# Execute SQL file
-docker exec -i boxerconnect-postgres psql -U boxer -d boxerconnect < script.sql
-
-# Create database backup
-docker exec boxerconnect-postgres pg_dump -U boxer boxerconnect > backup.sql
-
-# Restore from backup
-docker exec -i boxerconnect-postgres psql -U boxer boxerconnect < backup.sql
-```
-
-### Redis Commands
-
-```bash
-# Connect to Redis CLI
-docker exec -it boxerconnect-redis redis-cli
+# Connect to Redis CLI (from any machine on network)
+redis-cli -h 192.168.0.216 -p 6379
 
 # Monitor Redis commands
-docker exec -it boxerconnect-redis redis-cli monitor
+redis-cli -h 192.168.0.216 -p 6379 monitor
 
-# Clear all Redis data
-docker exec -it boxerconnect-redis redis-cli FLUSHALL
+# Check Redis info
+redis-cli -h 192.168.0.216 -p 6379 info
+
+# Clear all Redis data (development only!)
+redis-cli -h 192.168.0.216 -p 6379 FLUSHALL
+
+# Test connection
+redis-cli -h 192.168.0.216 -p 6379 ping
 ```
 
-### Cleanup
+### Redis Management on Raspberry Pi
 
 ```bash
-# Remove all containers and volumes (WARNING: destroys data)
-docker-compose down -v
+# SSH into Raspberry Pi
+ssh dan-pi@192.168.0.216
 
-# Remove unused Docker resources
-docker system prune -a
+# Check Docker containers
+cd ~/boxerconnect
+docker compose ps
+
+# View Redis logs
+docker compose logs redis -f
+
+# Restart Redis
+docker compose restart redis
+
+# Stop all services
+docker compose down
+
+# Start all services
+docker compose up -d
+```
+
+### Database Commands (Supabase)
+
+```bash
+# Use Supabase Dashboard for most operations
+# https://supabase.com/dashboard
+
+# Or use Prisma for schema management
+cd backend
+npm run prisma:studio  # GUI for browsing data
+npm run prisma:migrate # Run migrations
 ```
 
 ---
@@ -661,9 +677,10 @@ Use browser DevTools Network tab to inspect API requests.
 **Error:** `Connection refused` or `ECONNREFUSED`
 
 **Solution:**
-1. Check if Docker containers are running: `docker-compose ps`
-2. Verify DATABASE_URL in `.env` matches docker-compose.yml settings
-3. Wait for PostgreSQL to be fully ready (health check should pass)
+1. Verify DATABASE_URL in `.env` points to your Supabase instance
+2. Check Supabase Dashboard to ensure database is online
+3. Verify your IP is not blocked by Supabase (check Dashboard → Settings → Database → Connection pooling)
+4. Test connection with: `psql <DATABASE_URL>`
 
 ### Prisma Client Not Generated
 
@@ -692,12 +709,24 @@ PORT=3002
 
 ### Redis Connection Issues
 
-**Error:** `ECONNREFUSED 127.0.0.1:6379`
+**Error:** `ECONNREFUSED 192.168.0.216:6379`
 
 **Solution:**
-1. Check Redis container: `docker-compose ps`
-2. Verify REDIS_URL in `.env`
-3. Restart Redis: `docker-compose restart redis`
+1. Verify you're on the same network as the Raspberry Pi
+2. Check REDIS_URL in `.env` is set to: `redis://192.168.0.216:6379`
+3. Test Redis connectivity: `redis-cli -h 192.168.0.216 -p 6379 ping`
+4. If Pi is offline, SSH into it and check containers:
+   ```bash
+   ssh dan-pi@192.168.0.216
+   cd ~/boxerconnect
+   docker compose ps
+   docker compose up -d  # Start if needed
+   ```
+5. **Alternative:** Run Redis locally for development:
+   ```bash
+   docker run -d -p 6379:6379 --name local-redis redis:7-alpine
+   # Update .env: REDIS_URL=redis://localhost:6379
+   ```
 
 ### TypeScript Compilation Errors
 
