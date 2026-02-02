@@ -5,9 +5,9 @@ import { fetchMyClubs } from '@/features/gym-owner/gymOwnerSlice';
 import {
   fetchIncomingRequests,
   fetchOutgoingRequests,
-  acceptRequest,
-  declineRequest,
-  cancelRequest,
+  acceptMatchRequest,
+  declineMatchRequest,
+  cancelMatchRequest,
 } from '@/features/requests/requestsSlice';
 import {
   fetchCompatibleMatches,
@@ -147,15 +147,15 @@ export const GymOwnerMatchesPage: React.FC = () => {
   };
 
   const handleAccept = (id: string) => {
-    dispatch(acceptRequest(id));
+    dispatch(acceptMatchRequest({ id }));
   };
 
   const handleDecline = (id: string) => {
-    dispatch(declineRequest(id));
+    dispatch(declineMatchRequest({ id }));
   };
 
   const handleCancel = (id: string) => {
-    dispatch(cancelRequest(id));
+    dispatch(cancelMatchRequest(id));
   };
 
   return (
