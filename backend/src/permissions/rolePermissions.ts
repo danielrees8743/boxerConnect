@@ -88,8 +88,9 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   // Club managers - manage club members, can also manage boxer matches/availability/fights
   // ============================================================================
   [UserRole.GYM_OWNER]: [
-    // Can view boxer profiles
+    // Can view and update boxer profiles (for club members)
     Permission.BOXER_READ_ANY_PROFILE,
+    Permission.BOXER_UPDATE_LINKED_PROFILE,
 
     // Manage boxer's matches (for club members)
     Permission.MATCH_CREATE_REQUEST,
