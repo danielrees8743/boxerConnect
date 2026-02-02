@@ -93,6 +93,7 @@ describe('Boxer Controller - updateBoxer', () => {
       expect(boxerService.updateBoxer).toHaveBeenCalledWith(
         boxerId,
         gymOwnerId,
+        'GYM_OWNER',
         updateData,
         { skipOwnershipCheck: true }
       );
@@ -261,6 +262,7 @@ describe('Boxer Controller - updateBoxer', () => {
       expect(boxerService.updateBoxer).toHaveBeenCalledWith(
         boxerId,
         userId,
+        'BOXER',
         updateData,
         { skipOwnershipCheck: false }
       );
@@ -311,6 +313,7 @@ describe('Boxer Controller - updateBoxer', () => {
       expect(boxerService.updateBoxer).toHaveBeenCalledWith(
         boxerId,
         coachId,
+        'COACH',
         updateData,
         { skipOwnershipCheck: true }
       );
@@ -352,6 +355,7 @@ describe('Boxer Controller - updateBoxer', () => {
       expect(boxerService.updateBoxer).toHaveBeenCalledWith(
         boxerId,
         coachId,
+        'COACH',
         updateData,
         { skipOwnershipCheck: true }
       );
@@ -545,6 +549,7 @@ describe('Boxer Controller - updateBoxer', () => {
       expect(boxerService.updateBoxer).toHaveBeenCalledWith(
         boxerId,
         userId,
+        'GYM_OWNER',
         updateData,
         { skipOwnershipCheck: false }
       );
@@ -588,6 +593,7 @@ describe('Boxer Controller - updateBoxer', () => {
       expect(boxerService.updateBoxer).toHaveBeenCalledWith(
         boxerId,
         coachId,
+        'COACH',
         updateData,
         { skipOwnershipCheck: true }
       );

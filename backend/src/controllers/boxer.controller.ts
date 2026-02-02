@@ -160,7 +160,7 @@ export async function updateBoxer(
     }
 
     // Update boxer (skip ownership check since we verified above)
-    const updatedBoxer = await updateBoxerService(id, req.user.userId, validatedData, {
+    const updatedBoxer = await updateBoxerService(id, req.user.userId, req.user.role, validatedData, {
       skipOwnershipCheck: isAuthorizedCoach || isAuthorizedGymOwner,
     });
 
