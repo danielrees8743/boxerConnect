@@ -158,7 +158,7 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
                   )}
                 </div>
                 <div className="flex gap-2">
-                  {isOwner && onEdit && (
+                  {onEdit && (
                     <Button variant="outline" onClick={onEdit}>
                       <Edit2 className="h-4 w-4 mr-2" />
                       Edit Profile
