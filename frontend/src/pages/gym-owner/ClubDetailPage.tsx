@@ -57,7 +57,7 @@ export const ClubDetailPage: React.FC = () => {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/boxer/${boxer.id}`);
+              navigate(`/boxers/${boxer.id}`);
             }}
           >
             <Eye className="h-4 w-4 mr-1" />

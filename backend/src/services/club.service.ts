@@ -200,6 +200,11 @@ export async function getClubWithMembers(id: string): Promise<ClubWithMembers | 
           id: true,
           name: true,
           userId: true,
+          weightKg: true,
+          experienceLevel: true,
+          wins: true,
+          losses: true,
+          draws: true,
         },
       },
       coaches: {

@@ -120,7 +120,7 @@ export const GymOwnerBoxersPage: React.FC = () => {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/boxer/${boxer.id}`);
+              navigate(`/boxers/${boxer.id}`);
             }}
           >
             <Eye className="h-4 w-4 mr-1" />
@@ -166,7 +166,7 @@ export const GymOwnerBoxersPage: React.FC = () => {
         isLoading={loading || clubsLoading}
         emptyMessage="No boxers in your clubs yet. Invite boxers to join your clubs."
         keyExtractor={(boxer) => boxer.id}
-        onRowClick={(boxer) => navigate(`/boxer/${boxer.id}`)}
+        onRowClick={(boxer) => navigate(`/boxers/${boxer.id}`)}
       />
     </div>
   );
