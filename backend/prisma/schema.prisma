@@ -71,6 +71,12 @@ enum CoachPermission {
   FULL_ACCESS
 }
 
+enum MembershipRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // ============================================================================
 // MODELS
 // ============================================================================
@@ -94,6 +100,7 @@ model User {
   clubCoach     ClubCoach?
   refreshTokens       RefreshToken[]
   passwordResetTokens PasswordResetToken[]
+  clubMembershipRequests ClubMembershipRequest[]
 
   @@index([email])
   @@index([role])
@@ -252,6 +259,7 @@ model Club {
   // Members
   boxers      Boxer[]
   coaches     ClubCoach[]
+  membershipRequests ClubMembershipRequest[]
 
   @@index([name])
   @@index([region])
@@ -325,4 +333,26 @@ model PasswordResetToken {
   @@index([token])
   @@index([expiresAt])
   @@map("password_reset_tokens")
+}
+
+model ClubMembershipRequest {
+  id          String                   @id @default(uuid()) @db.Uuid
+  userId      String                   @map("user_id") @db.Uuid
+  clubId      String                   @map("club_id") @db.Uuid
+  status      MembershipRequestStatus  @default(PENDING)
+  requestedAt DateTime                 @default(now()) @map("requested_at")
+  reviewedAt  DateTime?                @map("reviewed_at")
+  reviewedBy  String?                  @map("reviewed_by") @db.Uuid
+  notes       String?                  @db.Text
+
+  // Relations
+  user        User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club        Club                     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clubId])
+  @@index([userId])
+  @@index([clubId])
+  @@index([status])
+  @@index([requestedAt])
+  @@map("club_membership_requests")
 }

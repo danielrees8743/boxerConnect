@@ -522,6 +522,7 @@ export interface RegisterData {
   password: string;
   name: string;
   role?: UserRole;
+  clubId?: string;
 }
 
 export interface AuthResponse {

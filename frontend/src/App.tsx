@@ -34,6 +34,7 @@ import {
   GymOwnerBoxersPage,
   GymOwnerCoachesPage,
   GymOwnerMatchesPage,
+  MembershipRequestsPage,
 } from '@/pages/gym-owner';
 
 /**
@@ -225,6 +226,7 @@ const GymOwnerRoutes: React.FC = () => {
         <Route path="clubs/:id" element={<ClubDetailPage />} />
         <Route path="boxers" element={<GymOwnerBoxersPage />} />
         <Route path="coaches" element={<GymOwnerCoachesPage />} />
+        <Route path="membership-requests" element={<MembershipRequestsPage />} />
         <Route path="matches" element={<GymOwnerMatchesPage />} />
       </Route>
     </Routes>

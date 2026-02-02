@@ -111,6 +111,22 @@ export enum Permission {
   CLUB_SET_OWNER = 'club:set:owner',
 
   // ============================================================================
+  // Gym Owner Operations
+  // ============================================================================
+
+  /** Create a boxer account and auto-link to gym owner's club */
+  GYM_OWNER_CREATE_BOXER_ACCOUNT = 'gym-owner:create:boxer:account',
+
+  /** View membership requests for owned clubs */
+  GYM_OWNER_VIEW_MEMBERSHIP_REQUESTS = 'gym-owner:view:membership-requests',
+
+  /** Approve a membership request */
+  GYM_OWNER_APPROVE_MEMBERSHIP = 'gym-owner:approve:membership',
+
+  /** Reject a membership request */
+  GYM_OWNER_REJECT_MEMBERSHIP = 'gym-owner:reject:membership',
+
+  // ============================================================================
   // Coach Operations
   // ============================================================================
 

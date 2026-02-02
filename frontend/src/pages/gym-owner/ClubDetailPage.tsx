@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchClubWithMembers, clearSelectedClub } from '@/features/gym-owner/gymOwnerSlice';
@@ -8,7 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Eye, Calendar } from 'lucide-react';
+import { ArrowLeft, Eye, Calendar, UserPlus } from 'lucide-react';
+import { CreateBoxerAccountDialog } from '@/components/gym-owner/CreateBoxerAccountDialog';
+import { gymOwnerService } from '@/services/gymOwnerService';
+import type { CreateBoxerAccountData } from '@/services/gymOwnerService';
 import type { BoxerProfile } from '@/types';
 import type { ClubCoach } from '@/features/gym-owner/gymOwnerSlice';
 
@@ -19,6 +22,8 @@ export const ClubDetailPage: React.FC = () => {
   const { selectedClub, selectedClubLoading, selectedClubError } = useAppSelector(
     (state) => state.gymOwner
   );
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -28,6 +33,21 @@ export const ClubDetailPage: React.FC = () => {
       dispatch(clearSelectedClub());
     };
   }, [dispatch, id]);
+
+  const handleCreateBoxer = async (data: CreateBoxerAccountData) => {
+    if (!id) return;
+    await gymOwnerService.createBoxerAccount(id, data);
+  };
+
+  const handleCreateSuccess = () => {
+    setSuccessMessage('Boxer account created successfully!');
+    // Refresh the club members list
+    if (id) {
+      dispatch(fetchClubWithMembers(id));
+    }
+    // Clear success message after 5 seconds
+    setTimeout(() => setSuccessMessage(null), 5000);
+  };
 
   const boxerColumns: Column<Pick<BoxerProfile, 'id' | 'name' | 'userId' | 'weightKg' | 'experienceLevel' | 'wins' | 'losses' | 'draws'>>[] = [
     {
@@ -152,6 +172,12 @@ export const ClubDetailPage: React.FC = () => {
         <p className="text-muted-foreground mt-1">{selectedClub.region}</p>
       </div>
 
+      {successMessage && (
+        <Alert>
+          <AlertDescription>{successMessage}</AlertDescription>
+        </Alert>
+      )}
+
       {/* Club Info */}
       <Card>
         <CardHeader>
@@ -179,14 +205,18 @@ export const ClubDetailPage: React.FC = () => {
 
       {/* Boxers Section */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle>Boxers ({selectedClub.boxers.length})</CardTitle>
+          <Button onClick={() => setCreateDialogOpen(true)}>
+            <UserPlus className="h-4 w-4 mr-2" />
+            Add Boxer
+          </Button>
         </CardHeader>
         <CardContent>
           <DataTable
             columns={boxerColumns}
             data={selectedClub.boxers}
-            emptyMessage="No boxers in this club yet."
+            emptyMessage="No boxers in this club yet. Click 'Add Boxer' to create a new boxer account."
             keyExtractor={(boxer) => boxer.id}
           />
         </CardContent>
@@ -206,6 +236,17 @@ export const ClubDetailPage: React.FC = () => {
           />
         </CardContent>
       </Card>
+
+      {/* Create Boxer Account Dialog */}
+      {id && (
+        <CreateBoxerAccountDialog
+          open={createDialogOpen}
+          onOpenChange={setCreateDialogOpen}
+          clubId={id}
+          onSubmit={handleCreateBoxer}
+          onSuccess={handleCreateSuccess}
+        />
+      )}
     </div>
   );
 };
