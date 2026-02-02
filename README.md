@@ -166,6 +166,26 @@ After running the application, you can use these test accounts (if seeded):
 | `anthony.joshua@test.com` | `Password123` | Professional heavyweight boxer |
 | `amateur.boxer@test.com` | `Password123` | Amateur heavyweight boxer |
 
+## Security
+
+BoxerConnect implements PostgreSQL Row Level Security (RLS) to enforce access control at the database level. This provides defense-in-depth security by ensuring database-level protection in addition to application-level authorization.
+
+### Row Level Security
+
+All database operations must use the RLS context utilities to ensure proper access control:
+
+- **Documentation**: [Row Level Security Guide](docs/ROW_LEVEL_SECURITY.md)
+- **Quick Start**: [RLS Quick Start](docs/RLS_QUICK_START.md)
+- **Security Fixes**: [Security Fixes Documentation](docs/SECURITY_FIXES_RLS.md)
+
+#### Key Points:
+- All authenticated database operations use `withRequestContext()` or `withUserContext()`
+- System operations (signup, admin tasks) use `withSystemContext()`
+- 11 database tables protected with 49+ RLS policies
+- 4 user roles enforced: BOXER, COACH, GYM_OWNER, ADMIN
+
+See the [RLS Quick Start Guide](docs/RLS_QUICK_START.md) for integration examples.
+
 ## Project Structure
 
 ```
