@@ -1,0 +1,6 @@
+# Ignore certificate files
+acme.json
+certificates/
+
+# Ignore any local configuration overrides
+*.local.yml
