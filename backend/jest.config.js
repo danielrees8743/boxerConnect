@@ -55,7 +55,7 @@ module.exports = {
   projects: [
     {
       displayName: 'unit',
-      testMatch: ['<rootDir>/tests/services/**/*.test.ts', '<rootDir>/tests/utils/**/*.test.ts'],
+      testMatch: ['<rootDir>/tests/services/**/*.test.ts', '<rootDir>/tests/utils/**/*.test.ts', '<rootDir>/tests/controllers/**/*.test.ts'],
       setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
     },
     {

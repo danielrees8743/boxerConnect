@@ -1,18 +1,20 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { fetchBoxerById, clearSelectedBoxer } from '@/features/boxer/boxerSlice';
+import { fetchBoxerById, clearSelectedBoxer, updateBoxer } from '@/features/boxer/boxerSlice';
 import { createMatchRequest } from '@/features/requests/requestsSlice';
-import { BoxerProfile, FightHistoryList } from '@/components/boxer';
+import { BoxerProfile, FightHistoryList, BoxerForm } from '@/components/boxer';
 import { SendRequestDialog } from '@/components/requests';
 import { Alert, AlertDescription } from '@/components/ui';
 import { boxerService } from '@/services/boxerService';
-import type { FightHistory } from '@/types';
+import { gymOwnerService } from '@/services/gymOwnerService';
+import type { FightHistory, Club, UpdateBoxerData } from '@/types';
 
 /**
  * Boxer detail page component.
  * Displays a boxer's full profile with the ability to send match requests.
  * Coaches and gym owners can manage fight history for boxers they're linked to.
+ * Gym owners can also edit boxer profiles for boxers in their clubs.
  */
 const BoxerDetailPage: React.FC = () => {
   const { id } = useParams();
@@ -21,11 +23,14 @@ const BoxerDetailPage: React.FC = () => {
   const { selectedBoxer, myBoxer, isLoading, error } = useAppSelector((state) => state.boxer);
   const { user } = useAppSelector((state) => state.auth);
   const requestsState = useAppSelector((state) => state.requests);
-  const [isRequestDialogOpen, setIsRequestDialogOpen] = React.useState(false);
-  const [fights, setFights] = React.useState<FightHistory[]>([]);
-  const [fightsLoading, setFightsLoading] = React.useState(false);
+  const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
+  const [fights, setFights] = useState<FightHistory[]>([]);
+  const [fightsLoading, setFightsLoading] = useState(false);
+  const [isGymOwner, setIsGymOwner] = useState(false);
+  const [checkingGymOwner, setCheckingGymOwner] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (id) {
       dispatch(fetchBoxerById(id));
     }
@@ -34,7 +39,30 @@ const BoxerDetailPage: React.FC = () => {
     };
   }, [dispatch, id]);
 
-  React.useEffect(() => {
+  // Check if the current user is a gym owner who owns the boxer's club
+  useEffect(() => {
+    const checkGymOwnerAccess = async () => {
+      if (!user || !selectedBoxer || user.role !== 'GYM_OWNER' || !selectedBoxer.clubId) {
+        setCheckingGymOwner(false);
+        return;
+      }
+
+      try {
+        const clubs = await gymOwnerService.getMyClubs();
+        const ownsClub = clubs.some((club: Club) => club.id === selectedBoxer.clubId);
+        setIsGymOwner(ownsClub);
+      } catch (error) {
+        console.error('Failed to check gym owner access:', error);
+        setIsGymOwner(false);
+      } finally {
+        setCheckingGymOwner(false);
+      }
+    };
+
+    checkGymOwnerAccess();
+  }, [user, selectedBoxer]);
+
+  useEffect(() => {
     let isCancelled = false;
 
     const fetchFights = async () => {
@@ -79,6 +107,12 @@ const BoxerDetailPage: React.FC = () => {
     return false;
   }, [user, selectedBoxer, myBoxer]);
 
+  // Determine if current user can edit this boxer's profile
+  // - Profile owners can edit via their profile page (redirect)
+  // - Gym owners can edit boxers in their clubs
+  const isOwner = myBoxer?.id === selectedBoxer?.id;
+  const canEdit = isOwner || isGymOwner;
+
   // Handle fight created - add to list and refetch boxer to update record
   const handleFightCreated = useCallback((fight: FightHistory) => {
     setFights((prev) => [fight, ...prev]);
@@ -119,7 +153,57 @@ const BoxerDetailPage: React.FC = () => {
     }
   };
 
-  const isOwner = myBoxer?.id === selectedBoxer?.id;
+  // Handle profile edit by gym owner
+  const handleEditProfile = () => {
+    if (isOwner) {
+      // If it's the user's own profile, redirect to profile page
+      navigate('/profile');
+    } else if (isGymOwner) {
+      // If gym owner editing someone else's profile, show edit form
+      setIsEditing(true);
+    }
+  };
+
+  // Handle profile update by gym owner
+  const handleUpdateProfile = async (data: UpdateBoxerData) => {
+    if (!selectedBoxer) return;
+
+    const result = await dispatch(updateBoxer({ id: selectedBoxer.id, data }));
+    if (updateBoxer.fulfilled.match(result)) {
+      setIsEditing(false);
+      // Refetch the boxer to show updated data
+      if (id) {
+        dispatch(fetchBoxerById(id));
+      }
+    }
+  };
+
+  // Show loading state while checking permissions
+  if (isLoading || checkingGymOwner) {
+    return (
+      <div className="space-y-6">
+        <Alert>
+          <AlertDescription>Loading boxer profile...</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  // Show edit form when gym owner is editing
+  if (isEditing && isGymOwner && selectedBoxer) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <BoxerForm
+          boxer={selectedBoxer}
+          mode="edit"
+          isLoading={isLoading}
+          error={error}
+          onSubmit={handleUpdateProfile}
+          onCancel={() => setIsEditing(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -135,7 +219,7 @@ const BoxerDetailPage: React.FC = () => {
         availability={selectedBoxer?.availability || []}
         isOwner={isOwner}
         isLoading={isLoading}
-        onEdit={isOwner ? () => navigate('/profile') : undefined}
+        onEdit={canEdit ? handleEditProfile : undefined}
         onSendRequest={!isOwner && myBoxer ? handleSendRequest : undefined}
       />
 

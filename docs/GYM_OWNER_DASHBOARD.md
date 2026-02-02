@@ -33,7 +33,8 @@ The Gym Owner Dashboard is a dedicated management interface for gym owners to ov
 
 - **Multi-Club Management**: View and manage all clubs owned by the authenticated gym owner
 - **Centralized Statistics**: Dashboard overview showing total clubs, boxers, coaches, and pending match requests
-- **Boxer Management**: View all boxers across owned clubs, access their profiles, and create match requests
+- **Boxer Management**: View all boxers across owned clubs, access their profiles, edit their information, and create match requests
+- **Boxer Profile Editing**: Update boxer information (weight, record, experience level, etc.) for boxers in owned clubs
 - **Coach Management**: View all coaches across owned clubs and their assignments
 - **Match Request System**: Create match requests for boxers, find compatible opponents, and manage incoming/outgoing requests
 - **Club Details**: Detailed view of each club including all members (boxers and coaches)
@@ -60,6 +61,7 @@ The following permissions are granted to gym owners:
 - `MATCH_DECLINE_REQUEST`: Decline incoming match requests
 - `MATCH_CANCEL_REQUEST`: Cancel outgoing match requests
 - `BOXER_READ_ANY_PROFILE`: View any boxer's profile
+- `BOXER_UPDATE_LINKED_PROFILE`: Edit boxer profiles for boxers in owned clubs
 - `AVAILABILITY_READ`: View boxer availability
 
 ---
@@ -140,6 +142,45 @@ Navigate to **Coaches** to see all coaches across your clubs:
 - Head coach designation
 - Contact information (email)
 - Actions: View Details, Manage Assignment
+
+### Editing Boxer Profiles
+
+Gym owners can edit the profiles of boxers who belong to their clubs. This allows you to keep boxer information up-to-date, including their weight, record, and other details.
+
+#### How to Edit a Boxer Profile
+
+1. **Navigate to the Boxer**: Access the boxer's profile page by clicking "View Profile" from:
+   - The "Boxers" page (all boxers list)
+   - A club's detail page (boxer list for that club)
+   - The boxer row in any data table
+
+2. **Access Edit Mode**: On the boxer's profile page, you'll see an "Edit Profile" button if you own the club the boxer belongs to.
+
+3. **Make Changes**: The edit form allows you to update:
+   - Personal information (name, date of birth, gender)
+   - Physical stats (weight, height)
+   - Location (city, country)
+   - Experience level (beginner, intermediate, advanced, professional)
+   - Fight record (wins, losses, draws)
+   - Gym affiliation
+   - Biography
+   - Profile photo
+
+4. **Save Updates**: Click "Save Changes" to update the boxer's profile. The changes are immediately visible.
+
+#### Important Notes
+
+- **Authorization**: You can only edit boxers who belong to clubs you own
+- **Boxer's Own Data**: Boxers can still edit their own profiles through the `/profile` page
+- **No Edit for Unaffiliated Boxers**: If a boxer is not assigned to any club, gym owners cannot edit their profile
+- **Backend Verification**: Authorization is verified on both frontend and backend for security
+
+#### Use Cases
+
+- **Update Weight**: After weigh-ins, update a boxer's current weight before a match
+- **Update Record**: Add wins, losses, or draws after a bout (alternatively, create fight history entries)
+- **Correct Information**: Fix errors in boxer data like incorrect experience level or city
+- **Profile Management**: Help boxers who don't actively manage their own profiles
 
 ### Creating Match Requests
 
@@ -513,6 +554,74 @@ if (!isOwner && !isAdmin) {
   return next(new ForbiddenError('Only the club owner can perform this action'));
 }
 ```
+
+#### Boxer Profile Edit Authorization
+
+Gym owners can edit boxer profiles for boxers who belong to their clubs. This feature has multi-layer authorization:
+
+**Backend Authorization** (`PUT /api/v1/boxers/:id`):
+```typescript
+// Check authorization: boxer owner OR coach with permission OR gym owner
+const isOwner = boxer.userId === req.user.userId;
+let isAuthorizedCoach = false;
+
+if (!isOwner && req.user.role === 'COACH') {
+  isAuthorizedCoach = await hasPermission(
+    req.user.userId,
+    id,
+    CoachPermission.EDIT_PROFILE
+  );
+}
+
+// Check if gym owner owns the boxer's club
+let isAuthorizedGymOwner = false;
+if (!isOwner && !isAuthorizedCoach && req.user.role === 'GYM_OWNER') {
+  if (boxer.clubId) {
+    isAuthorizedGymOwner = await isClubOwner(req.user.userId, boxer.clubId);
+  }
+}
+
+if (!isOwner && !isAuthorizedCoach && !isAuthorizedGymOwner) {
+  return next(new ForbiddenError('Not authorized to update this profile'));
+}
+```
+
+**Frontend Authorization** (`BoxerDetailPage.tsx`):
+```typescript
+// Check if the current user is a gym owner who owns the boxer's club
+useEffect(() => {
+  const checkGymOwnerAccess = async () => {
+    if (!user || !selectedBoxer || user.role !== 'GYM_OWNER' || !selectedBoxer.clubId) {
+      setCheckingGymOwner(false);
+      return;
+    }
+
+    try {
+      const clubs = await gymOwnerService.getMyClubs();
+      const ownsClub = clubs.some((club) => club.id === selectedBoxer.clubId);
+      setIsGymOwner(ownsClub);
+    } catch (error) {
+      console.error('Failed to check gym owner access:', error);
+      setIsGymOwner(false);
+    } finally {
+      setCheckingGymOwner(false);
+    }
+  };
+
+  checkGymOwnerAccess();
+}, [user, selectedBoxer]);
+```
+
+**Authorization Matrix**:
+
+| User Type | Can Edit | Conditions |
+|-----------|----------|------------|
+| Boxer (Owner) | ✅ Yes | Always (own profile) |
+| Coach | ✅ Yes | Must have EDIT_PROFILE or FULL_ACCESS permission for that boxer |
+| Gym Owner | ✅ Yes | Boxer must belong to a club owned by the gym owner |
+| Boxer without club | ❌ No | Gym owners cannot edit unaffiliated boxers |
+| Gym owner (different club) | ❌ No | Can only edit boxers in own clubs |
+| Unauthorized | ❌ No | 403 Forbidden error |
 
 #### Frontend Route Guards
 
