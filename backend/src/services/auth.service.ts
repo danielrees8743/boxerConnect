@@ -6,8 +6,8 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { randomBytes } from 'crypto';
 import { UserRole } from '@prisma/client';
-import { prisma, jwtConfig, redis } from '../config';
-import type { RegisterInput, LoginInput } from '../validators';
+import { prisma, jwtConfig } from '../config';
+import type { RegisterInput } from '../validators';
 import type { SafeUser, UserWithBoxer } from '../types';
 
 // ============================================================================
@@ -111,87 +111,131 @@ export function generatePasswordResetToken(): string {
 }
 
 // ============================================================================
-// Redis Token Storage
+// Token Storage (Phase 4: Database Exclusive)
 // ============================================================================
 
 /**
- * Store refresh token in Redis
- * Key format: refresh_token:{userId}:{tokenId}
+ * Store refresh token in Database
  */
 async function storeRefreshToken(
   userId: string,
   tokenId: string,
   token: string
 ): Promise<void> {
-  const key = `refresh_token:${userId}:${tokenId}`;
-  // Store a hash of the token for security
   const tokenHash = await hashPassword(token);
-  await redis.setex(key, REFRESH_TOKEN_EXPIRY_SECONDS, tokenHash);
+  const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRY_SECONDS * 1000);
+
+  await prisma.refreshToken.create({
+    data: {
+      userId,
+      tokenId,
+      tokenHash,
+      expiresAt,
+    },
+  });
 }
 
 /**
- * Validate refresh token exists in Redis
+ * Validate refresh token in Database
  */
-async function validateRefreshTokenInRedis(
+async function validateRefreshTokenInDatabase(
   userId: string,
   tokenId: string,
   token: string
 ): Promise<boolean> {
-  const key = `refresh_token:${userId}:${tokenId}`;
-  const storedHash = await redis.get(key);
-  if (!storedHash) {
+  const storedToken = await prisma.refreshToken.findUnique({
+    where: {
+      userId_tokenId: { userId, tokenId },
+    },
+  });
+
+  if (!storedToken) {
     return false;
   }
-  // Compare the provided token with the stored hash
-  return bcrypt.compare(token, storedHash);
+
+  // Check expiration
+  if (storedToken.expiresAt < new Date()) {
+    // Lazy cleanup of expired token
+    await prisma.refreshToken.delete({ where: { id: storedToken.id } });
+    return false;
+  }
+
+  // Validate token hash
+  return bcrypt.compare(token, storedToken.tokenHash);
 }
 
 /**
- * Invalidate a specific refresh token
+ * Invalidate a specific refresh token from Database
  */
 async function invalidateRefreshToken(
   userId: string,
   tokenId: string
 ): Promise<void> {
-  const key = `refresh_token:${userId}:${tokenId}`;
-  await redis.del(key);
+  await prisma.refreshToken.deleteMany({
+    where: { userId, tokenId },
+  });
 }
 
 /**
- * Invalidate all refresh tokens for a user
+ * Invalidate all refresh tokens for a user from Database
  */
 async function invalidateAllUserRefreshTokens(userId: string): Promise<void> {
-  const pattern = `refresh_token:${userId}:*`;
-  const keys = await redis.keys(pattern);
-  if (keys.length > 0) {
-    await redis.del(...keys);
-  }
+  await prisma.refreshToken.deleteMany({
+    where: { userId },
+  });
 }
 
 /**
- * Store password reset token in Redis
+ * Store password reset token in Database
  */
 async function storePasswordResetToken(
   userId: string,
   token: string
 ): Promise<void> {
-  const key = `password_reset:${token}`;
-  await redis.setex(key, PASSWORD_RESET_EXPIRY_SECONDS, userId);
+  const expiresAt = new Date(Date.now() + PASSWORD_RESET_EXPIRY_SECONDS * 1000);
+
+  // Clean up old unused tokens first (security best practice)
+  await prisma.passwordResetToken.deleteMany({
+    where: { userId, usedAt: null },
+  });
+
+  await prisma.passwordResetToken.create({
+    data: { userId, token, expiresAt },
+  });
 }
 
 /**
- * Validate and consume password reset token
+ * Validate and consume password reset token from Database
  */
 async function validatePasswordResetToken(
   token: string
 ): Promise<string | null> {
-  const key = `password_reset:${token}`;
-  const userId = await redis.get(key);
-  if (userId) {
-    // Delete the token after use
-    await redis.del(key);
+  const resetToken = await prisma.passwordResetToken.findUnique({
+    where: { token },
+  });
+
+  if (!resetToken) {
+    return null;
   }
-  return userId;
+
+  // Check expiration
+  if (resetToken.expiresAt < new Date()) {
+    await prisma.passwordResetToken.delete({ where: { id: resetToken.id } });
+    return null;
+  }
+
+  // Check if already used
+  if (resetToken.usedAt !== null) {
+    return null;
+  }
+
+  // Mark as used (audit trail)
+  await prisma.passwordResetToken.update({
+    where: { id: resetToken.id },
+    data: { usedAt: new Date() },
+  });
+
+  return resetToken.userId;
 }
 
 // ============================================================================
@@ -346,9 +390,9 @@ export async function refresh(refreshToken: string): Promise<AuthTokens> {
     throw new Error('Invalid refresh token');
   }
 
-  // Validate token exists in Redis
+  // Validate token exists in Database
   if (payload.tokenId) {
-    const isValid = await validateRefreshTokenInRedis(
+    const isValid = await validateRefreshTokenInDatabase(
       payload.userId,
       payload.tokenId,
       refreshToken
