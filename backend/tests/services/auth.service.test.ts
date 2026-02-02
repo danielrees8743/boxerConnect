@@ -21,13 +21,20 @@ jest.mock('../../src/config', () => ({
     boxer: {
       create: jest.fn(),
     },
+    refreshToken: {
+      create: jest.fn(),
+      findUnique: jest.fn(),
+      delete: jest.fn(),
+      deleteMany: jest.fn(),
+    },
+    passwordResetToken: {
+      create: jest.fn(),
+      findUnique: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+      deleteMany: jest.fn(),
+    },
     $transaction: jest.fn(),
-  },
-  redis: {
-    get: jest.fn(),
-    setex: jest.fn(),
-    del: jest.fn(),
-    keys: jest.fn(),
   },
   jwtConfig: {
     secret: 'test-jwt-secret-key-that-is-at-least-32-characters',
@@ -39,16 +46,21 @@ jest.mock('../../src/config', () => ({
 
 // Import after mocking
 import * as authService from '../../src/services/auth.service';
-import { prisma, redis } from '../../src/config';
+import { prisma } from '../../src/config';
 
 // Get typed references to the mocks
 const mockUserFindUnique = prisma.user.findUnique as jest.Mock;
 const mockUserUpdate = prisma.user.update as jest.Mock;
 const mockTransaction = prisma.$transaction as jest.Mock;
-const mockRedisGet = redis.get as jest.Mock;
-const mockRedisSetex = redis.setex as jest.Mock;
-const mockRedisDel = redis.del as jest.Mock;
-const mockRedisKeys = redis.keys as jest.Mock;
+const mockRefreshTokenCreate = prisma.refreshToken.create as jest.Mock;
+const mockRefreshTokenFindUnique = prisma.refreshToken.findUnique as jest.Mock;
+const mockRefreshTokenDelete = prisma.refreshToken.delete as jest.Mock;
+const mockRefreshTokenDeleteMany = prisma.refreshToken.deleteMany as jest.Mock;
+const mockPasswordResetTokenCreate = prisma.passwordResetToken.create as jest.Mock;
+const mockPasswordResetTokenFindUnique = prisma.passwordResetToken.findUnique as jest.Mock;
+const mockPasswordResetTokenUpdate = prisma.passwordResetToken.update as jest.Mock;
+const mockPasswordResetTokenDelete = prisma.passwordResetToken.delete as jest.Mock;
+const mockPasswordResetTokenDeleteMany = prisma.passwordResetToken.deleteMany as jest.Mock;
 
 // ============================================================================
 // Test Suites
@@ -307,9 +319,9 @@ describe('Auth Service', () => {
       const result = await authService.register(registerData);
 
       expect(result).toBeDefined();
-      expect(result.email).toBe(registerData.email);
-      expect(result.name).toBe(registerData.name);
-      expect(result).not.toHaveProperty('passwordHash');
+      expect(result.user.email).toBe(registerData.email);
+      expect(result.user.name).toBe(registerData.name);
+      expect(result.user).not.toHaveProperty('passwordHash');
     });
 
     it('should throw error if user already exists', async () => {
@@ -397,7 +409,7 @@ describe('Auth Service', () => {
 
       mockUserFindUnique.mockResolvedValue(mockUser as any);
       mockUserUpdate.mockResolvedValue(mockUser as any);
-      mockRedisSetex.mockResolvedValue('OK' as any);
+      mockRefreshTokenCreate.mockResolvedValue({} as any);
 
       const result = await authService.login(loginData.email, loginData.password);
 
@@ -456,7 +468,7 @@ describe('Auth Service', () => {
 
       mockUserFindUnique.mockResolvedValue(mockUser as any);
       mockUserUpdate.mockResolvedValue(mockUser as any);
-      mockRedisSetex.mockResolvedValue('OK' as any);
+      mockRefreshTokenCreate.mockResolvedValue({} as any);
 
       await authService.login(loginData.email, loginData.password);
 
@@ -470,7 +482,7 @@ describe('Auth Service', () => {
       );
     });
 
-    it('should store refresh token in Redis', async () => {
+    it('should store refresh token in Database', async () => {
       const passwordHash = await bcrypt.hash(loginData.password, 12);
       const mockUser = createMockUser({
         email: loginData.email,
@@ -480,11 +492,11 @@ describe('Auth Service', () => {
 
       mockUserFindUnique.mockResolvedValue(mockUser as any);
       mockUserUpdate.mockResolvedValue(mockUser as any);
-      mockRedisSetex.mockResolvedValue('OK' as any);
+      mockRefreshTokenCreate.mockResolvedValue({} as any);
 
       await authService.login(loginData.email, loginData.password);
 
-      expect(mockRedisSetex).toHaveBeenCalled();
+      expect(mockRefreshTokenCreate).toHaveBeenCalled();
     });
   });
 
@@ -496,15 +508,21 @@ describe('Auth Service', () => {
     it('should return new tokens for valid refresh token', async () => {
       const userId = 'test-user-id';
       const refreshToken = authService.generateRefreshToken(userId);
-      // Verify token is valid (not using payload, just validating)
-      authService.verifyRefreshToken(refreshToken);
+      const payload = authService.verifyRefreshToken(refreshToken);
 
       const mockUser = createMockUser({ id: userId, isActive: true });
       const storedHash = await bcrypt.hash(refreshToken, 12);
 
-      mockRedisGet.mockResolvedValue(storedHash);
-      mockRedisDel.mockResolvedValue(1 as any);
-      mockRedisSetex.mockResolvedValue('OK' as any);
+      mockRefreshTokenFindUnique.mockResolvedValue({
+        id: 'token-id',
+        userId,
+        tokenId: payload.tokenId,
+        tokenHash: storedHash,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        createdAt: new Date(),
+      });
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 1 });
+      mockRefreshTokenCreate.mockResolvedValue({} as any);
       mockUserFindUnique.mockResolvedValue(mockUser as any);
 
       const result = await authService.refresh(refreshToken);
@@ -527,7 +545,7 @@ describe('Auth Service', () => {
       const userId = 'test-user-id';
       const refreshToken = authService.generateRefreshToken(userId);
 
-      mockRedisGet.mockResolvedValue(null); // Token not found in Redis
+      mockRefreshTokenFindUnique.mockResolvedValue(null); // Token not found in Database
 
       await expect(authService.refresh(refreshToken)).rejects.toThrow(
         'Refresh token has been revoked'
@@ -537,12 +555,20 @@ describe('Auth Service', () => {
     it('should throw error for inactive user', async () => {
       const userId = 'test-user-id';
       const refreshToken = authService.generateRefreshToken(userId);
+      const payload = authService.verifyRefreshToken(refreshToken);
       const storedHash = await bcrypt.hash(refreshToken, 12);
 
       const mockUser = createMockUser({ id: userId, isActive: false });
 
-      mockRedisGet.mockResolvedValue(storedHash);
-      mockRedisDel.mockResolvedValue(1 as any);
+      mockRefreshTokenFindUnique.mockResolvedValue({
+        id: 'token-id',
+        userId,
+        tokenId: payload.tokenId,
+        tokenHash: storedHash,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        createdAt: new Date(),
+      });
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 1 });
       mockUserFindUnique.mockResolvedValue(mockUser as any);
 
       await expect(authService.refresh(refreshToken)).rejects.toThrow(
@@ -553,23 +579,53 @@ describe('Auth Service', () => {
     it('should invalidate old token after rotation', async () => {
       const userId = 'test-user-id';
       const refreshToken = authService.generateRefreshToken(userId);
-      // Verify token is valid
-      authService.verifyRefreshToken(refreshToken);
+      const payload = authService.verifyRefreshToken(refreshToken);
       const storedHash = await bcrypt.hash(refreshToken, 12);
 
       const mockUser = createMockUser({ id: userId, isActive: true });
 
-      mockRedisGet.mockResolvedValue(storedHash);
-      mockRedisDel.mockResolvedValue(1 as any);
-      mockRedisSetex.mockResolvedValue('OK' as any);
+      mockRefreshTokenFindUnique.mockResolvedValue({
+        id: 'token-id',
+        userId,
+        tokenId: payload.tokenId,
+        tokenHash: storedHash,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        createdAt: new Date(),
+      });
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 1 });
+      mockRefreshTokenCreate.mockResolvedValue({} as any);
       mockUserFindUnique.mockResolvedValue(mockUser as any);
 
       await authService.refresh(refreshToken);
 
       // Old token should be deleted
-      expect(mockRedisDel).toHaveBeenCalledWith(
-        expect.stringContaining(`refresh_token:${userId}:`)
+      expect(mockRefreshTokenDeleteMany).toHaveBeenCalledWith({
+        where: { userId, tokenId: payload.tokenId },
+      });
+    });
+
+    it('should throw error for expired refresh token', async () => {
+      const userId = 'test-user-id';
+      const refreshToken = authService.generateRefreshToken(userId);
+      const payload = authService.verifyRefreshToken(refreshToken);
+      const storedHash = await bcrypt.hash(refreshToken, 12);
+
+      mockRefreshTokenFindUnique.mockResolvedValue({
+        id: 'token-id',
+        userId,
+        tokenId: payload.tokenId,
+        tokenHash: storedHash,
+        expiresAt: new Date(Date.now() - 1000), // Expired
+        createdAt: new Date(),
+      });
+      mockRefreshTokenDelete.mockResolvedValue({} as any);
+
+      await expect(authService.refresh(refreshToken)).rejects.toThrow(
+        'Refresh token has been revoked'
       );
+
+      // Should cleanup expired token
+      expect(mockRefreshTokenDelete).toHaveBeenCalled();
     });
   });
 
@@ -582,19 +638,18 @@ describe('Auth Service', () => {
       const userId = 'test-user-id';
       const refreshToken = authService.generateRefreshToken(userId);
 
-      mockRedisDel.mockResolvedValue(1 as any);
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 1 });
 
       await authService.logout(userId, refreshToken);
 
-      expect(mockRedisDel).toHaveBeenCalled();
+      expect(mockRefreshTokenDeleteMany).toHaveBeenCalled();
     });
 
     it('should handle invalid token gracefully', async () => {
       const userId = 'test-user-id';
       const invalidToken = 'invalid.token';
 
-      mockRedisKeys.mockResolvedValue([]);
-      mockRedisDel.mockResolvedValue(0 as any);
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 0 });
 
       // Should not throw
       await expect(authService.logout(userId, invalidToken)).resolves.not.toThrow();
@@ -604,29 +659,24 @@ describe('Auth Service', () => {
   describe('logoutAll', () => {
     it('should invalidate all refresh tokens for user', async () => {
       const userId = 'test-user-id';
-      const tokenKeys = [
-        `refresh_token:${userId}:token1`,
-        `refresh_token:${userId}:token2`,
-      ];
 
-      mockRedisKeys.mockResolvedValue(tokenKeys);
-      mockRedisDel.mockResolvedValue(2 as any);
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 2 });
 
       await authService.logoutAll(userId);
 
-      expect(mockRedisKeys).toHaveBeenCalledWith(`refresh_token:${userId}:*`);
-      expect(mockRedisDel).toHaveBeenCalledWith(...tokenKeys);
+      expect(mockRefreshTokenDeleteMany).toHaveBeenCalledWith({
+        where: { userId },
+      });
     });
 
     it('should handle case with no active tokens', async () => {
       const userId = 'test-user-id';
 
-      mockRedisKeys.mockResolvedValue([]);
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 0 });
 
       await authService.logoutAll(userId);
 
-      expect(mockRedisKeys).toHaveBeenCalled();
-      // del should not be called if no keys found
+      expect(mockRefreshTokenDeleteMany).toHaveBeenCalled();
     });
   });
 
@@ -671,14 +721,15 @@ describe('Auth Service', () => {
     it('should generate and store reset token for valid email', async () => {
       const mockUser = createMockUser();
       mockUserFindUnique.mockResolvedValue(mockUser as any);
-      mockRedisSetex.mockResolvedValue('OK' as any);
+      mockPasswordResetTokenDeleteMany.mockResolvedValue({ count: 0 });
+      mockPasswordResetTokenCreate.mockResolvedValue({} as any);
 
       const result = await authService.requestPasswordReset(mockUser.email);
 
       expect(result).toBeDefined();
       expect(typeof result).toBe('string');
       expect(result?.length).toBe(64);
-      expect(mockRedisSetex).toHaveBeenCalled();
+      expect(mockPasswordResetTokenCreate).toHaveBeenCalled();
     });
 
     it('should return null for non-existent email (security)', async () => {
@@ -688,6 +739,19 @@ describe('Auth Service', () => {
 
       expect(result).toBeNull();
     });
+
+    it('should cleanup old unused tokens before creating new one', async () => {
+      const mockUser = createMockUser();
+      mockUserFindUnique.mockResolvedValue(mockUser as any);
+      mockPasswordResetTokenDeleteMany.mockResolvedValue({ count: 1 });
+      mockPasswordResetTokenCreate.mockResolvedValue({} as any);
+
+      await authService.requestPasswordReset(mockUser.email);
+
+      expect(mockPasswordResetTokenDeleteMany).toHaveBeenCalledWith({
+        where: { userId: mockUser.id, usedAt: null },
+      });
+    });
   });
 
   describe('resetPassword', () => {
@@ -696,10 +760,17 @@ describe('Auth Service', () => {
       const resetToken = 'valid-reset-token';
       const newPassword = 'NewSecurePassword123';
 
-      mockRedisGet.mockResolvedValue(userId);
-      mockRedisDel.mockResolvedValue(1 as any);
-      mockRedisKeys.mockResolvedValue([]);
+      mockPasswordResetTokenFindUnique.mockResolvedValue({
+        id: 'reset-token-id',
+        userId,
+        token: resetToken,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        createdAt: new Date(),
+        usedAt: null,
+      });
+      mockPasswordResetTokenUpdate.mockResolvedValue({} as any);
       mockUserUpdate.mockResolvedValue({} as any);
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 0 });
 
       const result = await authService.resetPassword(resetToken, newPassword);
 
@@ -715,26 +786,97 @@ describe('Auth Service', () => {
     });
 
     it('should throw error for invalid token', async () => {
-      mockRedisGet.mockResolvedValue(null);
+      mockPasswordResetTokenFindUnique.mockResolvedValue(null);
 
       await expect(
         authService.resetPassword('invalid-token', 'NewPassword123')
       ).rejects.toThrow('Invalid or expired reset token');
     });
 
+    it('should throw error for expired token', async () => {
+      const resetToken = 'expired-token';
+
+      mockPasswordResetTokenFindUnique.mockResolvedValue({
+        id: 'reset-token-id',
+        userId: 'user-id',
+        token: resetToken,
+        expiresAt: new Date(Date.now() - 1000), // Expired
+        createdAt: new Date(),
+        usedAt: null,
+      });
+      mockPasswordResetTokenDelete.mockResolvedValue({} as any);
+
+      await expect(
+        authService.resetPassword(resetToken, 'NewPassword123')
+      ).rejects.toThrow('Invalid or expired reset token');
+
+      // Should cleanup expired token
+      expect(mockPasswordResetTokenDelete).toHaveBeenCalled();
+    });
+
+    it('should throw error for already used token', async () => {
+      const resetToken = 'used-token';
+
+      mockPasswordResetTokenFindUnique.mockResolvedValue({
+        id: 'reset-token-id',
+        userId: 'user-id',
+        token: resetToken,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        createdAt: new Date(),
+        usedAt: new Date(), // Already used
+      });
+
+      await expect(
+        authService.resetPassword(resetToken, 'NewPassword123')
+      ).rejects.toThrow('Invalid or expired reset token');
+    });
+
     it('should invalidate all refresh tokens after password reset', async () => {
       const userId = 'test-user-id';
       const resetToken = 'valid-reset-token';
-      const tokenKeys = [`refresh_token:${userId}:token1`];
 
-      mockRedisGet.mockResolvedValue(userId);
-      mockRedisDel.mockResolvedValue(1 as any);
-      mockRedisKeys.mockResolvedValue(tokenKeys);
+      mockPasswordResetTokenFindUnique.mockResolvedValue({
+        id: 'reset-token-id',
+        userId,
+        token: resetToken,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        createdAt: new Date(),
+        usedAt: null,
+      });
+      mockPasswordResetTokenUpdate.mockResolvedValue({} as any);
       mockUserUpdate.mockResolvedValue({} as any);
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 1 });
 
       await authService.resetPassword(resetToken, 'NewPassword123');
 
-      expect(mockRedisKeys).toHaveBeenCalledWith(`refresh_token:${userId}:*`);
+      expect(mockRefreshTokenDeleteMany).toHaveBeenCalledWith({
+        where: { userId },
+      });
+    });
+
+    it('should mark token as used after successful reset', async () => {
+      const userId = 'test-user-id';
+      const resetToken = 'valid-reset-token';
+      const resetTokenId = 'reset-token-id';
+
+      mockPasswordResetTokenFindUnique.mockResolvedValue({
+        id: resetTokenId,
+        userId,
+        token: resetToken,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        createdAt: new Date(),
+        usedAt: null,
+      });
+      mockPasswordResetTokenUpdate.mockResolvedValue({} as any);
+      mockUserUpdate.mockResolvedValue({} as any);
+      mockRefreshTokenDeleteMany.mockResolvedValue({ count: 0 });
+
+      await authService.resetPassword(resetToken, 'NewPassword123');
+
+      expect(mockPasswordResetTokenUpdate).toHaveBeenCalledWith({
+        where: { id: resetTokenId },
+        data: { usedAt: expect.any(Date) },
+      });
     });
   });
 });

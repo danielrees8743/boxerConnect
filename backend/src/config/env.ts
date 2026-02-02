@@ -46,9 +46,30 @@ const envSchema = z.object({
     .optional()
     .refine(
       (p) => !p || path.isAbsolute(p),
-      { message: 'UPLOAD_PATH must be an absolute path' }
+      { message: 'UPLOAD_PATH must be an absolute path' },
     ),
-});
+
+  // Storage Provider
+  STORAGE_PROVIDER: z
+    .enum(['local', 'supabase', 's3'])
+    .default('local'),
+
+  // Supabase Configuration (optional - only required when using Supabase storage)
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_ANON_KEY: z.string().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+  SUPABASE_DATABASE_URL: z.string().url().optional(),
+}).refine(
+  (data) => {
+    if (data.STORAGE_PROVIDER === 'supabase') {
+      return !!(data.SUPABASE_URL && data.SUPABASE_ANON_KEY && data.SUPABASE_SERVICE_ROLE_KEY);
+    }
+    return true;
+  },
+  {
+    message: 'SUPABASE_URL, SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY are required when STORAGE_PROVIDER=supabase',
+  },
+);
 
 // Parse and validate environment variables
 function validateEnv(): EnvironmentConfig {
@@ -112,4 +133,12 @@ export const loggingConfig = {
 
 export const storageEnvConfig = {
   uploadPath: env.UPLOAD_PATH,
+  storageProvider: env.STORAGE_PROVIDER,
+} as const;
+
+export const supabaseEnvConfig = {
+  url: env.SUPABASE_URL,
+  anonKey: env.SUPABASE_ANON_KEY,
+  serviceRoleKey: env.SUPABASE_SERVICE_ROLE_KEY,
+  databaseUrl: env.SUPABASE_DATABASE_URL,
 } as const;

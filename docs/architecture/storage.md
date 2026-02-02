@@ -20,9 +20,15 @@ Documentation for the file storage system used for profile photos and other uplo
 
 ## Overview
 
-BoxerConnect uses a storage abstraction layer to handle file uploads. This architecture allows the application to switch between storage providers (local filesystem, AWS S3, Cloudinary, etc.) without modifying business logic.
+BoxerConnect uses a storage abstraction layer to handle file uploads. This architecture allows the application to switch between storage providers (local filesystem, Supabase Storage, AWS S3, Cloudinary, etc.) without modifying business logic.
 
-**Current Implementation:** Local filesystem storage with sharp-based image processing.
+**Current Implementation:** Supabase Storage with sharp-based image processing.
+
+**Supported Providers:**
+
+- **Supabase Storage** (default) - Cloud storage with CDN
+- **Local filesystem** - Development and testing
+- **AWS S3** (implementation available) - Enterprise cloud storage
 
 **Key Features:**
 
@@ -30,6 +36,7 @@ BoxerConnect uses a storage abstraction layer to handle file uploads. This archi
 - Automatic image optimization (resize, format conversion, compression)
 - Security-first design (UUID filenames, metadata stripping, path traversal prevention)
 - Easy extensibility for cloud storage providers
+- CDN delivery for fast global access (Supabase)
 
 ---
 
@@ -92,9 +99,27 @@ interface UploadOptions {
 }
 ```
 
+### SupabaseStorageService Implementation
+
+The default implementation stores files in Supabase Storage with global CDN delivery.
+
+**Location:** `backend/src/services/storage/supabaseStorage.service.ts`
+
+**Key Behaviors:**
+
+1. **Cloud Storage**: Files stored in Supabase Storage buckets
+2. **Image Processing**: Uses sharp to process all uploaded images
+3. **UUID Filenames**: Generates UUID-based filenames to prevent conflicts and attacks
+4. **Public CDN URLs**: Files accessible via Supabase CDN
+5. **Bucket Management**: Separate buckets for different file types
+
+**Buckets**:
+- `boxer-photos` - Profile photos (5MB limit, images only)
+- `boxer-videos` - Training videos (100MB limit, video + thumbnails)
+
 ### LocalStorageService Implementation
 
-The default implementation stores files on the local filesystem.
+An alternative implementation for local filesystem storage (development/testing).
 
 **Location:** `backend/src/services/storage/localStorage.service.ts`
 
@@ -271,20 +296,28 @@ The storage abstraction makes it straightforward to add cloud storage providers.
 The factory pattern in `backend/src/services/storage/index.ts` manages provider selection:
 
 ```typescript
-export type StorageProvider = 'local' | 's3' | 'cloudinary';
+export type StorageProvider = 'local' | 'supabase' | 's3';
 
-export function getStorageService(provider: StorageProvider = 'local'): StorageService {
+export function getStorageService(provider: StorageProvider = 'supabase'): StorageService {
   switch (provider) {
     case 'local':
       return localStorageService;
+    case 'supabase':
+      return supabaseStorageService;
     case 's3':
-      return s3StorageService;      // Implement this
-    case 'cloudinary':
-      return cloudinaryStorageService; // Implement this
+      return s3StorageService;      // Available implementation
     default:
-      return localStorageService;
+      return supabaseStorageService;
   }
 }
+```
+
+**Configuration**: Set the `STORAGE_PROVIDER` environment variable to switch providers:
+
+```env
+STORAGE_PROVIDER=supabase  # Default
+# STORAGE_PROVIDER=local   # For local development
+# STORAGE_PROVIDER=s3      # For AWS S3
 ```
 
 ### S3 Implementation Example
@@ -452,6 +485,60 @@ CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 ```
 
+### Supabase Storage Implementation
+
+BoxerConnect includes a production-ready Supabase Storage implementation.
+
+**File:** `backend/src/services/storage/supabaseStorage.service.ts`
+
+**Features:**
+- Public CDN URLs for fast global delivery
+- Automatic bucket creation and management
+- Sharp-based image processing before upload
+- Support for both processed images and raw files
+- Cache control headers (1 hour cache)
+- Comprehensive error handling
+
+**Example usage:**
+
+```typescript
+import { supabaseStorageService } from './services/storage/supabaseStorage.service';
+
+// Upload and process a profile photo
+const result = await supabaseStorageService.upload(
+  imageBuffer,
+  'profile.jpg',
+  'image/jpeg',
+  { directory: 'profile-photos' }
+);
+
+// Returns:
+// {
+//   key: 'profile-photos/uuid.webp',
+//   url: 'https://project.supabase.co/storage/v1/object/public/boxer-photos/profile-photos/uuid.webp',
+//   size: 12345,
+//   mimeType: 'image/webp'
+// }
+
+// Delete a file
+await supabaseStorageService.delete('profile-photos/uuid.webp');
+
+// Get public URL
+const url = supabaseStorageService.getUrl('profile-photos/uuid.webp');
+```
+
+**Configuration:**
+
+Required environment variables:
+```env
+STORAGE_PROVIDER=supabase
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+See [Supabase Setup Guide](../../docs/SUPABASE_SETUP.md) for detailed configuration instructions.
+
 ### Switching Providers
 
 To switch storage providers:
@@ -459,15 +546,13 @@ To switch storage providers:
 1. Set environment variable:
 
    ```env
-   STORAGE_PROVIDER=s3
+   STORAGE_PROVIDER=supabase  # or 'local' or 's3'
    ```
 
-2. Update the factory:
+2. Configure provider-specific environment variables
+3. Restart the backend server
 
-   ```typescript
-   const provider = process.env.STORAGE_PROVIDER || 'local';
-   export const storageService = getStorageService(provider as StorageProvider);
-   ```
+The storage service is automatically selected based on the `STORAGE_PROVIDER` variable.
 
 ---
 

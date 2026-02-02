@@ -150,6 +150,13 @@ export interface EnvironmentConfig {
 
   // Storage
   UPLOAD_PATH?: string | undefined;
+  STORAGE_PROVIDER: 'local' | 'supabase' | 's3';
+
+  // Supabase
+  SUPABASE_URL?: string | undefined;
+  SUPABASE_ANON_KEY?: string | undefined;
+  SUPABASE_SERVICE_ROLE_KEY?: string | undefined;
+  SUPABASE_DATABASE_URL?: string | undefined;
 }
 
 // ============================================================================
