@@ -21,6 +21,8 @@
     "prisma:studio": "prisma studio",
     "prisma:seed": "ts-node --project tsconfig.scripts.json prisma/seed.ts",
     "seed:boxers": "ts-node --project tsconfig.scripts.json scripts/seed-boxers.ts",
+    "import:test-boxers": "ts-node --project tsconfig.scripts.json scripts/import-test-boxers.ts",
+    "assign:gym-owners": "ts-node --project tsconfig.scripts.json scripts/assign-gym-owners.ts",
     "db:reset": "prisma migrate reset"
   },
   "keywords": [
