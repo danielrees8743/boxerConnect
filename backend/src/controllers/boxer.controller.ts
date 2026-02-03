@@ -11,6 +11,7 @@ import {
   deleteBoxer as deleteBoxerService,
 } from '../services/boxer.service';
 import { hasPermission } from '../services/coach.service';
+import { isClubOwner } from '../services/club.service';
 import { CoachPermission } from '@prisma/client';
 import {
   findCompatibleBoxers,
@@ -134,7 +135,7 @@ export async function updateBoxer(
       return next(new NotFoundError('Boxer profile not found'));
     }
 
-    // Check authorization: boxer owner OR coach with EDIT_PROFILE/FULL_ACCESS
+    // Check authorization: boxer owner OR coach with EDIT_PROFILE/FULL_ACCESS OR gym owner
     const isOwner = boxer.userId === req.user.userId;
     let isAuthorizedCoach = false;
 
@@ -146,13 +147,21 @@ export async function updateBoxer(
       );
     }
 
-    if (!isOwner && !isAuthorizedCoach) {
+    // Check if gym owner owns the boxer's club
+    let isAuthorizedGymOwner = false;
+    if (!isOwner && !isAuthorizedCoach && req.user.role === 'GYM_OWNER') {
+      if (boxer.clubId) {
+        isAuthorizedGymOwner = await isClubOwner(req.user.userId, boxer.clubId);
+      }
+    }
+
+    if (!isOwner && !isAuthorizedCoach && !isAuthorizedGymOwner) {
       return next(new ForbiddenError('Not authorized to update this profile'));
     }
 
     // Update boxer (skip ownership check since we verified above)
     const updatedBoxer = await updateBoxerService(id, req.user.userId, validatedData, {
-      skipOwnershipCheck: isAuthorizedCoach,
+      skipOwnershipCheck: isAuthorizedCoach || isAuthorizedGymOwner,
     });
 
     // Invalidate match cache since profile changed

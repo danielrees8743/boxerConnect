@@ -7,6 +7,7 @@ import { fetchCurrentUser } from '@/features/auth/authSlice';
 import { ThemeProvider } from '@/components/theme';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { AdminLayout } from '@/components/admin/AdminLayout';
+import { GymOwnerLayout } from '@/components/gym-owner/GymOwnerLayout';
 import { HomePage } from '@/pages/HomePage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
@@ -26,17 +27,30 @@ import {
   AdminClubsPage,
   AdminClubFormPage,
 } from '@/pages/admin';
+import {
+  GymOwnerDashboardPage,
+  MyClubsPage,
+  ClubDetailPage,
+  GymOwnerBoxersPage,
+  GymOwnerCoachesPage,
+  GymOwnerMatchesPage,
+} from '@/pages/gym-owner';
 
 /**
  * Protected route component that redirects to login if not authenticated.
- * Optionally redirects admin users to admin dashboard.
+ * Optionally redirects admin users to admin dashboard or gym owners to gym owner dashboard.
  */
 interface ProtectedRouteProps {
   children: React.ReactNode;
   redirectAdminTo?: string;
+  redirectGymOwnerTo?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, redirectAdminTo }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  redirectAdminTo,
+  redirectGymOwnerTo,
+}) => {
   const { isAuthenticated, isLoading, token, user } = useAppSelector((state) => state.auth);
 
   if (isLoading) {
@@ -54,6 +68,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, redirectAdmin
   // Redirect admin users to admin area if specified
   if (redirectAdminTo && user?.role === 'ADMIN') {
     return <Navigate to={redirectAdminTo} replace />;
+  }
+
+  // Redirect gym owner users to gym owner area if specified
+  if (redirectGymOwnerTo && user?.role === 'GYM_OWNER') {
+    return <Navigate to={redirectGymOwnerTo} replace />;
   }
 
   return <>{children}</>;
@@ -106,7 +125,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute redirectAdminTo="/admin">
+            <ProtectedRoute redirectAdminTo="/admin" redirectGymOwnerTo="/gym-owner">
               <DashboardPage />
             </ProtectedRoute>
           }
@@ -195,6 +214,24 @@ const AdminRoutes: React.FC = () => {
 };
 
 /**
+ * Gym Owner routes component - separated from main layout.
+ */
+const GymOwnerRoutes: React.FC = () => {
+  return (
+    <Routes>
+      <Route element={<GymOwnerLayout />}>
+        <Route index element={<GymOwnerDashboardPage />} />
+        <Route path="clubs" element={<MyClubsPage />} />
+        <Route path="clubs/:id" element={<ClubDetailPage />} />
+        <Route path="boxers" element={<GymOwnerBoxersPage />} />
+        <Route path="coaches" element={<GymOwnerCoachesPage />} />
+        <Route path="matches" element={<GymOwnerMatchesPage />} />
+      </Route>
+    </Routes>
+  );
+};
+
+/**
  * Root App component with providers.
  */
 const App: React.FC = () => {
@@ -206,6 +243,8 @@ const App: React.FC = () => {
             <Routes>
               {/* Admin routes have their own layout */}
               <Route path="/admin/*" element={<AdminRoutes />} />
+              {/* Gym Owner routes have their own layout */}
+              <Route path="/gym-owner/*" element={<GymOwnerRoutes />} />
               {/* All other routes use main layout */}
               <Route path="/*" element={<AppRoutes />} />
             </Routes>

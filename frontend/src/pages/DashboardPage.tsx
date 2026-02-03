@@ -27,7 +27,8 @@ export const DashboardPage: React.FC = () => {
   // Fetch video count when boxer profile is loaded
   useEffect(() => {
     const fetchVideos = async () => {
-      if (!myBoxer) return;
+      // Only fetch videos for boxers with a profile
+      if (user?.role !== 'BOXER' || !myBoxer) return;
       try {
         const result = await boxerService.getMyVideos();
         setVideoCount(result.count);
@@ -36,7 +37,7 @@ export const DashboardPage: React.FC = () => {
       }
     };
     fetchVideos();
-  }, [myBoxer]);
+  }, [myBoxer, user?.role]);
 
   // Calculate profile completion
   const profileCompletion = useMemo(() => {

@@ -56,3 +56,19 @@ CLAUDE.md
 
 # Test credentials (do not commit)
 TEST_CREDENTIALS.md
+
+# Production environment and secrets
+.env.production
+traefik/acme.json
+traefik/certificates/
+
+# Backups
+backups/
+*.sql
+*.dump
+*.rdb
+
+# Docker volumes
+postgres_data/
+redis_data/
+uploads/

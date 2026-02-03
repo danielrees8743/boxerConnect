@@ -1,6 +1,6 @@
 /**
  * Script to seed test boxers with varied profiles
- * Run from backend directory: node scripts/seed-boxers.mjs
+ * Run from backend directory: npm run seed:boxers
  *
  * Creates boxers with:
  * - Male and female genders
@@ -10,8 +10,9 @@
  * - Assigned to existing clubs
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ExperienceLevel, Gender } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { withSystemContext } from '../src/utils/database-context';
 
 const prisma = new PrismaClient();
 
@@ -43,7 +44,7 @@ const heightRanges = {
   heavyweight: { min: 183, max: 200 },
 };
 
-const experienceLevels = ['BEGINNER', 'AMATEUR', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL'];
+const experienceLevels: ExperienceLevel[] = ['BEGINNER', 'AMATEUR', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL'];
 
 // Male first names
 const maleFirstNames = [
@@ -86,33 +87,39 @@ const welshCities = [
 ];
 
 // Helper functions
-function randomInt(min, max) {
+function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function randomElement(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+function randomElement<T>(arr: T[]): T {
+  const index = Math.floor(Math.random() * arr.length);
+  const element = arr[index];
+  if (element === undefined) {
+    throw new Error('Array is empty');
+  }
+  return element;
 }
 
-function randomDecimal(min, max, decimals = 1) {
+function randomDecimal(min: number, max: number, decimals: number = 1): number {
   const value = Math.random() * (max - min) + min;
   return parseFloat(value.toFixed(decimals));
 }
 
-function getProfilePhotoUrl(gender, index) {
+function getProfilePhotoUrl(gender: Gender, index: number): string {
   // randomuser.me has 100 photos (0-99) for each gender
   const photoIndex = index % 100;
   const genderPath = gender === 'MALE' ? 'men' : 'women';
   return `https://randomuser.me/api/portraits/${genderPath}/${photoIndex}.jpg`;
 }
 
-function generateRecord(gender, wins, losses, draws) {
-  // Higher experience = more fights
-  const totalFights = wins + losses + draws;
-  return { wins, losses, draws, totalFights };
+interface FightRecord {
+  wins: number;
+  losses: number;
+  draws: number;
+  totalFights: number;
 }
 
-function generateBio(name, experienceLevel, record, gender) {
+function generateBio(name: string, experienceLevel: ExperienceLevel, record: FightRecord, gender: Gender): string {
   const pronouns = gender === 'MALE' ? ['He', 'his'] : ['She', 'her'];
   const bios = [
     `${name} is a dedicated ${experienceLevel.toLowerCase()} boxer with a record of ${record.wins}-${record.losses}-${record.draws}. ${pronouns[0]} trains hard every day to improve ${pronouns[1]} skills.`,
@@ -124,9 +131,9 @@ function generateBio(name, experienceLevel, record, gender) {
   return randomElement(bios);
 }
 
-function generateDateOfBirth(experienceLevel) {
+function generateDateOfBirth(experienceLevel: ExperienceLevel): Date {
   const now = new Date();
-  let minAge, maxAge;
+  let minAge: number, maxAge: number;
 
   switch (experienceLevel) {
     case 'BEGINNER':
@@ -153,8 +160,8 @@ function generateDateOfBirth(experienceLevel) {
   return dob;
 }
 
-function generateFightRecord(experienceLevel) {
-  let maxFights;
+function generateFightRecord(experienceLevel: ExperienceLevel): FightRecord {
+  let maxFights: number;
   switch (experienceLevel) {
     case 'BEGINNER': maxFights = 5; break;
     case 'AMATEUR': maxFights = 15; break;
@@ -173,11 +180,38 @@ function generateFightRecord(experienceLevel) {
   return { wins, losses, draws, totalFights };
 }
 
+interface BoxerData {
+  email: string;
+  name: string;
+  gender: Gender;
+  weightKg: number;
+  heightCm: number;
+  experienceLevel: ExperienceLevel;
+  wins: number;
+  losses: number;
+  draws: number;
+  dateOfBirth: Date;
+  city: string;
+  country: string;
+  bio: string;
+  profilePhotoUrl: string;
+  clubId: string | null;
+  gymAffiliation: string | null;
+  isVerified: boolean;
+  isSearchable: boolean;
+}
+
 async function seedBoxers() {
   console.log('Starting boxer seeding...\n');
 
   // Get existing clubs to assign boxers
-  const clubs = await prisma.club.findMany({ select: { id: true, name: true } });
+  const clubs = await withSystemContext(
+    async (tx) => {
+      return await tx.club.findMany({ select: { id: true, name: true } });
+    },
+    'Database seeding - fetching clubs for boxer assignments'
+  );
+
   if (clubs.length === 0) {
     console.log('Warning: No clubs found. Boxers will not be assigned to clubs.');
   } else {
@@ -185,21 +219,26 @@ async function seedBoxers() {
   }
 
   // Check for existing test boxers
-  const existingBoxers = await prisma.boxer.count();
+  const existingBoxers = await withSystemContext(
+    async (tx) => {
+      return await tx.boxer.count();
+    },
+    'Database seeding - counting existing boxers'
+  );
   console.log(`Current boxers in database: ${existingBoxers}`);
 
-  const password = await bcrypt.hash('password123', 10);
-  const boxersToCreate = [];
+  const BCRYPT_COST = 12; // Match seed.ts security standard
+  const boxersToCreate: BoxerData[] = [];
 
   // Create 30 male boxers
   console.log('\nGenerating male boxers...');
   for (let i = 0; i < 30; i++) {
-    const firstName = maleFirstNames[i % maleFirstNames.length];
+    const firstName = maleFirstNames[i % maleFirstNames.length] as string;
     const lastName = randomElement(lastNames);
     const name = `${firstName} ${lastName}`;
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@boxer.test`;
 
-    const weightClass = randomElement(Object.keys(weightClasses));
+    const weightClass = randomElement(Object.keys(weightClasses)) as keyof typeof weightClasses;
     const weight = randomDecimal(weightClasses[weightClass].min, weightClasses[weightClass].max);
     const height = randomInt(heightRanges[weightClass].min, heightRanges[weightClass].max);
     const experienceLevel = randomElement(experienceLevels);
@@ -208,7 +247,6 @@ async function seedBoxers() {
     const assignedClub = clubs.length > 0 ? randomElement(clubs) : null;
     boxersToCreate.push({
       email,
-      password,
       name,
       gender: 'MALE',
       weightKg: weight,
@@ -230,13 +268,13 @@ async function seedBoxers() {
   // Create 20 female boxers
   console.log('Generating female boxers...');
   for (let i = 0; i < 20; i++) {
-    const firstName = femaleFirstNames[i % femaleFirstNames.length];
+    const firstName = femaleFirstNames[i % femaleFirstNames.length] as string;
     const lastName = randomElement(lastNames);
     const name = `${firstName} ${lastName}`;
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@boxer.test`;
 
     // Female boxers typically in lighter weight classes
-    const femaleWeightClasses = ['minimumweight', 'flyweight', 'bantamweight', 'featherweight', 'lightweight', 'welterweight', 'middleweight'];
+    const femaleWeightClasses: (keyof typeof weightClasses)[] = ['minimumweight', 'flyweight', 'bantamweight', 'featherweight', 'lightweight', 'welterweight', 'middleweight'];
     const weightClass = randomElement(femaleWeightClasses);
     const weight = randomDecimal(weightClasses[weightClass].min, weightClasses[weightClass].max);
     const height = randomInt(heightRanges[weightClass].min - 5, heightRanges[weightClass].max - 5);
@@ -246,7 +284,6 @@ async function seedBoxers() {
     const assignedClub = clubs.length > 0 ? randomElement(clubs) : null;
     boxersToCreate.push({
       email,
-      password,
       name,
       gender: 'FEMALE',
       weightKg: weight,
@@ -270,67 +307,97 @@ async function seedBoxers() {
   let created = 0;
   for (const boxer of boxersToCreate) {
     try {
-      // Create user first
-      const user = await prisma.user.create({
-        data: {
-          email: boxer.email,
-          passwordHash: boxer.password,
-          name: boxer.name,
-          role: 'BOXER',
-          isActive: true,
-          emailVerified: true,
-        },
-      });
+      await withSystemContext(
+        async (tx) => {
+          // Hash password individually for each user (security best practice)
+          const passwordHash = await bcrypt.hash('password123', BCRYPT_COST);
 
-      // Create boxer profile
-      await prisma.boxer.create({
-        data: {
-          userId: user.id,
-          name: boxer.name,
-          gender: boxer.gender,
-          weightKg: boxer.weightKg,
-          heightCm: boxer.heightCm,
-          dateOfBirth: boxer.dateOfBirth,
-          city: boxer.city,
-          country: boxer.country,
-          experienceLevel: boxer.experienceLevel,
-          wins: boxer.wins,
-          losses: boxer.losses,
-          draws: boxer.draws,
-          gymAffiliation: boxer.gymAffiliation,
-          bio: boxer.bio,
-          profilePhotoUrl: boxer.profilePhotoUrl,
-          clubId: boxer.clubId,
-          isVerified: boxer.isVerified,
-          isSearchable: boxer.isSearchable,
+          // Create user first
+          const user = await tx.user.create({
+            data: {
+              email: boxer.email,
+              passwordHash,
+              name: boxer.name,
+              role: 'BOXER',
+              isActive: true,
+              emailVerified: true,
+            },
+          });
+
+          // Create boxer profile
+          await tx.boxer.create({
+            data: {
+              userId: user.id,
+              name: boxer.name,
+              gender: boxer.gender,
+              weightKg: boxer.weightKg,
+              heightCm: boxer.heightCm,
+              dateOfBirth: boxer.dateOfBirth,
+              city: boxer.city,
+              country: boxer.country,
+              experienceLevel: boxer.experienceLevel,
+              wins: boxer.wins,
+              losses: boxer.losses,
+              draws: boxer.draws,
+              gymAffiliation: boxer.gymAffiliation,
+              bio: boxer.bio,
+              profilePhotoUrl: boxer.profilePhotoUrl,
+              clubId: boxer.clubId,
+              isVerified: boxer.isVerified,
+              isSearchable: boxer.isSearchable,
+            },
+          });
         },
-      });
+        `Database seeding - creating test boxer: ${boxer.name}`
+      );
 
       created++;
       if (created % 10 === 0) {
         console.log(`Created ${created}/${boxersToCreate.length} boxers...`);
       }
     } catch (error) {
-      console.error(`Failed to create boxer ${boxer.email}:`, error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error(`❌ Failed to create boxer ${boxer.email}:`, errorMessage);
     }
   }
 
   console.log(`\n=== SEEDING COMPLETE ===\n`);
 
   // Show statistics
-  const stats = await prisma.boxer.groupBy({
-    by: ['gender'],
-    _count: { id: true },
-  });
+  const stats = await withSystemContext(
+    async (tx) => {
+      return await tx.boxer.groupBy({
+        by: ['gender'],
+        _count: { id: true },
+      });
+    },
+    'Database seeding - generating gender statistics'
+  );
 
-  const expStats = await prisma.boxer.groupBy({
-    by: ['experienceLevel'],
-    _count: { id: true },
-    orderBy: { experienceLevel: 'asc' },
-  });
+  const expStats = await withSystemContext(
+    async (tx) => {
+      return await tx.boxer.groupBy({
+        by: ['experienceLevel'],
+        _count: { id: true },
+        orderBy: { experienceLevel: 'asc' },
+      });
+    },
+    'Database seeding - generating experience level statistics'
+  );
 
-  const verifiedCount = await prisma.boxer.count({ where: { isVerified: true } });
-  const totalBoxers = await prisma.boxer.count();
+  const verifiedCount = await withSystemContext(
+    async (tx) => {
+      return await tx.boxer.count({ where: { isVerified: true } });
+    },
+    'Database seeding - counting verified boxers'
+  );
+
+  const totalBoxers = await withSystemContext(
+    async (tx) => {
+      return await tx.boxer.count();
+    },
+    'Database seeding - counting total boxers'
+  );
 
   console.log('=== BOXER STATISTICS ===\n');
   console.log(`Total boxers: ${totalBoxers}`);
@@ -342,11 +409,16 @@ async function seedBoxers() {
 
   // Show sample boxers
   console.log('\n=== SAMPLE BOXERS ===\n');
-  const samples = await prisma.boxer.findMany({
-    take: 5,
-    include: { club: { select: { name: true } } },
-    orderBy: { createdAt: 'desc' },
-  });
+  const samples = await withSystemContext(
+    async (tx) => {
+      return await tx.boxer.findMany({
+        take: 5,
+        include: { club: { select: { name: true } } },
+        orderBy: { createdAt: 'desc' },
+      });
+    },
+    'Database seeding - fetching sample boxers for display'
+  );
 
   samples.forEach((boxer, i) => {
     console.log(`${i + 1}. ${boxer.name} (${boxer.gender})`);

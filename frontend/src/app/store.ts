@@ -4,6 +4,7 @@ import boxerReducer from '@/features/boxer/boxerSlice';
 import matchingReducer from '@/features/matching/matchingSlice';
 import requestsReducer from '@/features/requests/requestsSlice';
 import adminReducer from '@/features/admin/adminSlice';
+import gymOwnerReducer from '@/features/gym-owner/gymOwnerSlice';
 
 /**
  * Redux store configuration for BoxerConnect.
@@ -16,6 +17,7 @@ export const store = configureStore({
     matching: matchingReducer,
     requests: requestsReducer,
     admin: adminReducer,
+    gymOwner: gymOwnerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -1,0 +1,73 @@
+# Traefik v2 Dynamic Configuration
+# Middlewares and additional routing rules
+
+# =============================================================================
+# HTTP Middlewares
+# =============================================================================
+http:
+  middlewares:
+    # Security headers
+    security-headers:
+      headers:
+        # Security headers
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+
+        # HSTS (HTTP Strict Transport Security)
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+        # Content Security Policy (adjust as needed)
+        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';"
+
+        # Permissions Policy
+        permissionsPolicy: "camera=(), microphone=(), geolocation=(), payment=()"
+
+    # Rate limiting (global)
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+        period: 1m
+
+    # Compression
+    compression:
+      compress: true
+
+    # CORS (if needed)
+    cors-headers:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+          - OPTIONS
+        accessControlAllowOriginList:
+          - "https://${DOMAIN}"  # Specific domain only - no wildcards in production
+        accessControlMaxAge: 100
+        addVaryHeader: true
+
+# =============================================================================
+# TLS Configuration
+# =============================================================================
+tls:
+  options:
+    # Modern TLS configuration (TLS 1.2+)
+    default:
+      minVersion: VersionTLS12
+      cipherSuites:
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_AES_128_GCM_SHA256
+        - TLS_AES_256_GCM_SHA384
+        - TLS_CHACHA20_POLY1305_SHA256
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+      sniStrict: true
