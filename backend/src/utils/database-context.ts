@@ -57,10 +57,11 @@ async function setUserContext(
   validateUserId(userId);
   validateUserRole(userRole);
 
-  // SECURITY FIX: Use parameterized queries ($executeRaw) instead of $executeRawUnsafe
+  // SECURITY NOTE: SET LOCAL doesn't support parameterized queries ($1, $2)
+  // so we must use $executeRawUnsafe. Inputs are validated above to prevent SQL injection.
   // Use SET LOCAL for transaction-scoped settings (safer with connection pooling)
-  await tx.$executeRaw`SET LOCAL app.current_user_id = ${userId}`;
-  await tx.$executeRaw`SET LOCAL app.current_user_role = ${userRole}`;
+  await tx.$executeRawUnsafe(`SET LOCAL app.current_user_id = '${userId}'`);
+  await tx.$executeRawUnsafe(`SET LOCAL app.current_user_role = '${userRole}'`);
 }
 
 /**

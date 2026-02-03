@@ -3,6 +3,7 @@
 
 import { Boxer, ExperienceLevel, Prisma } from '@prisma/client';
 import { prisma } from '../config';
+import { withUserContext } from '../utils/database-context';
 import type { CreateBoxerInput, UpdateBoxerInput, BoxerSearchInput } from '../validators/boxer.validators';
 
 // ============================================================================
@@ -175,65 +176,69 @@ export interface UpdateBoxerOptions {
 export async function updateBoxer(
   id: string,
   userId: string,
+  userRole: string,
   data: UpdateBoxerInput,
   options: UpdateBoxerOptions = {}
 ): Promise<Boxer> {
   const { skipOwnershipCheck = false } = options;
 
-  // Verify the boxer exists
-  const boxer = await prisma.boxer.findUnique({
-    where: { id },
-    include: { club: true },
-  });
+  // Use withUserContext to set RLS context for all database operations
+  return withUserContext(userId, userRole, async (tx) => {
+    // Verify the boxer exists
+    const boxer = await tx.boxer.findUnique({
+      where: { id },
+      include: { club: true },
+    });
 
-  if (!boxer) {
-    throw new Error('Boxer profile not found');
-  }
-
-  // Verify ownership unless explicitly skipped
-  if (!skipOwnershipCheck && boxer.userId !== userId) {
-    throw new Error('Not authorized to update this profile');
-  }
-
-  // Build update data, handling null values for clearing fields
-  // Using UncheckedUpdateInput to allow direct clubId assignment
-  const updateData: Prisma.BoxerUncheckedUpdateInput = {};
-
-  if (data.name !== undefined) updateData.name = data.name;
-  if (data.gender !== undefined) updateData.gender = data.gender;
-  if (data.weightKg !== undefined) updateData.weightKg = data.weightKg;
-  if (data.heightCm !== undefined) updateData.heightCm = data.heightCm;
-  if (data.dateOfBirth !== undefined) updateData.dateOfBirth = data.dateOfBirth;
-  if (data.location !== undefined) updateData.location = data.location;
-  if (data.city !== undefined) updateData.city = data.city;
-  if (data.country !== undefined) updateData.country = data.country;
-  if (data.experienceLevel !== undefined) updateData.experienceLevel = data.experienceLevel;
-  if (data.wins !== undefined) updateData.wins = data.wins;
-  if (data.losses !== undefined) updateData.losses = data.losses;
-  if (data.draws !== undefined) updateData.draws = data.draws;
-  if (data.gymAffiliation !== undefined) updateData.gymAffiliation = data.gymAffiliation;
-  if (data.bio !== undefined) updateData.bio = data.bio;
-  if (data.profilePhotoUrl !== undefined) updateData.profilePhotoUrl = data.profilePhotoUrl;
-  if (data.isSearchable !== undefined) updateData.isSearchable = data.isSearchable;
-  if (data.clubId !== undefined) {
-    if (data.clubId) {
-      // Verify club exists before assigning
-      const club = await prisma.club.findUnique({ where: { id: data.clubId } });
-      if (!club) {
-        throw new Error('Club not found');
-      }
-      updateData.clubId = data.clubId;
-      // Update gymAffiliation with club name for backwards compatibility
-      updateData.gymAffiliation = club.name;
-    } else {
-      // Allow setting clubId to null (removing from club)
-      updateData.clubId = null;
+    if (!boxer) {
+      throw new Error('Boxer profile not found');
     }
-  }
 
-  return prisma.boxer.update({
-    where: { id },
-    data: updateData,
+    // Verify ownership unless explicitly skipped
+    if (!skipOwnershipCheck && boxer.userId !== userId) {
+      throw new Error('Not authorized to update this profile');
+    }
+
+    // Build update data, handling null values for clearing fields
+    // Using UncheckedUpdateInput to allow direct clubId assignment
+    const updateData: Prisma.BoxerUncheckedUpdateInput = {};
+
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.gender !== undefined) updateData.gender = data.gender;
+    if (data.weightKg !== undefined) updateData.weightKg = data.weightKg;
+    if (data.heightCm !== undefined) updateData.heightCm = data.heightCm;
+    if (data.dateOfBirth !== undefined) updateData.dateOfBirth = data.dateOfBirth;
+    if (data.location !== undefined) updateData.location = data.location;
+    if (data.city !== undefined) updateData.city = data.city;
+    if (data.country !== undefined) updateData.country = data.country;
+    if (data.experienceLevel !== undefined) updateData.experienceLevel = data.experienceLevel;
+    if (data.wins !== undefined) updateData.wins = data.wins;
+    if (data.losses !== undefined) updateData.losses = data.losses;
+    if (data.draws !== undefined) updateData.draws = data.draws;
+    if (data.gymAffiliation !== undefined) updateData.gymAffiliation = data.gymAffiliation;
+    if (data.bio !== undefined) updateData.bio = data.bio;
+    if (data.profilePhotoUrl !== undefined) updateData.profilePhotoUrl = data.profilePhotoUrl;
+    if (data.isSearchable !== undefined) updateData.isSearchable = data.isSearchable;
+    if (data.clubId !== undefined) {
+      if (data.clubId) {
+        // Verify club exists before assigning
+        const club = await tx.club.findUnique({ where: { id: data.clubId } });
+        if (!club) {
+          throw new Error('Club not found');
+        }
+        updateData.clubId = data.clubId;
+        // Update gymAffiliation with club name for backwards compatibility
+        updateData.gymAffiliation = club.name;
+      } else {
+        // Allow setting clubId to null (removing from club)
+        updateData.clubId = null;
+      }
+    }
+
+    return tx.boxer.update({
+      where: { id },
+      data: updateData,
+    });
   });
 }
 
