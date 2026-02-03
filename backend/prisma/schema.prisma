@@ -256,6 +256,41 @@ model Club {
   ownerId     String?  @map("owner_id") @db.Uuid
   owner       User?    @relation("ClubOwner", fields: [ownerId], references: [id], onDelete: SetNull)
 
+  // Enhanced Profile Fields
+  description         String?  @db.Text
+  address             String?  @db.VarChar(500)
+  city                String?  @db.VarChar(100)
+  country             String?  @db.VarChar(100)
+  website             String?  @db.VarChar(500)
+  facebookUrl         String?  @map("facebook_url") @db.VarChar(500)
+  instagramUrl        String?  @map("instagram_url") @db.VarChar(500)
+  twitterUrl          String?  @map("twitter_url") @db.VarChar(500)
+  foundedYear         Int?     @map("founded_year")
+  capacity            Int?
+  amenities           String[] @default([])
+  photos              String[] @default([])
+  operatingHours      Json?    @map("operating_hours")
+  pricingTiers        Json?    @map("pricing_tiers")
+  specialties         String[] @default([])
+  ageGroupsServed     String[] @map("age_groups_served") @default([])
+  acceptingMembers    Boolean  @default(true) @map("accepting_members")
+  isPublished         Boolean  @default(false) @map("is_published")
+  headCoachName       String?  @map("head_coach_name") @db.VarChar(200)
+  headCoachBio        String?  @map("head_coach_bio") @db.Text
+  headCoachPhotoUrl   String?  @map("head_coach_photo_url") @db.VarChar(500)
+  achievements        String[] @default([])
+  affiliations        String[] @default([])
+  certifications      String[] @default([])
+  languages           String[] @default([])
+  parkingInfo         String?  @map("parking_info") @db.Text
+  publicTransportInfo String?  @map("public_transport_info") @db.Text
+  accessibility       String[] @default([])
+  memberCount         Int?     @map("member_count")
+  coachCount          Int?     @map("coach_count")
+  establishedDate     DateTime? @map("established_date") @db.Date
+  lastVerifiedAt      DateTime? @map("last_verified_at")
+  verificationNotes   String?  @map("verification_notes") @db.Text
+
   // Members
   boxers      Boxer[]
   coaches     ClubCoach[]
@@ -265,6 +300,9 @@ model Club {
   @@index([region])
   @@index([postcode])
   @@index([ownerId])
+  @@index([city, country])
+  @@index([isPublished])
+  @@index([acceptingMembers])
   @@map("clubs")
 }
 

@@ -110,6 +110,9 @@ export enum Permission {
   /** Set or transfer club ownership */
   CLUB_SET_OWNER = 'club:set:owner',
 
+  /** Update own club profile (for club owners) */
+  CLUB_UPDATE_OWN = 'club:update:own',
+
   // ============================================================================
   // Gym Owner Operations
   // ============================================================================

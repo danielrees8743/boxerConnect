@@ -112,6 +112,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     // Club management
     Permission.CLUB_READ_PUBLIC,
     Permission.CLUB_READ_MEMBERS,
+    Permission.CLUB_UPDATE_OWN,
     Permission.CLUB_MEMBER_ADD_BOXER,
     Permission.CLUB_MEMBER_REMOVE_BOXER,
     Permission.CLUB_MEMBER_ADD_COACH,

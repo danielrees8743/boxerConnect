@@ -390,6 +390,11 @@ describe('Club Service - Gym Owner Features', () => {
               id: true,
               name: true,
               userId: true,
+              weightKg: true,
+              experienceLevel: true,
+              wins: true,
+              losses: true,
+              draws: true,
             },
           },
           coaches: {

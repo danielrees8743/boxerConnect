@@ -17,8 +17,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { registerUser, clearError } from '@/features/auth/authSlice';
 import { clubService } from '@/services/clubService';
 import { cn } from '@/lib/utils';
-import type { UserRole } from '@/types';
-import type { Club } from '@/services/clubService';
+import type { UserRole, Club } from '@/types';
 
 // Validation schema for registration form
 const registerSchema = z

@@ -12,6 +12,10 @@ export interface ClubSearchInput {
   name?: string | undefined;
   region?: string | undefined;
   postcode?: string | undefined;
+  city?: string | undefined;
+  country?: string | undefined;
+  acceptingMembers?: boolean | undefined;
+  includeUnpublished?: boolean | undefined;
   page?: number;
   limit?: number;
 }
@@ -38,12 +42,28 @@ export interface ClubWithMembers extends Club {
 
 /**
  * Get all clubs with optional filtering and pagination
+ * By default, only returns published clubs unless includeUnpublished is true
  */
 export async function getClubs(params: ClubSearchInput = {}): Promise<PaginatedClubs> {
-  const { name, region, postcode, page = 1, limit = 50 } = params;
+  const {
+    name,
+    region,
+    postcode,
+    city,
+    country,
+    acceptingMembers,
+    includeUnpublished = false,
+    page = 1,
+    limit = 50,
+  } = params;
 
   // Build where clause
   const where: Prisma.ClubWhereInput = {};
+
+  // Filter by publication status (default: only published)
+  if (!includeUnpublished) {
+    where.isPublished = true;
+  }
 
   if (name) {
     where.name = {
@@ -64,6 +84,24 @@ export async function getClubs(params: ClubSearchInput = {}): Promise<PaginatedC
       startsWith: postcode.toUpperCase(),
       mode: 'insensitive',
     };
+  }
+
+  if (city) {
+    where.city = {
+      contains: city,
+      mode: 'insensitive',
+    };
+  }
+
+  if (country) {
+    where.country = {
+      contains: country,
+      mode: 'insensitive',
+    };
+  }
+
+  if (acceptingMembers !== undefined) {
+    where.acceptingMembers = acceptingMembers;
   }
 
   // Calculate pagination
@@ -451,6 +489,43 @@ export async function getClubsByOwner(ownerId: string): Promise<Club[]> {
   });
 }
 
+// ============================================================================
+// Club CRUD Operations
+// ============================================================================
+
+/**
+ * Create a new club
+ * Admin-only operation
+ */
+export async function createClub(data: Prisma.ClubCreateInput): Promise<Club> {
+  return prisma.club.create({
+    data,
+  });
+}
+
+/**
+ * Update a club
+ * Can be performed by club owner or admin
+ */
+export async function updateClub(
+  clubId: string,
+  data: Prisma.ClubUpdateInput
+): Promise<Club> {
+  // Verify club exists
+  const club = await prisma.club.findUnique({
+    where: { id: clubId },
+  });
+
+  if (!club) {
+    throw new Error('Club not found');
+  }
+
+  return prisma.club.update({
+    where: { id: clubId },
+    data,
+  });
+}
+
 // Export all functions
 export default {
   getClubs,
@@ -467,4 +542,6 @@ export default {
   setClubOwner,
   isClubOwner,
   getClubsByOwner,
+  createClub,
+  updateClub,
 };

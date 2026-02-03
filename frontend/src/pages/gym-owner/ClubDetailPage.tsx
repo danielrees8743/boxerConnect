@@ -3,12 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchClubWithMembers, clearSelectedClub } from '@/features/gym-owner/gymOwnerSlice';
 import { DataTable, Column } from '@/components/admin/DataTable';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Eye, Calendar, UserPlus } from 'lucide-react';
+import { ArrowLeft, Eye, Calendar, UserPlus, Edit, Building2, ExternalLink } from 'lucide-react';
 import { CreateBoxerAccountDialog } from '@/components/gym-owner/CreateBoxerAccountDialog';
 import { gymOwnerService } from '@/services/gymOwnerService';
 import type { CreateBoxerAccountData } from '@/services/gymOwnerService';
@@ -167,9 +167,15 @@ export const ClubDetailPage: React.FC = () => {
         </Button>
       </div>
 
-      <div>
-        <h1 className="text-3xl font-bold">{selectedClub.name}</h1>
-        <p className="text-muted-foreground mt-1">{selectedClub.region}</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">{selectedClub.name}</h1>
+          <p className="text-muted-foreground mt-1">{selectedClub.region}</p>
+        </div>
+        <Button onClick={() => navigate(`/gym-owner/clubs/${id}/edit`)}>
+          <Edit className="h-4 w-4 mr-2" />
+          Edit Profile
+        </Button>
       </div>
 
       {successMessage && (
@@ -177,6 +183,56 @@ export const ClubDetailPage: React.FC = () => {
           <AlertDescription>{successMessage}</AlertDescription>
         </Alert>
       )}
+
+      {/* Club Profile Preview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="h-5 w-5" />
+            Club Profile Preview
+          </CardTitle>
+          <CardDescription>
+            This is how your club appears to the public
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {selectedClub.description ? (
+              <div>
+                <p className="text-sm font-medium mb-1">Description</p>
+                <p className="text-sm text-muted-foreground line-clamp-3">
+                  {selectedClub.description}
+                </p>
+              </div>
+            ) : (
+              <div className="text-sm text-muted-foreground italic">
+                No description added yet. Click Edit Profile to add one.
+              </div>
+            )}
+
+            <div className="flex items-center justify-between pt-2">
+              <div className="flex gap-2">
+                {selectedClub.isPublished ? (
+                  <Badge variant="success">Published</Badge>
+                ) : (
+                  <Badge variant="secondary">Draft</Badge>
+                )}
+                {selectedClub.acceptingMembers && (
+                  <Badge variant="outline">Accepting Members</Badge>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(`/clubs/${id}`)}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                View Public Profile
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Club Info */}
       <Card>

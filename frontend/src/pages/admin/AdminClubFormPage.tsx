@@ -14,6 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -24,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
 const clubSchema = z.object({
@@ -37,6 +39,19 @@ const clubSchema = z.object({
   longitude: z.coerce.number().min(-180).max(180).optional().nullable(),
   ownerId: z.string().optional().or(z.literal('')),
   isVerified: z.boolean().default(false),
+  // Enhanced Profile Fields
+  description: z.string().max(2000).optional().or(z.literal('')),
+  address: z.string().max(200).optional().or(z.literal('')),
+  city: z.string().max(100).optional().or(z.literal('')),
+  country: z.string().max(100).optional().or(z.literal('')),
+  website: z.string().url('Invalid URL').optional().or(z.literal('')),
+  facebookUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
+  instagramUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
+  twitterUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
+  foundedYear: z.coerce.number().min(1800).max(new Date().getFullYear()).optional().nullable(),
+  capacity: z.coerce.number().min(0).optional().nullable(),
+  acceptingMembers: z.boolean().default(false),
+  isPublished: z.boolean().default(false),
 });
 
 type ClubFormData = z.infer<typeof clubSchema>;
@@ -69,11 +84,23 @@ export const AdminClubFormPage: React.FC = () => {
       region: '',
       ownerId: '',
       isVerified: false,
+      description: '',
+      address: '',
+      city: '',
+      country: '',
+      website: '',
+      facebookUrl: '',
+      instagramUrl: '',
+      twitterUrl: '',
+      acceptingMembers: false,
+      isPublished: false,
     },
   });
 
   const watchedOwnerId = watch('ownerId');
   const watchedIsVerified = watch('isVerified');
+  const watchedAcceptingMembers = watch('acceptingMembers');
+  const watchedIsPublished = watch('isPublished');
 
   // Load gym owners for the owner selector
   useEffect(() => {
@@ -103,6 +130,18 @@ export const AdminClubFormPage: React.FC = () => {
         longitude: selectedClub.longitude,
         ownerId: selectedClub.ownerId || '',
         isVerified: selectedClub.isVerified,
+        description: selectedClub.description || '',
+        address: selectedClub.address || '',
+        city: selectedClub.city || '',
+        country: selectedClub.country || '',
+        website: selectedClub.website || '',
+        facebookUrl: selectedClub.facebookUrl || '',
+        instagramUrl: selectedClub.instagramUrl || '',
+        twitterUrl: selectedClub.twitterUrl || '',
+        foundedYear: selectedClub.foundedYear,
+        capacity: selectedClub.capacity,
+        acceptingMembers: selectedClub.acceptingMembers || false,
+        isPublished: selectedClub.isPublished || false,
       });
     }
   }, [isEditing, selectedClub, reset]);
@@ -123,6 +162,18 @@ export const AdminClubFormPage: React.FC = () => {
         longitude: data.longitude || undefined,
         ownerId: data.ownerId || undefined,
         isVerified: data.isVerified,
+        description: data.description || undefined,
+        address: data.address || undefined,
+        city: data.city || undefined,
+        country: data.country || undefined,
+        website: data.website || undefined,
+        facebookUrl: data.facebookUrl || undefined,
+        instagramUrl: data.instagramUrl || undefined,
+        twitterUrl: data.twitterUrl || undefined,
+        foundedYear: data.foundedYear || undefined,
+        capacity: data.capacity || undefined,
+        acceptingMembers: data.acceptingMembers,
+        isPublished: data.isPublished,
       };
 
       if (isEditing && id) {
@@ -139,6 +190,16 @@ export const AdminClubFormPage: React.FC = () => {
               latitude: data.latitude || null,
               longitude: data.longitude || null,
               ownerId: data.ownerId || null,
+              description: data.description || null,
+              address: data.address || null,
+              city: data.city || null,
+              country: data.country || null,
+              website: data.website || null,
+              facebookUrl: data.facebookUrl || null,
+              instagramUrl: data.instagramUrl || null,
+              twitterUrl: data.twitterUrl || null,
+              foundedYear: data.foundedYear || null,
+              capacity: data.capacity || null,
             },
           })
         ).unwrap();
@@ -187,18 +248,22 @@ export const AdminClubFormPage: React.FC = () => {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Basic Info */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Club Name *</Label>
-              <Input
-                id="name"
-                {...register('name')}
-                placeholder="Enter club name"
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
-            </div>
+            {/* Section 1: Basic Info */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Basic Information</h3>
+              <Separator />
+
+              <div className="space-y-2">
+                <Label htmlFor="name">Club Name *</Label>
+                <Input
+                  id="name"
+                  {...register('name')}
+                  placeholder="Enter club name"
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name.message}</p>
+                )}
+              </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
@@ -233,8 +298,62 @@ export const AdminClubFormPage: React.FC = () => {
               />
             </div>
 
-            {/* Location */}
             <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="foundedYear">Founded Year</Label>
+                <Input id="foundedYear" type="number" {...register('foundedYear')} />
+                {errors.foundedYear && (
+                  <p className="text-sm text-red-500">{errors.foundedYear.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="capacity">Capacity</Label>
+                <Input id="capacity" type="number" {...register('capacity')} placeholder="Max members" />
+              </div>
+            </div>
+            </div>
+
+            {/* Section 2: Profile Content */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Profile Content</h3>
+              <Separator />
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  {...register('description')}
+                  placeholder="Tell potential members about your club..."
+                  rows={4}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="website">Website</Label>
+                <Input id="website" type="url" {...register('website')} placeholder="https://..." />
+                {errors.website && (
+                  <p className="text-sm text-red-500">{errors.website.message}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Section 3: Location */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Location</h3>
+              <Separator />
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Input id="address" {...register('address')} />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="city">City</Label>
+                <Input id="city" {...register('city')} />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="postcode">Postcode</Label>
                 <Input
@@ -243,13 +362,24 @@ export const AdminClubFormPage: React.FC = () => {
                   placeholder="SW1A 1AA"
                 />
               </div>
+            </div>
 
+            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="region">Region</Label>
                 <Input
                   id="region"
                   {...register('region')}
-                  placeholder="London"
+                  placeholder="Wales"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="country">Country</Label>
+                <Input
+                  id="country"
+                  {...register('country')}
+                  placeholder="Wales"
                 />
               </div>
             </div>
@@ -277,9 +407,44 @@ export const AdminClubFormPage: React.FC = () => {
                 />
               </div>
             </div>
+            </div>
 
-            {/* Owner */}
-            <div className="space-y-2">
+            {/* Section 4: Social Media */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Social Media</h3>
+              <Separator />
+
+              <div className="space-y-2">
+                <Label htmlFor="facebookUrl">Facebook</Label>
+                <Input id="facebookUrl" type="url" {...register('facebookUrl')} placeholder="https://facebook.com/..." />
+                {errors.facebookUrl && (
+                  <p className="text-sm text-red-500">{errors.facebookUrl.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="instagramUrl">Instagram</Label>
+                <Input id="instagramUrl" type="url" {...register('instagramUrl')} placeholder="https://instagram.com/..." />
+                {errors.instagramUrl && (
+                  <p className="text-sm text-red-500">{errors.instagramUrl.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="twitterUrl">Twitter</Label>
+                <Input id="twitterUrl" type="url" {...register('twitterUrl')} placeholder="https://twitter.com/..." />
+                {errors.twitterUrl && (
+                  <p className="text-sm text-red-500">{errors.twitterUrl.message}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Section 5: Administrative */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Administrative</h3>
+              <Separator />
+
+              <div className="space-y-2">
               <Label htmlFor="ownerId">Owner</Label>
               <Select
                 value={watchedOwnerId || ''}
@@ -299,7 +464,6 @@ export const AdminClubFormPage: React.FC = () => {
               </Select>
             </div>
 
-            {/* Verification */}
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="isVerified"
@@ -307,6 +471,25 @@ export const AdminClubFormPage: React.FC = () => {
                 onCheckedChange={(checked: boolean | 'indeterminate') => setValue('isVerified', checked === true)}
               />
               <Label htmlFor="isVerified">Verified club</Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="acceptingMembers"
+                checked={watchedAcceptingMembers}
+                onCheckedChange={(checked: boolean | 'indeterminate') => setValue('acceptingMembers', checked === true)}
+              />
+              <Label htmlFor="acceptingMembers">Currently accepting new members</Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="isPublished"
+                checked={watchedIsPublished}
+                onCheckedChange={(checked: boolean | 'indeterminate') => setValue('isPublished', checked === true)}
+              />
+              <Label htmlFor="isPublished">Published (visible to public)</Label>
+            </div>
             </div>
 
             <div className="flex gap-4 pt-4">

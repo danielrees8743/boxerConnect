@@ -17,6 +17,8 @@ import {
   setClubOwner as setClubOwnerService,
   isClubOwner as isClubOwnerService,
   getClubsByOwner as getClubsByOwnerService,
+  createClub as createClubService,
+  updateClub as updateClubService,
 } from '../services/club.service';
 import { sendSuccess, sendPaginated } from '../utils';
 import { NotFoundError, ForbiddenError, BadRequestError } from '../middleware';
@@ -28,6 +30,8 @@ import {
   clubCoachParamsSchema,
   assignCoachSchema,
   setClubOwnerSchema,
+  createClubSchema,
+  updateClubSchema,
 } from '../validators/club.validators';
 
 // ============================================================================
@@ -38,6 +42,10 @@ const clubSearchSchema = z.object({
   name: z.string().optional(),
   region: z.string().optional(),
   postcode: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+  acceptingMembers: z.coerce.boolean().optional(),
+  includeUnpublished: z.coerce.boolean().optional().default(false),
   page: z.coerce.number().int().positive().optional().default(1),
   limit: z.coerce.number().int().positive().max(100).optional().default(50),
 });
@@ -425,6 +433,77 @@ export async function setClubOwner(
   }
 }
 
+/**
+ * Create a new club (ADMIN only)
+ * POST /api/v1/clubs
+ */
+export async function createClub(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    // Only admin can create clubs
+    if (req.user.role !== 'ADMIN') {
+      return next(new ForbiddenError('Only admins can create clubs'));
+    }
+
+    const validatedData = createClubSchema.parse(req.body);
+
+    // Cast to Prisma ClubCreateInput type
+    const club = await createClubService(validatedData as any);
+
+    sendSuccess(res, { club }, 'Club created successfully', 201);
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * Update a club (ADMIN or club owner)
+ * PATCH /api/v1/clubs/:id
+ */
+export async function updateClub(
+  req: AuthenticatedUserRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id } = clubIdSchema.parse(req.params);
+    const validatedData = updateClubSchema.parse(req.body);
+
+    // Check if user is club owner or admin
+    const isOwner = await isClubOwnerService(req.user.userId, id);
+    const isAdmin = req.user.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
+      return next(new ForbiddenError('Only the club owner or admin can update this club'));
+    }
+
+    // Only admin can update certain fields
+    const adminOnlyFields = ['isVerified', 'lastVerifiedAt', 'verificationNotes'];
+    if (!isAdmin) {
+      adminOnlyFields.forEach((field) => {
+        if (field in validatedData) {
+          delete (validatedData as Record<string, unknown>)[field];
+        }
+      });
+    }
+
+    // Cast to Prisma ClubUpdateInput type
+    const club = await updateClubService(id, validatedData as any);
+
+    sendSuccess(res, { club }, 'Club updated successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Club not found') {
+        return next(new NotFoundError(error.message));
+      }
+    }
+    next(error);
+  }
+}
+
 // Export all controller methods
 export default {
   getClubs,
@@ -440,4 +519,6 @@ export default {
   addCoachToClub,
   removeCoachFromClub,
   setClubOwner,
+  createClub,
+  updateClub,
 };

@@ -432,6 +432,27 @@ export interface UpdateAdminBoxerData {
   clubId?: string | null;
 }
 
+// ============================================================================
+// Club Types
+// ============================================================================
+
+export interface OperatingHours {
+  [day: string]: DaySchedule;
+}
+
+export interface DaySchedule {
+  open?: string;
+  close?: string;
+  closed?: boolean;
+}
+
+export interface PricingTier {
+  name: string;
+  price: number;
+  interval: string;
+  description?: string;
+}
+
 export interface Club {
   id: string;
   name: string;
@@ -451,6 +472,40 @@ export interface Club {
     boxers: number;
     coaches: number;
   };
+  // Enhanced Profile Fields
+  description?: string | null;
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  website?: string | null;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  twitterUrl?: string | null;
+  foundedYear?: number | null;
+  capacity?: number | null;
+  amenities?: string[];
+  photos?: string[];
+  operatingHours?: OperatingHours | null;
+  pricingTiers?: PricingTier[] | null;
+  specialties?: string[];
+  ageGroupsServed?: string[];
+  acceptingMembers?: boolean;
+  isPublished?: boolean;
+  headCoachName?: string | null;
+  headCoachBio?: string | null;
+  headCoachPhotoUrl?: string | null;
+  achievements?: string[];
+  affiliations?: string[];
+  certifications?: string[];
+  languages?: string[];
+  parkingInfo?: string | null;
+  publicTransportInfo?: string | null;
+  accessibility?: string[];
+  memberCount?: number | null;
+  coachCount?: number | null;
+  establishedDate?: string | null;
+  lastVerifiedAt?: string | null;
+  verificationNotes?: string | null;
 }
 
 export interface CreateClubData {
@@ -464,6 +519,38 @@ export interface CreateClubData {
   longitude?: number;
   ownerId?: string;
   isVerified?: boolean;
+  // Enhanced Profile Fields
+  description?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  website?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  foundedYear?: number;
+  capacity?: number;
+  amenities?: string[];
+  photos?: string[];
+  operatingHours?: OperatingHours;
+  pricingTiers?: PricingTier[];
+  specialties?: string[];
+  ageGroupsServed?: string[];
+  acceptingMembers?: boolean;
+  isPublished?: boolean;
+  headCoachName?: string;
+  headCoachBio?: string;
+  headCoachPhotoUrl?: string;
+  achievements?: string[];
+  affiliations?: string[];
+  certifications?: string[];
+  languages?: string[];
+  parkingInfo?: string;
+  publicTransportInfo?: string;
+  accessibility?: string[];
+  memberCount?: number;
+  coachCount?: number;
+  establishedDate?: string;
 }
 
 export interface UpdateClubData {
@@ -477,6 +564,38 @@ export interface UpdateClubData {
   longitude?: number | null;
   ownerId?: string | null;
   isVerified?: boolean;
+  // Enhanced Profile Fields
+  description?: string | null;
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  website?: string | null;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  twitterUrl?: string | null;
+  foundedYear?: number | null;
+  capacity?: number | null;
+  amenities?: string[];
+  photos?: string[];
+  operatingHours?: OperatingHours | null;
+  pricingTiers?: PricingTier[] | null;
+  specialties?: string[];
+  ageGroupsServed?: string[];
+  acceptingMembers?: boolean;
+  isPublished?: boolean;
+  headCoachName?: string | null;
+  headCoachBio?: string | null;
+  headCoachPhotoUrl?: string | null;
+  achievements?: string[];
+  affiliations?: string[];
+  certifications?: string[];
+  languages?: string[];
+  parkingInfo?: string | null;
+  publicTransportInfo?: string | null;
+  accessibility?: string[];
+  memberCount?: number | null;
+  coachCount?: number | null;
+  establishedDate?: string | null;
 }
 
 export interface AdminUserSearchParams {
