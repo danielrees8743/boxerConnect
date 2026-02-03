@@ -11,6 +11,7 @@ import {
   requestPasswordReset,
   resetPassword as resetUserPassword,
 } from '../services/auth.service';
+import { createMembershipRequest } from '../services/clubMembershipRequest.service';
 import {
   registerSchema,
   loginSchema,
@@ -41,6 +42,18 @@ export async function register(
 
     // Register user (now returns tokens for immediate login)
     const result = await registerUser(validatedData);
+
+    // If clubId is provided and role is BOXER, create a membership request
+    if (validatedData.clubId && validatedData.role === 'BOXER') {
+      try {
+        await createMembershipRequest(result.user.id, validatedData.clubId);
+        // Membership request created successfully, but don't block registration
+      } catch (error) {
+        // Log error but don't fail registration
+        console.error('Failed to create membership request during registration:', error);
+        // Membership request will need to be created manually or through profile
+      }
+    }
 
     sendCreated(res, {
       user: result.user,

@@ -71,6 +71,12 @@ enum CoachPermission {
   FULL_ACCESS
 }
 
+enum MembershipRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // ============================================================================
 // MODELS
 // ============================================================================
@@ -94,6 +100,7 @@ model User {
   clubCoach     ClubCoach?
   refreshTokens       RefreshToken[]
   passwordResetTokens PasswordResetToken[]
+  clubMembershipRequests ClubMembershipRequest[]
 
   @@index([email])
   @@index([role])
@@ -249,14 +256,53 @@ model Club {
   ownerId     String?  @map("owner_id") @db.Uuid
   owner       User?    @relation("ClubOwner", fields: [ownerId], references: [id], onDelete: SetNull)
 
+  // Enhanced Profile Fields
+  description         String?  @db.Text
+  address             String?  @db.VarChar(500)
+  city                String?  @db.VarChar(100)
+  country             String?  @db.VarChar(100)
+  website             String?  @db.VarChar(500)
+  facebookUrl         String?  @map("facebook_url") @db.VarChar(500)
+  instagramUrl        String?  @map("instagram_url") @db.VarChar(500)
+  twitterUrl          String?  @map("twitter_url") @db.VarChar(500)
+  foundedYear         Int?     @map("founded_year")
+  capacity            Int?
+  amenities           String[] @default([])
+  photos              String[] @default([])
+  operatingHours      Json?    @map("operating_hours")
+  pricingTiers        Json?    @map("pricing_tiers")
+  specialties         String[] @default([])
+  ageGroupsServed     String[] @map("age_groups_served") @default([])
+  acceptingMembers    Boolean  @default(true) @map("accepting_members")
+  isPublished         Boolean  @default(false) @map("is_published")
+  headCoachName       String?  @map("head_coach_name") @db.VarChar(200)
+  headCoachBio        String?  @map("head_coach_bio") @db.Text
+  headCoachPhotoUrl   String?  @map("head_coach_photo_url") @db.VarChar(500)
+  achievements        String[] @default([])
+  affiliations        String[] @default([])
+  certifications      String[] @default([])
+  languages           String[] @default([])
+  parkingInfo         String?  @map("parking_info") @db.Text
+  publicTransportInfo String?  @map("public_transport_info") @db.Text
+  accessibility       String[] @default([])
+  memberCount         Int?     @map("member_count")
+  coachCount          Int?     @map("coach_count")
+  establishedDate     DateTime? @map("established_date") @db.Date
+  lastVerifiedAt      DateTime? @map("last_verified_at")
+  verificationNotes   String?  @map("verification_notes") @db.Text
+
   // Members
   boxers      Boxer[]
   coaches     ClubCoach[]
+  membershipRequests ClubMembershipRequest[]
 
   @@index([name])
   @@index([region])
   @@index([postcode])
   @@index([ownerId])
+  @@index([city, country])
+  @@index([isPublished])
+  @@index([acceptingMembers])
   @@map("clubs")
 }
 
@@ -325,4 +371,26 @@ model PasswordResetToken {
   @@index([token])
   @@index([expiresAt])
   @@map("password_reset_tokens")
+}
+
+model ClubMembershipRequest {
+  id          String                   @id @default(uuid()) @db.Uuid
+  userId      String                   @map("user_id") @db.Uuid
+  clubId      String                   @map("club_id") @db.Uuid
+  status      MembershipRequestStatus  @default(PENDING)
+  requestedAt DateTime                 @default(now()) @map("requested_at")
+  reviewedAt  DateTime?                @map("reviewed_at")
+  reviewedBy  String?                  @map("reviewed_by") @db.Uuid
+  notes       String?                  @db.Text
+
+  // Relations
+  user        User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club        Club                     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clubId])
+  @@index([userId])
+  @@index([clubId])
+  @@index([status])
+  @@index([requestedAt])
+  @@map("club_membership_requests")
 }

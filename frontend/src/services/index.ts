@@ -12,3 +12,4 @@ export { matchingService } from './matchingService';
 export { matchRequestService } from './matchRequestService';
 export { availabilityService } from './availabilityService';
 export { clubService } from './clubService';
+export { membershipRequestService } from './membershipRequestService';

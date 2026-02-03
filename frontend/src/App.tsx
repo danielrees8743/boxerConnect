@@ -18,6 +18,7 @@ import { BoxerDetailPage } from '@/pages/BoxerDetailPage';
 import { MatchesPage } from '@/pages/MatchesPage';
 import { RequestsPage } from '@/pages/RequestsPage';
 import { ClubsPage } from '@/pages/ClubsPage';
+import { ClubDetailPage as PublicClubDetailPage } from '@/pages/ClubDetailPage';
 import {
   AdminDashboardPage,
   AdminUsersPage,
@@ -31,9 +32,11 @@ import {
   GymOwnerDashboardPage,
   MyClubsPage,
   ClubDetailPage,
+  ClubEditPage,
   GymOwnerBoxersPage,
   GymOwnerCoachesPage,
   GymOwnerMatchesPage,
+  MembershipRequestsPage,
 } from '@/pages/gym-owner';
 
 /**
@@ -120,6 +123,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/clubs" element={<ClubsPage />} />
+        <Route path="/clubs/:id" element={<PublicClubDetailPage />} />
 
         {/* Protected Routes */}
         <Route
@@ -223,8 +227,10 @@ const GymOwnerRoutes: React.FC = () => {
         <Route index element={<GymOwnerDashboardPage />} />
         <Route path="clubs" element={<MyClubsPage />} />
         <Route path="clubs/:id" element={<ClubDetailPage />} />
+        <Route path="clubs/:id/edit" element={<ClubEditPage />} />
         <Route path="boxers" element={<GymOwnerBoxersPage />} />
         <Route path="coaches" element={<GymOwnerCoachesPage />} />
+        <Route path="membership-requests" element={<MembershipRequestsPage />} />
         <Route path="matches" element={<GymOwnerMatchesPage />} />
       </Route>
     </Routes>

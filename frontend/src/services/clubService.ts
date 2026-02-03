@@ -1,22 +1,5 @@
 import { apiClient } from './apiClient';
-
-/**
- * Club type definition
- */
-export interface Club {
-  id: string;
-  name: string;
-  email: string | null;
-  phone: string | null;
-  contactName: string | null;
-  postcode: string | null;
-  region: string | null;
-  latitude: string | null;
-  longitude: string | null;
-  isVerified: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Club, CreateClubData, UpdateClubData } from '@/types';
 
 export interface ClubSearchParams {
   name?: string;
@@ -112,6 +95,28 @@ export const clubService = {
       throw new Error('Failed to fetch club stats');
     }
     return response.data.data.stats;
+  },
+
+  /**
+   * Create a new club (admin only)
+   */
+  async createClub(data: CreateClubData): Promise<Club> {
+    const response = await apiClient.post<ApiResponse<{ club: Club }>>('/clubs', data);
+    if (!response.data.data?.club) {
+      throw new Error(response.data.message || 'Failed to create club');
+    }
+    return response.data.data.club;
+  },
+
+  /**
+   * Update an existing club (admin or gym owner)
+   */
+  async updateClub(id: string, data: UpdateClubData): Promise<Club> {
+    const response = await apiClient.patch<ApiResponse<{ club: Club }>>(`/clubs/${id}`, data);
+    if (!response.data.data?.club) {
+      throw new Error(response.data.message || 'Failed to update club');
+    }
+    return response.data.data.club;
   },
 };
 

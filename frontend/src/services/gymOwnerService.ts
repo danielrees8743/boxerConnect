@@ -1,11 +1,29 @@
 import { apiClient } from './apiClient';
-import type { Club } from '@/types';
+import type { Club, User, BoxerProfile, Gender, ExperienceLevel } from '@/types';
 import type { ClubWithMembers } from '@/features/gym-owner/gymOwnerSlice';
 
 interface ApiResponse<T> {
   success: boolean;
   data: T;
   message: string;
+}
+
+export interface CreateBoxerAccountData {
+  email: string;
+  password: string;
+  name: string;
+  experienceLevel?: ExperienceLevel;
+  gender?: Gender;
+  weightKg?: number;
+  heightCm?: number;
+  dateOfBirth?: string;
+  city?: string;
+  country?: string;
+}
+
+export interface CreateBoxerAccountResponse {
+  user: User;
+  boxer: BoxerProfile;
 }
 
 /**
@@ -32,6 +50,23 @@ export const gymOwnerService = {
       throw new Error(response.data.message || 'Club not found');
     }
     return response.data.data.club;
+  },
+
+  /**
+   * Create a boxer account for a club
+   * Creates a new user account with BOXER role and links them to the club
+   */
+  async createBoxerAccount(
+    clubId: string,
+    data: CreateBoxerAccountData
+  ): Promise<CreateBoxerAccountResponse> {
+    const response = await apiClient.post<
+      ApiResponse<CreateBoxerAccountResponse>
+    >(`/gym-owner/clubs/${clubId}/boxers/create-account`, data);
+    if (!response.data.data) {
+      throw new Error(response.data.message || 'Failed to create boxer account');
+    }
+    return response.data.data;
   },
 };
 

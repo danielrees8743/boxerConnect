@@ -16,6 +16,8 @@ import {
   addCoachToClub,
   removeCoachFromClub,
   setClubOwner,
+  createClub,
+  updateClub,
 } from '../controllers/club.controller';
 import {
   searchLimiter,
@@ -77,9 +79,22 @@ router.get(
 );
 
 /**
+ * POST /api/v1/clubs
+ * Create a new club (ADMIN only)
+ * Requires: ADMIN_CREATE_CLUB permission
+ */
+router.post(
+  '/',
+  standardLimiter,
+  authenticate,
+  requirePermission(Permission.ADMIN_CREATE_CLUB),
+  handler(createClub)
+);
+
+/**
  * GET /api/v1/clubs
  * List all clubs with optional filtering
- * Query params: name, region, postcode, page, limit
+ * Query params: name, region, postcode, city, country, acceptingMembers, includeUnpublished, page, limit
  */
 router.get('/', searchLimiter, getClubs);
 
@@ -88,6 +103,18 @@ router.get('/', searchLimiter, getClubs);
  * Get club by ID
  */
 router.get('/:id', standardLimiter, getClub);
+
+/**
+ * PATCH /api/v1/clubs/:id
+ * Update a club (ADMIN or club owner)
+ * Requires: authentication + ownership check in controller
+ */
+router.patch(
+  '/:id',
+  standardLimiter,
+  authenticate,
+  handler(updateClub)
+);
 
 /**
  * GET /api/v1/clubs/:id/members

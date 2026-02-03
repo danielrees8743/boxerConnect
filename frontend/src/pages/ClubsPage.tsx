@@ -1,6 +1,8 @@
 import React from 'react';
-import { Building2, Mail, Phone, MapPin, Users } from 'lucide-react';
-import { clubService, type Club, type ClubStats } from '@/services/clubService';
+import { useNavigate } from 'react-router-dom';
+import { Building2, Mail, MapPin, Users, CheckCircle2 } from 'lucide-react';
+import { clubService, type ClubStats } from '@/services/clubService';
+import type { Club } from '@/types';
 import {
   Card,
   CardContent,
@@ -26,6 +28,7 @@ import { Skeleton } from '@/components/ui/skeleton';
  * Public page - no authentication required.
  */
 export const ClubsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [clubs, setClubs] = React.useState<Club[]>([]);
   const [regions, setRegions] = React.useState<string[]>([]);
   const [stats, setStats] = React.useState<ClubStats | null>(null);
@@ -208,53 +211,124 @@ export const ClubsPage: React.FC = () => {
           </div>
         ) : (
           clubs.map((club) => (
-            <Card key={club.id} className="hover:shadow-md transition-shadow">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-lg">{club.name}</CardTitle>
-                    {club.region && (
-                      <CardDescription>
-                        <Badge variant="secondary" className="mt-1">
-                          {club.region}
-                        </Badge>
-                      </CardDescription>
+            <Card
+              key={club.id}
+              className="hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => navigate(`/clubs/${club.id}`)}
+            >
+              <CardHeader className="p-0">
+                {/* Banner Photo (if available) */}
+                {club.photos && club.photos.length > 0 && (
+                  <div className="w-full h-32 overflow-hidden rounded-t-lg">
+                    <img
+                      src={club.photos[0]}
+                      alt={club.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-6 pb-0">
+                  <div className="flex items-start gap-3">
+                    {/* Profile Photo (if available, otherwise show default) */}
+                    {club.photos && club.photos.length > 1 ? (
+                      <img
+                        src={club.photos[1]}
+                        alt={club.name}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-background"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center border-2 border-background">
+                        <Building2 className="h-6 w-6 text-muted-foreground" />
+                      </div>
                     )}
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">{club.name}</CardTitle>
+                      {club.region && (
+                        <CardDescription>
+                          <Badge variant="secondary" className="mt-1">
+                            {club.region}
+                          </Badge>
+                        </CardDescription>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                {club.contactName && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Users className="h-4 w-4" />
-                    <span>{club.contactName}</span>
+              <CardContent className="space-y-3 pt-4">
+                {/* Description Preview */}
+                {club.description && (
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {club.description.length > 100
+                      ? `${club.description.substring(0, 100)}...`
+                      : club.description}
+                  </p>
+                )}
+
+                {/* Specialties Badges */}
+                {club.specialties && club.specialties.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {club.specialties.slice(0, 3).map((specialty, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs">
+                        {specialty}
+                      </Badge>
+                    ))}
+                    {club.specialties.length > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{club.specialties.length - 3} more
+                      </Badge>
+                    )}
                   </div>
                 )}
-                {club.email && (
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <a
-                      href={`mailto:${club.email}`}
-                      className="text-primary hover:underline truncate"
-                    >
-                      {club.email}
-                    </a>
+
+                {/* Amenities/Facilities Badges */}
+                {club.amenities && club.amenities.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {club.amenities.slice(0, 4).map((amenity, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">
+                        {amenity}
+                      </Badge>
+                    ))}
+                    {club.amenities.length > 4 && (
+                      <Badge variant="secondary" className="text-xs">
+                        +{club.amenities.length - 4} more
+                      </Badge>
+                    )}
                   </div>
                 )}
-                {club.phone && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <a href={`tel:${club.phone}`} className="hover:underline">
-                      {club.phone}
-                    </a>
-                  </div>
-                )}
-                {club.postcode && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>{club.postcode}</span>
-                  </div>
-                )}
+
+                {/* Contact Info */}
+                <div className="space-y-2 text-sm pt-2 border-t">
+                  {club.acceptingMembers && (
+                    <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span className="font-medium">Accepting Members</span>
+                    </div>
+                  )}
+                  {club.contactName && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Users className="h-4 w-4" />
+                      <span>{club.contactName}</span>
+                    </div>
+                  )}
+                  {club.email && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <a
+                        href={`mailto:${club.email}`}
+                        className="text-primary hover:underline truncate"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {club.email}
+                      </a>
+                    </div>
+                  )}
+                  {club.postcode && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin className="h-4 w-4" />
+                      <span>{club.postcode}</span>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))

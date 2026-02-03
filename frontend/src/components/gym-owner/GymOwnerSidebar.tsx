@@ -4,14 +4,17 @@ import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   LayoutDashboard,
   Building2,
   Users,
   UserCog,
   Calendar,
+  UserPlus,
   LogOut,
 } from 'lucide-react';
+import { membershipRequestService } from '@/services/membershipRequestService';
 
 interface NavItem {
   label: string;
@@ -41,6 +44,11 @@ const navItems: NavItem[] = [
     icon: UserCog,
   },
   {
+    label: 'Membership Requests',
+    path: '/gym-owner/membership-requests',
+    icon: UserPlus,
+  },
+  {
     label: 'Match Requests',
     path: '/gym-owner/matches',
     icon: Calendar,
@@ -51,6 +59,24 @@ export const GymOwnerSidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
+  const [pendingCount, setPendingCount] = React.useState(0);
+
+  // Load pending membership requests count
+  React.useEffect(() => {
+    const loadPendingCount = async () => {
+      try {
+        const requests = await membershipRequestService.getPendingRequests();
+        setPendingCount(requests.length);
+      } catch (err) {
+        console.error('Failed to load pending requests count:', err);
+      }
+    };
+
+    loadPendingCount();
+    // Refresh count every 60 seconds
+    const interval = setInterval(loadPendingCount, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -81,6 +107,14 @@ export const GymOwnerSidebar: React.FC = () => {
               >
                 <item.icon className="h-5 w-5" />
                 {item.label}
+                {item.path === '/gym-owner/membership-requests' && pendingCount > 0 && (
+                  <Badge
+                    variant="default"
+                    className="ml-auto bg-boxing-red-600 text-white"
+                  >
+                    {pendingCount}
+                  </Badge>
+                )}
               </NavLink>
             </li>
           ))}

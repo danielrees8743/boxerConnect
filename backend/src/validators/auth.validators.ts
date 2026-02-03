@@ -33,6 +33,10 @@ export const registerSchema = z.object({
     .max(100, 'Name must be less than 100 characters')
     .trim(),
   role: z.nativeEnum(UserRole).optional().default(UserRole.BOXER),
+  clubId: z
+    .string()
+    .uuid('Club ID must be a valid UUID')
+    .optional(),
 });
 
 /**

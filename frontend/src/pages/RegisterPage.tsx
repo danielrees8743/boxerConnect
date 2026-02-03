@@ -5,10 +5,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { registerUser, clearError } from '@/features/auth/authSlice';
+import { clubService } from '@/services/clubService';
 import { cn } from '@/lib/utils';
-import type { UserRole } from '@/types';
+import type { UserRole, Club } from '@/types';
 
 // Validation schema for registration form
 const registerSchema = z
@@ -27,6 +36,7 @@ const registerSchema = z
       ),
     confirmPassword: z.string(),
     role: z.enum(['BOXER', 'COACH', 'GYM_OWNER'] as const),
+    clubId: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
@@ -42,10 +52,15 @@ export const RegisterPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isLoading, error, isAuthenticated } = useAppSelector((state) => state.auth);
+  const [clubs, setClubs] = React.useState<Club[]>([]);
+  const [clubsLoading, setClubsLoading] = React.useState(false);
+  const [selectedClubId, setSelectedClubId] = React.useState<string>('');
 
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -55,8 +70,11 @@ export const RegisterPage: React.FC = () => {
       password: '',
       confirmPassword: '',
       role: 'BOXER',
+      clubId: '',
     },
   });
+
+  const selectedRole = watch('role');
 
   // Redirect if already authenticated
   React.useEffect(() => {
@@ -72,6 +90,23 @@ export const RegisterPage: React.FC = () => {
     };
   }, [dispatch]);
 
+  // Load clubs when component mounts
+  React.useEffect(() => {
+    const loadClubs = async () => {
+      try {
+        setClubsLoading(true);
+        const response = await clubService.getClubs({ limit: 1000 });
+        setClubs(response.data || []);
+      } catch (err) {
+        console.error('Failed to load clubs:', err);
+      } finally {
+        setClubsLoading(false);
+      }
+    };
+
+    loadClubs();
+  }, []);
+
   const onSubmit = async (data: RegisterFormData) => {
     const { confirmPassword, ...registerData } = data;
     const result = await dispatch(
@@ -80,6 +115,7 @@ export const RegisterPage: React.FC = () => {
         password: registerData.password,
         name: registerData.name,
         role: registerData.role as UserRole,
+        clubId: registerData.clubId || undefined,
       })
     );
     if (registerUser.fulfilled.match(result)) {
@@ -241,6 +277,43 @@ export const RegisterPage: React.FC = () => {
               <p className="text-sm text-destructive">{errors.role.message}</p>
             )}
           </div>
+
+          {/* Club Selection - Only for BOXER role */}
+          {selectedRole === 'BOXER' && (
+            <div className="space-y-2">
+              <label htmlFor="clubId" className="text-sm font-medium">
+                Select your club (optional)
+              </label>
+              <Select
+                value={selectedClubId}
+                onValueChange={(value) => {
+                  setSelectedClubId(value);
+                  setValue('clubId', value);
+                }}
+                disabled={isLoading || clubsLoading}
+              >
+                <SelectTrigger id="clubId" className="w-full">
+                  <SelectValue placeholder={clubsLoading ? 'Loading clubs...' : 'Choose a club'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">No club (skip for now)</SelectItem>
+                  {clubs.map((club) => (
+                    <SelectItem key={club.id} value={club.id}>
+                      {club.name} {club.region ? `- ${club.region}` : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Alert>
+                <AlertDescription className="text-xs">
+                  If you select a club, your membership will require gym owner approval before you can access all features.
+                </AlertDescription>
+              </Alert>
+              {errors.clubId && (
+                <p className="text-sm text-destructive">{errors.clubId.message}</p>
+              )}
+            </div>
+          )}
 
           {/* Submit Button */}
           <Button type="submit" className="w-full" disabled={isLoading}>

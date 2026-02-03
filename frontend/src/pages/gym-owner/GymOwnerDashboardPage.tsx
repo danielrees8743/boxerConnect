@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyClubs, fetchGymOwnerStats } from '@/features/gym-owner/gymOwnerSlice';
@@ -12,19 +12,36 @@ import {
   Users,
   UserCog,
   Calendar,
+  UserPlus,
   Eye,
   Plus,
 } from 'lucide-react';
+import { membershipRequestService } from '@/services/membershipRequestService';
 
 export const GymOwnerDashboardPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { stats, statsLoading, statsError } = useAppSelector((state) => state.gymOwner);
+  const [pendingMembershipRequests, setPendingMembershipRequests] = useState(0);
 
   useEffect(() => {
     dispatch(fetchMyClubs());
     dispatch(fetchGymOwnerStats());
   }, [dispatch]);
+
+  // Load pending membership requests count
+  useEffect(() => {
+    const loadPendingRequests = async () => {
+      try {
+        const requests = await membershipRequestService.getPendingRequests();
+        setPendingMembershipRequests(requests.length);
+      } catch (err) {
+        console.error('Failed to load pending membership requests:', err);
+      }
+    };
+
+    loadPendingRequests();
+  }, []);
 
   if (statsLoading) {
     return (
@@ -94,12 +111,12 @@ export const GymOwnerDashboardPage: React.FC = () => {
           href="/gym-owner/coaches"
         />
         <StatsCard
-          title="Pending Match Requests"
-          value={stats?.pendingMatchRequests ?? 0}
-          icon={Calendar}
-          description="Awaiting response"
-          iconClassName="bg-yellow-100 text-yellow-600"
-          href="/gym-owner/matches"
+          title="Pending Membership Requests"
+          value={pendingMembershipRequests}
+          icon={UserPlus}
+          description="Awaiting approval"
+          iconClassName="bg-purple-100 text-purple-600"
+          href="/gym-owner/membership-requests"
         />
       </div>
 
