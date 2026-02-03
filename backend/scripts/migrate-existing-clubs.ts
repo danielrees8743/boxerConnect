@@ -1,7 +1,7 @@
 /**
- * Migrate Existing Clubs - Set Default Values for PHASE 5 Fields
+ * Migrate Existing Clubs - Set Default Values for Enhanced Profiles
  *
- * Sets default values for existing clubs after the schema migration:
+ * Ensures all existing clubs are visible to the public:
  * - isPublished = true (make existing clubs visible)
  * - acceptingMembers = true (allow new members)
  */
@@ -12,90 +12,85 @@ import { withSystemContext } from '../src/utils/database-context';
 const prisma = new PrismaClient();
 
 async function migrateExistingClubs() {
-  console.log('🔄 Migrating existing clubs with PHASE 5 defaults...\n');
+  console.log('🔄 Migrating existing clubs with enhanced profile defaults...\n');
 
   try {
-    // Find all clubs that need migration
-    const clubsToMigrate = await withSystemContext(
+    // Get current stats
+    const stats = await withSystemContext(
       async (tx) => {
-        return await tx.club.findMany({
-          where: {
-            OR: [
-              { isPublished: null },
-              { acceptingMembers: null }
-            ]
-          },
-          select: {
-            id: true,
-            name: true,
-            isPublished: true,
-            acceptingMembers: true
-          },
-          orderBy: { name: 'asc' }
+        const totalClubs = await tx.club.count();
+        const publishedClubs = await tx.club.count({
+          where: { isPublished: true }
         });
+        const unpublishedClubs = await tx.club.count({
+          where: { isPublished: false }
+        });
+        const acceptingClubs = await tx.club.count({
+          where: { acceptingMembers: true }
+        });
+        const notAcceptingClubs = await tx.club.count({
+          where: { acceptingMembers: false }
+        });
+
+        return {
+          totalClubs,
+          publishedClubs,
+          unpublishedClubs,
+          acceptingClubs,
+          notAcceptingClubs
+        };
       },
-      'Migrate clubs - fetching clubs needing default values'
+      'Migrate clubs - fetching current statistics'
     );
 
-    console.log(`📋 Found ${clubsToMigrate.length} clubs needing migration\n`);
+    console.log('📊 Current Database Statistics:');
+    console.log(`   Total clubs: ${stats.totalClubs}`);
+    console.log(`   Published clubs: ${stats.publishedClubs}`);
+    console.log(`   Unpublished clubs: ${stats.unpublishedClubs}`);
+    console.log(`   Accepting members: ${stats.acceptingClubs}`);
+    console.log(`   Not accepting members: ${stats.notAcceptingClubs}`);
+    console.log('');
 
-    if (clubsToMigrate.length === 0) {
-      console.log('✅ All clubs are already migrated!\n');
-      return;
+    // Find unpublished clubs to make visible
+    if (stats.unpublishedClubs > 0) {
+      console.log(`📋 Found ${stats.unpublishedClubs} unpublished clubs to make visible\n`);
+
+      const result = await withSystemContext(
+        async (tx) => {
+          return await tx.club.updateMany({
+            where: { isPublished: false },
+            data: { isPublished: true }
+          });
+        },
+        'Migrate clubs - publishing all clubs'
+      );
+
+      console.log(`✅ Published ${result.count} clubs`);
+    } else {
+      console.log('✅ All clubs are already published!\n');
     }
 
-    let updated = 0;
-    let errors = 0;
+    // Ensure all clubs are accepting members
+    if (stats.notAcceptingClubs > 0) {
+      console.log(`📋 Found ${stats.notAcceptingClubs} clubs not accepting members\n`);
 
-    // Update each club with default values
-    for (const club of clubsToMigrate) {
-      try {
-        const updates: any = {};
+      const result = await withSystemContext(
+        async (tx) => {
+          return await tx.club.updateMany({
+            where: { acceptingMembers: false },
+            data: { acceptingMembers: true }
+          });
+        },
+        'Migrate clubs - enabling member acceptance'
+      );
 
-        // Set isPublished to true if null (make existing clubs visible)
-        if (club.isPublished === null) {
-          updates.isPublished = true;
-        }
-
-        // Set acceptingMembers to true if null (allow new members)
-        if (club.acceptingMembers === null) {
-          updates.acceptingMembers = true;
-        }
-
-        // Only update if there are changes
-        if (Object.keys(updates).length > 0) {
-          await withSystemContext(
-            async (tx) => {
-              await tx.club.update({
-                where: { id: club.id },
-                data: updates
-              });
-            },
-            `Migrate clubs - updating ${club.name}`
-          );
-
-          updated++;
-          console.log(`  ✅ ${updated}/${clubsToMigrate.length} - Updated ${club.name}`);
-        }
-
-      } catch (error) {
-        errors++;
-        console.error(
-          `  ❌ Error updating ${club.name}:`,
-          error instanceof Error ? error.message : error
-        );
-      }
+      console.log(`✅ Enabled member acceptance for ${result.count} clubs`);
+    } else {
+      console.log('✅ All clubs are already accepting members!\n');
     }
 
-    console.log('\n' + '='.repeat(60));
-    console.log('📊 Migration Summary');
-    console.log('='.repeat(60));
-    console.log(`✅ Successfully migrated: ${updated} clubs`);
-    console.log(`❌ Errors: ${errors}`);
-    console.log('='.repeat(60));
-
-    // Verify migration completion
-    const stats = await withSystemContext(
+    // Final verification
+    const finalStats = await withSystemContext(
       async (tx) => {
         const totalClubs = await tx.club.count();
         const publishedClubs = await tx.club.count({
@@ -104,38 +99,24 @@ async function migrateExistingClubs() {
         const acceptingClubs = await tx.club.count({
           where: { acceptingMembers: true }
         });
-        const nullPublished = await tx.club.count({
-          where: { isPublished: null }
-        });
-        const nullAccepting = await tx.club.count({
-          where: { acceptingMembers: null }
-        });
 
-        return {
-          totalClubs,
-          publishedClubs,
-          acceptingClubs,
-          nullPublished,
-          nullAccepting
-        };
+        return { totalClubs, publishedClubs, acceptingClubs };
       },
       'Migrate clubs - fetching final statistics'
     );
 
-    console.log('\n📊 Final Database Statistics:');
-    console.log(`   Total clubs: ${stats.totalClubs}`);
-    console.log(`   Published clubs: ${stats.publishedClubs}`);
-    console.log(`   Accepting members: ${stats.acceptingClubs}`);
-    console.log(`   Clubs with null isPublished: ${stats.nullPublished}`);
-    console.log(`   Clubs with null acceptingMembers: ${stats.nullAccepting}`);
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 Migration Complete - Final Statistics');
+    console.log('='.repeat(60));
+    console.log(`   Total clubs: ${finalStats.totalClubs}`);
+    console.log(`   Published clubs: ${finalStats.publishedClubs}`);
+    console.log(`   Accepting members: ${finalStats.acceptingClubs}`);
+    console.log('='.repeat(60));
 
-    if (stats.nullPublished > 0 || stats.nullAccepting > 0) {
-      console.log(`\n⚠️  ${Math.max(stats.nullPublished, stats.nullAccepting)} clubs still need migration.`);
-    } else {
-      console.log('\n✅ All clubs successfully migrated!');
+    if (finalStats.publishedClubs === finalStats.totalClubs &&
+        finalStats.acceptingClubs === finalStats.totalClubs) {
+      console.log('\n✅ All clubs are now published and accepting members!\n');
     }
-
-    console.log('\n✅ Migration complete!\n');
 
   } catch (error) {
     console.error('❌ Fatal error during migration:', error);
