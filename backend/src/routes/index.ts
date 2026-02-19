@@ -10,6 +10,7 @@ import coachRoutes from './coach.routes';
 import adminRoutes from './admin.routes';
 import clubRoutes from './club.routes';
 import gymOwnerRoutes from './gymOwner.routes';
+import connectionRoutes from './connection.routes';
 
 const router = Router();
 
@@ -70,5 +71,11 @@ router.use('/clubs', clubRoutes);
  * Base path: /api/v1/gym-owner
  */
 router.use('/gym-owner', gymOwnerRoutes);
+
+/**
+ * Connection routes
+ * Base path: /api/v1/connections
+ */
+router.use('/connections', connectionRoutes);
 
 export default router;
