@@ -288,13 +288,3 @@ ALTER TABLE "club_coaches" ADD CONSTRAINT "club_coaches_club_id_fkey" FOREIGN KE
 -- AddForeignKey
 ALTER TABLE "club_coaches" ADD CONSTRAINT "club_coaches_coach_user_id_fkey" FOREIGN KEY ("coach_user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-┌─────────────────────────────────────────────────────────┐
-│  Update available 5.22.0 -> 7.3.0                       │
-│                                                         │
-│  This is a major update - please follow the guide at    │
-│  https://pris.ly/d/major-version-upgrade                │
-│                                                         │
-│  Run the following to update                            │
-│    npm i --save-dev prisma@latest                       │
-│    npm i @prisma/client@latest                          │
-└─────────────────────────────────────────────────────────┘

@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyBoxer, updateBoxer, createBoxer } from '@/features/boxer/boxerSlice';
+import {
+  fetchMyConnections,
+  fetchIncomingConnectionRequests,
+  acceptConnectionRequest,
+  declineConnectionRequest,
+  disconnect,
+} from '@/features/connections/connectionsSlice';
 import { BoxerProfile, BoxerForm, VideoUpload, VideoList } from '@/components/boxer';
 import { Alert, AlertDescription, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Video } from 'lucide-react';
@@ -15,6 +22,7 @@ export const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { myBoxer, isLoading, error } = useAppSelector((state) => state.boxer);
   const { user } = useAppSelector((state) => state.auth);
+  const connectionsState = useAppSelector((state) => state.connections);
   const [isEditing, setIsEditing] = useState(false);
   const [videos, setVideos] = useState<BoxerVideo[]>([]);
   const [videoCount, setVideoCount] = useState(0);
@@ -25,6 +33,8 @@ export const ProfilePage: React.FC = () => {
   // Fetch boxer profile on mount
   useEffect(() => {
     dispatch(fetchMyBoxer());
+    dispatch(fetchMyConnections());
+    dispatch(fetchIncomingConnectionRequests());
   }, [dispatch]);
 
   // Fetch videos when boxer profile is loaded
@@ -74,6 +84,19 @@ export const ProfilePage: React.FC = () => {
 
   // Note: Fight management callbacks removed - boxers can no longer manage their own fights.
   // Fight history is now managed by coaches and gym owners only.
+
+  const handleAcceptConnection = useCallback(async (requestId: string) => {
+    await dispatch(acceptConnectionRequest(requestId));
+    dispatch(fetchMyConnections());
+  }, [dispatch]);
+
+  const handleDeclineConnection = useCallback(async (requestId: string) => {
+    await dispatch(declineConnectionRequest(requestId));
+  }, [dispatch]);
+
+  const handleDisconnect = useCallback(async (connectionId: string) => {
+    await dispatch(disconnect(connectionId));
+  }, [dispatch]);
 
   // Handle creating/updating boxer profile
   const handleSubmit = async (data: CreateBoxerData | UpdateBoxerData) => {
@@ -145,9 +168,16 @@ export const ProfilePage: React.FC = () => {
         fightHistory={fights}
         availability={myBoxer?.availability || []}
         videos={videos}
+        connections={connectionsState.connections}
+        connectionsLoading={connectionsState.isLoading}
+        connectionsTotalCount={connectionsState.connectionsPagination?.total ?? connectionsState.connections.length}
+        incomingConnectionRequests={connectionsState.incomingRequests}
         isOwner={true}
         isLoading={isLoading}
         onEdit={() => setIsEditing(true)}
+        onAcceptConnection={handleAcceptConnection}
+        onDeclineConnection={handleDeclineConnection}
+        onDisconnect={handleDisconnect}
       />
 
       {/* Training Videos Section */}

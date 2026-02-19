@@ -25,18 +25,29 @@ import {
   Skeleton,
   getInitials,
 } from '@/components/ui';
-import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender, BoxerVideo } from '@/types';
+import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender, BoxerVideo, Connection, ConnectionRequest } from '@/types';
 import { cn } from '@/lib/utils';
+import { ConnectButton } from './ConnectButton';
+import { ConnectionsCard } from './ConnectionsCard';
 
 interface BoxerProfileProps {
   boxer: BoxerProfileType | null;
   fightHistory?: FightHistory[];
   availability?: Availability[];
   videos?: BoxerVideo[];
+  connections?: Connection[];
+  connectionsLoading?: boolean;
+  connectionsTotalCount?: number;
+  incomingConnectionRequests?: ConnectionRequest[];
+  connectState?: 'idle' | 'pending' | 'connected';
   isOwner?: boolean;
   isLoading?: boolean;
   onEdit?: () => void;
   onSendRequest?: () => void;
+  onConnect?: () => void;
+  onAcceptConnection?: (requestId: string) => void;
+  onDeclineConnection?: (requestId: string) => void;
+  onDisconnect?: (connectionId: string) => void;
   className?: string;
 }
 
@@ -101,10 +112,19 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
   fightHistory = [],
   availability = [],
   videos = [],
+  connections = [],
+  connectionsLoading = false,
+  connectionsTotalCount,
+  incomingConnectionRequests = [],
+  connectState = 'idle',
   isOwner = false,
   isLoading = false,
   onEdit,
   onSendRequest,
+  onConnect,
+  onAcceptConnection,
+  onDeclineConnection,
+  onDisconnect,
   className,
 }) => {
   if (isLoading) {
@@ -163,6 +183,9 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
                       <Edit2 className="h-4 w-4 mr-2" />
                       Edit Profile
                     </Button>
+                  )}
+                  {!isOwner && onConnect && (
+                    <ConnectButton onConnect={onConnect} initialState={connectState} />
                   )}
                   {!isOwner && onSendRequest && (
                     <Button onClick={onSendRequest}>Send Match Request</Button>
@@ -302,44 +325,17 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
         </CardContent>
       </Card>
 
-      {/* Availability */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Availability
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {availability.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">
-              No availability set.
-            </p>
-          ) : (
-            <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-              {availability
-                .filter((a) => a.isAvailable)
-                .slice(0, 6)
-                .map((slot) => (
-                  <div
-                    key={slot.id}
-                    className="flex items-center gap-2 p-2 rounded-lg bg-green-50 border border-green-200"
-                  >
-                    <Calendar className="h-4 w-4 text-green-600" />
-                    <div className="text-sm">
-                      <p className="font-medium">
-                        {format(new Date(slot.date), 'EEE, MMM d')}
-                      </p>
-                      <p className="text-muted-foreground">
-                        {slot.startTime} - {slot.endTime}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Connections */}
+      <ConnectionsCard
+        connections={connections}
+        isLoading={connectionsLoading}
+        totalCount={connectionsTotalCount}
+        isOwner={isOwner}
+        incomingRequests={incomingConnectionRequests}
+        onAccept={onAcceptConnection}
+        onDecline={onDeclineConnection}
+        onDisconnect={onDisconnect}
+      />
 
       {/* Training Videos */}
       {videos.length > 0 && (

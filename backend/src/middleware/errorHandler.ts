@@ -35,30 +35,35 @@ export class AppError extends Error {
 export class BadRequestError extends AppError {
   constructor(message: string = 'Bad request') {
     super(message, 400, true, 'BAD_REQUEST');
+    Object.setPrototypeOf(this, BadRequestError.prototype);
   }
 }
 
 export class UnauthorizedError extends AppError {
   constructor(message: string = 'Unauthorized') {
     super(message, 401, true, 'UNAUTHORIZED');
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
   }
 }
 
 export class ForbiddenError extends AppError {
   constructor(message: string = 'Forbidden') {
     super(message, 403, true, 'FORBIDDEN');
+    Object.setPrototypeOf(this, ForbiddenError.prototype);
   }
 }
 
 export class NotFoundError extends AppError {
   constructor(message: string = 'Resource not found') {
     super(message, 404, true, 'NOT_FOUND');
+    Object.setPrototypeOf(this, NotFoundError.prototype);
   }
 }
 
 export class ConflictError extends AppError {
   constructor(message: string = 'Resource conflict') {
     super(message, 409, true, 'CONFLICT');
+    Object.setPrototypeOf(this, ConflictError.prototype);
   }
 }
 
@@ -71,18 +76,21 @@ export class ValidationError extends AppError {
   ) {
     super(message, 422, true, 'VALIDATION_ERROR');
     this.errors = errors;
+    Object.setPrototypeOf(this, ValidationError.prototype);
   }
 }
 
 export class TooManyRequestsError extends AppError {
   constructor(message: string = 'Too many requests') {
     super(message, 429, true, 'TOO_MANY_REQUESTS');
+    Object.setPrototypeOf(this, TooManyRequestsError.prototype);
   }
 }
 
 export class InternalServerError extends AppError {
   constructor(message: string = 'Internal server error') {
     super(message, 500, false, 'INTERNAL_SERVER_ERROR');
+    Object.setPrototypeOf(this, InternalServerError.prototype);
   }
 }
 

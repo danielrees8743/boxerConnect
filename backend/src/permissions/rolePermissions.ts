@@ -43,6 +43,12 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.CLUB_READ_PUBLIC,
     Permission.CLUB_READ_MEMBERS,
 
+    // Connection management (self-service — boxers manage their own connections)
+    Permission.CONNECTION_SEND_REQUEST,
+    Permission.CONNECTION_READ_OWN,
+    Permission.CONNECTION_ACCEPT_REQUEST,
+    Permission.CONNECTION_DISCONNECT,
+
     // NOTE: Boxers CANNOT create/accept/decline matches, manage availability,
     // or manage fight history. That's handled by their coach or gym owner.
   ],

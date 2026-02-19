@@ -11,6 +11,8 @@ interface BoxerListProps {
   onPageChange?: (page: number) => void;
   onViewProfile?: (id: string) => void;
   onSendRequest?: (id: string) => void;
+  onConnect?: (id: string) => void;
+  connectStateMap?: Record<string, 'idle' | 'pending' | 'connected'>;
   isLoading?: boolean;
   emptyMessage?: string;
   showCompatibility?: boolean;
@@ -34,7 +36,7 @@ function isMatchSuggestion(
  *   boxers={boxerProfiles}
  *   pagination={paginationInfo}
  *   onPageChange={handlePageChange}
- *   onSendRequest={handleSendRequest}
+ *   onConnect={handleConnect}
  * />
  */
 export const BoxerList: React.FC<BoxerListProps> = ({
@@ -43,6 +45,8 @@ export const BoxerList: React.FC<BoxerListProps> = ({
   onPageChange,
   onViewProfile,
   onSendRequest,
+  onConnect,
+  connectStateMap,
   isLoading = false,
   emptyMessage = 'No boxers found.',
   showCompatibility = false,
@@ -88,8 +92,10 @@ export const BoxerList: React.FC<BoxerListProps> = ({
                   ? compatibilityScore
                   : undefined
               }
+              connectState={connectStateMap?.[boxer.id]}
               onViewProfile={onViewProfile}
               onSendRequest={onSendRequest}
+              onConnect={onConnect}
             />
           );
         })}

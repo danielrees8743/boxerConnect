@@ -15,3 +15,6 @@ export { VideoUpload } from './VideoUpload';
 export { VideoList } from './VideoList';
 export { FightHistoryForm } from './FightHistoryForm';
 export { FightHistoryList } from './FightHistoryList';
+
+export { ConnectButton } from './ConnectButton';
+export { ConnectionsCard } from './ConnectionsCard';

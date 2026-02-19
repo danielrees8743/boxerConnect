@@ -29,6 +29,7 @@ import {
   updateFightForBoxer,
   deleteFightForBoxer,
 } from '../controllers/fightHistory.controller';
+import { getPublicBoxerConnections } from '../controllers/connection.controller';
 import {
   authenticate,
   optionalAuth,
@@ -315,6 +316,16 @@ router.get(
   standardLimiter,
   optionalAuth,
   handler(getBoxerFights)
+);
+
+/**
+ * GET /api/v1/boxers/:boxerId/connections
+ * Get connections for a boxer (public — no auth required)
+ */
+router.get(
+  '/:boxerId/connections',
+  searchLimiter,
+  handler(getPublicBoxerConnections)
 );
 
 // ============================================================================

@@ -317,6 +317,63 @@ export interface MatchRequestStats {
 }
 
 // ============================================================================
+// Connection Types
+// ============================================================================
+
+export enum ConnectionRequestStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DECLINED = 'DECLINED',
+  CANCELLED = 'CANCELLED',
+}
+
+export type ConnectionStatus = 'none' | 'pending_sent' | 'pending_received' | 'connected';
+
+export interface ConnectionBoxerSummary {
+  id: string;
+  name: string;
+  profilePhotoUrl: string | null;
+  experienceLevel: ExperienceLevel;
+  city: string | null;
+  country: string | null;
+  wins: number;
+  losses: number;
+  draws: number;
+  user: { id: string; name: string };
+}
+
+export interface ConnectionRequest {
+  id: string;
+  requesterBoxerId: string;
+  targetBoxerId: string;
+  status: ConnectionRequestStatus;
+  message: string | null;
+  createdAt: string;
+  updatedAt: string;
+  requesterBoxer?: ConnectionBoxerSummary;
+  targetBoxer?: ConnectionBoxerSummary;
+}
+
+export interface Connection {
+  id: string;
+  boxerAId: string;
+  boxerBId: string;
+  createdAt: string;
+  boxer: ConnectionBoxerSummary; // The "other" boxer relative to the requesting user
+}
+
+export interface ConnectionStatusResult {
+  status: ConnectionStatus;
+  requestId: string | null;
+  connectionId: string | null;
+}
+
+export interface SendConnectionRequestData {
+  targetBoxerId: string;
+  message?: string;
+}
+
+// ============================================================================
 // Matching Types
 // ============================================================================
 
