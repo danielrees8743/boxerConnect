@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Users } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   fetchIncomingRequests,
@@ -9,8 +9,16 @@ import {
   declineMatchRequest,
   cancelMatchRequest,
 } from '@/features/requests/requestsSlice';
+import {
+  fetchIncomingConnectionRequests,
+  fetchOutgoingConnectionRequests,
+  acceptConnectionRequest,
+  declineConnectionRequest,
+  cancelConnectionRequest,
+} from '@/features/connections/connectionsSlice';
 import { RequestList } from '@/components/requests';
-import { Alert, AlertDescription, Card, CardContent } from '@/components/ui';
+import { ConnectionRequestList } from '@/components/connections/ConnectionRequestList';
+import { Alert, AlertDescription, Card, CardContent, Badge } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
 /**
@@ -27,15 +35,26 @@ export const RequestsPage: React.FC = () => {
     isStatsLoading,
     error,
   } = useAppSelector((state) => state.requests);
+  const {
+    incomingRequests: incomingConnections,
+    outgoingRequests: outgoingConnections,
+    isLoading: connectionsLoading,
+    error: connectionsError,
+  } = useAppSelector((state) => state.connections);
 
+  const [pageTab, setPageTab] = React.useState<'match' | 'connection'>('match');
   const [activeTab, setActiveTab] = React.useState<'incoming' | 'outgoing'>('incoming');
+  const [connectionTab, setConnectionTab] = React.useState<'incoming' | 'outgoing'>('incoming');
   const [loadingRequestId, setLoadingRequestId] = React.useState<string | null>(null);
+  const [loadingConnectionId, setLoadingConnectionId] = React.useState<string | null>(null);
 
   // Fetch requests and stats on mount
   React.useEffect(() => {
     dispatch(fetchIncomingRequests());
     dispatch(fetchOutgoingRequests());
     dispatch(fetchMatchRequestStats());
+    dispatch(fetchIncomingConnectionRequests());
+    dispatch(fetchOutgoingConnectionRequests());
   }, [dispatch]);
 
   // Handle accept request
@@ -64,71 +83,127 @@ export const RequestsPage: React.FC = () => {
     setActiveTab(tab);
   };
 
+  // Handle connection request actions
+  const handleAcceptConnection = async (id: string) => {
+    setLoadingConnectionId(id);
+    await dispatch(acceptConnectionRequest(id));
+    setLoadingConnectionId(null);
+  };
+
+  const handleDeclineConnection = async (id: string) => {
+    setLoadingConnectionId(id);
+    await dispatch(declineConnectionRequest(id));
+    setLoadingConnectionId(null);
+  };
+
+  const handleCancelConnection = async (id: string) => {
+    setLoadingConnectionId(id);
+    await dispatch(cancelConnectionRequest(id));
+    setLoadingConnectionId(null);
+  };
+
+  const pendingConnectionCount = incomingConnections.filter((r) => r.status === 'PENDING').length;
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <MessageSquare className="h-6 w-6" />
-          Match Requests
+          Requests
         </h1>
         <p className="text-muted-foreground mt-1">
-          Manage your incoming and outgoing match requests
+          Manage your match requests and connection requests
         </p>
       </div>
 
-      {error && (
+      {(error || connectionsError) && (
         <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{error || connectionsError}</AlertDescription>
         </Alert>
       )}
 
-      {/* Stats */}
-      {stats && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            label="Pending"
-            value={stats.pending}
-            variant="pending"
-            isLoading={isStatsLoading}
-          />
-          <StatCard
-            label="Accepted"
-            value={stats.accepted}
-            variant="success"
-            isLoading={isStatsLoading}
-          />
-          <StatCard
-            label="Declined"
-            value={stats.declined}
-            variant="destructive"
-            isLoading={isStatsLoading}
-          />
-          <StatCard
-            label="Total"
-            value={stats.total}
-            variant="default"
-            isLoading={isStatsLoading}
-          />
-        </div>
+      {/* Page-level tab: Match Requests vs Connection Requests */}
+      <div className="flex gap-2 border-b">
+        <button
+          className={cn(
+            'flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors',
+            pageTab === 'match'
+              ? 'border-boxing-red text-boxing-red'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          )}
+          onClick={() => setPageTab('match')}
+        >
+          <MessageSquare className="h-4 w-4" />
+          Match Requests
+        </button>
+        <button
+          className={cn(
+            'flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors',
+            pageTab === 'connection'
+              ? 'border-boxing-red text-boxing-red'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          )}
+          onClick={() => setPageTab('connection')}
+        >
+          <Users className="h-4 w-4" />
+          Connection Requests
+          {pendingConnectionCount > 0 && (
+            <Badge variant="pending" className="ml-1 h-5 min-w-5 text-xs">
+              {pendingConnectionCount}
+            </Badge>
+          )}
+        </button>
+      </div>
+
+      {pageTab === 'match' && (
+        <>
+          {/* Match Request Stats */}
+          {stats && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <StatCard label="Pending" value={stats.pending} variant="pending" isLoading={isStatsLoading} />
+              <StatCard label="Accepted" value={stats.accepted} variant="success" isLoading={isStatsLoading} />
+              <StatCard label="Declined" value={stats.declined} variant="destructive" isLoading={isStatsLoading} />
+              <StatCard label="Total" value={stats.total} variant="default" isLoading={isStatsLoading} />
+            </div>
+          )}
+
+          {/* Match Request List */}
+          <Card>
+            <CardContent className="p-0 sm:p-6">
+              <RequestList
+                incomingRequests={incomingRequests}
+                outgoingRequests={outgoingRequests}
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+                onAccept={handleAccept}
+                onDecline={handleDecline}
+                onCancel={handleCancel}
+                loadingRequestId={loadingRequestId}
+                isLoading={isLoading}
+              />
+            </CardContent>
+          </Card>
+        </>
       )}
 
-      {/* Request List */}
-      <Card>
-        <CardContent className="p-0 sm:p-6">
-          <RequestList
-            incomingRequests={incomingRequests}
-            outgoingRequests={outgoingRequests}
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            onAccept={handleAccept}
-            onDecline={handleDecline}
-            onCancel={handleCancel}
-            loadingRequestId={loadingRequestId}
-            isLoading={isLoading}
-          />
-        </CardContent>
-      </Card>
+      {pageTab === 'connection' && (
+        <Card>
+          <CardContent className="p-0 sm:p-6">
+            <ConnectionRequestList
+              incomingRequests={incomingConnections}
+              outgoingRequests={outgoingConnections}
+              activeTab={connectionTab}
+              onTabChange={setConnectionTab}
+              onAccept={handleAcceptConnection}
+              onDecline={handleDeclineConnection}
+              onCancel={handleCancelConnection}
+              loadingRequestId={loadingConnectionId}
+              isLoading={connectionsLoading}
+            />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

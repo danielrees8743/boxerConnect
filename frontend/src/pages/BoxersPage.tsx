@@ -9,6 +9,7 @@ import {
   setPage,
 } from '@/features/boxer/boxerSlice';
 import { createMatchRequest } from '@/features/requests/requestsSlice';
+import { sendConnectionRequest as sendConnectionRequestThunk } from '@/features/connections/connectionsSlice';
 import { BoxerList, BoxerSearchFilters } from '@/components/boxer';
 import { SendRequestDialog } from '@/components/requests';
 import { Alert, AlertDescription } from '@/components/ui';
@@ -72,11 +73,10 @@ export const BoxersPage: React.FC = () => {
     }
   };
 
-  // Handle connect — local state only until backend is wired
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleConnect = (_id: string) => {
-    // no-op: ConnectButton manages optimistic UI state internally
-  };
+  // Handle connect — dispatches real API call
+  const handleConnect = React.useCallback(async (id: string) => {
+    await dispatch(sendConnectionRequestThunk({ targetBoxerId: id }));
+  }, [dispatch]);
 
   // Handle submit request
   const handleSubmitRequest = async (data: { targetBoxerId: string; message?: string; proposedDate?: string; proposedVenue?: string }) => {
