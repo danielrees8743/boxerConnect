@@ -17,3 +17,4 @@ export { FightHistoryForm } from './FightHistoryForm';
 export { FightHistoryList } from './FightHistoryList';
 
 export { ConnectButton } from './ConnectButton';
+export { ConnectionsCard } from './ConnectionsCard';
