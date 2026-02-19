@@ -6,6 +6,7 @@ import type {
   SendConnectionRequestData,
   PaginationInfo,
 } from '@/types';
+import { ExperienceLevel } from '@/types';
 import { connectionService } from '@/services/connectionService';
 
 interface ConnectionsState {
@@ -280,8 +281,24 @@ const connectionsSlice = createSlice({
         state.incomingRequests = state.incomingRequests.filter(
           (r) => r.id !== connectionRequest.id
         );
-        // Add to connections
-        state.connections.unshift(connection);
+        // Add to connections, backfilling boxer from the request if the API omitted it
+        const enrichedConnection: Connection = connection.boxer
+          ? connection
+          : {
+              ...connection,
+              boxer: connectionRequest.requesterBoxer ?? {
+                id: connectionRequest.requesterBoxerId,
+                name: 'Unknown Boxer',
+                profilePhotoUrl: null,
+                experienceLevel: ExperienceLevel.BEGINNER,
+                city: null,
+                country: null,
+                wins: 0,
+                losses: 0,
+                draws: 0,
+              },
+            };
+        state.connections.unshift(enrichedConnection);
         // Update status cache for the requester boxer
         state.statusCache[connectionRequest.requesterBoxerId] = {
           status: 'connected',

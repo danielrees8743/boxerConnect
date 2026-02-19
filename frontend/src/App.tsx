@@ -172,13 +172,15 @@ const AppRoutes: React.FC = () => {
         />
 
         <Route
-          path="/requests"
+          path="/connections"
           element={
             <ProtectedRoute>
               <RequestsPage />
             </ProtectedRoute>
           }
         />
+        {/* Redirect legacy /requests URL */}
+        <Route path="/requests" element={<Navigate to="/connections" replace />} />
 
         {/* 404 Route */}
         <Route

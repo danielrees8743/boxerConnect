@@ -25,7 +25,7 @@ import {
   Skeleton,
   getInitials,
 } from '@/components/ui';
-import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender, BoxerVideo, Connection } from '@/types';
+import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender, BoxerVideo, Connection, ConnectionRequest } from '@/types';
 import { cn } from '@/lib/utils';
 import { ConnectButton } from './ConnectButton';
 import { ConnectionsCard } from './ConnectionsCard';
@@ -38,12 +38,16 @@ interface BoxerProfileProps {
   connections?: Connection[];
   connectionsLoading?: boolean;
   connectionsTotalCount?: number;
+  incomingConnectionRequests?: ConnectionRequest[];
   connectState?: 'idle' | 'pending' | 'connected';
   isOwner?: boolean;
   isLoading?: boolean;
   onEdit?: () => void;
   onSendRequest?: () => void;
   onConnect?: () => void;
+  onAcceptConnection?: (requestId: string) => void;
+  onDeclineConnection?: (requestId: string) => void;
+  onDisconnect?: (connectionId: string) => void;
   className?: string;
 }
 
@@ -111,12 +115,16 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
   connections = [],
   connectionsLoading = false,
   connectionsTotalCount,
+  incomingConnectionRequests = [],
   connectState = 'idle',
   isOwner = false,
   isLoading = false,
   onEdit,
   onSendRequest,
   onConnect,
+  onAcceptConnection,
+  onDeclineConnection,
+  onDisconnect,
   className,
 }) => {
   if (isLoading) {
@@ -322,6 +330,11 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
         connections={connections}
         isLoading={connectionsLoading}
         totalCount={connectionsTotalCount}
+        isOwner={isOwner}
+        incomingRequests={incomingConnectionRequests}
+        onAccept={onAcceptConnection}
+        onDecline={onDeclineConnection}
+        onDisconnect={onDisconnect}
       />
 
       {/* Training Videos */}

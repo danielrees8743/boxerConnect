@@ -166,11 +166,12 @@ apiClient.interceptors.response.use(
           console.error('Server error:', data?.message);
           break;
         default:
-          console.error('API error:', data?.message);
+          console.error('API error:', data?.error || data?.message);
       }
 
       // Create a more descriptive error message
-      const message = data?.message || 'An unexpected error occurred';
+      // Backend returns `error` field; fall back to `message` for other APIs
+      const message = data?.error || data?.message || 'An unexpected error occurred';
       return Promise.reject(new Error(message));
     }
 

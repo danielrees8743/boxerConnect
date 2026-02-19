@@ -109,11 +109,11 @@ export const RequestsPage: React.FC = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
-          <MessageSquare className="h-6 w-6" />
-          Requests
+          <Users className="h-6 w-6" />
+          Connections
         </h1>
         <p className="text-muted-foreground mt-1">
-          Manage your match requests and connection requests
+          Manage your connections and match requests
         </p>
       </div>
 

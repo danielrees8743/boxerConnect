@@ -11,6 +11,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { BoxerDetailPage } from '../BoxerDetailPage';
 import { gymOwnerService } from '@/services/gymOwnerService';
 import { boxerService } from '@/services/boxerService';
+import { connectionService } from '@/services/connectionService';
 import boxerReducer from '@/features/boxer/boxerSlice';
 import authReducer from '@/features/auth/authSlice';
 import requestsReducer from '@/features/requests/requestsSlice';
@@ -33,6 +34,12 @@ vi.mock('@/services/connectionService', () => ({
     getPublicBoxerConnections: vi.fn().mockResolvedValue({ data: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0, hasNextPage: false, hasPrevPage: false } }),
     getConnectionStatus: vi.fn().mockResolvedValue({ status: 'none', requestId: null, connectionId: null }),
     sendConnectionRequest: vi.fn(),
+    getConnectionRequests: vi.fn().mockResolvedValue({ data: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0, hasNextPage: false, hasPrevPage: false }, success: true }),
+    getMyConnections: vi.fn().mockResolvedValue({ data: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0, hasNextPage: false, hasPrevPage: false }, success: true }),
+    acceptConnectionRequest: vi.fn(),
+    declineConnectionRequest: vi.fn(),
+    cancelConnectionRequest: vi.fn(),
+    disconnect: vi.fn(),
   },
 }));
 
@@ -776,4 +783,205 @@ describe('Connect button for boxer users viewing other boxer profiles', () => {
     });
   });
 
+});
+
+// ============================================================================
+// Connection Status Rendering on BoxerDetailPage
+// ============================================================================
+
+const connectionsInitialState = {
+  connections: [],
+  connectionsPagination: null,
+  incomingRequests: [],
+  outgoingRequests: [],
+  incomingPagination: null,
+  outgoingPagination: null,
+  statusCache: {},
+  isLoading: false,
+  isStatusLoading: false,
+  error: null,
+};
+
+describe('Connection status rendering on BoxerDetailPage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (boxerService.getBoxerFights as Mock).mockResolvedValue({ fights: [] });
+    (gymOwnerService.getMyClubs as Mock).mockResolvedValue([]);
+  });
+
+  it('shows "Connected" button when statusCache has connected status', async () => {
+    const myBoxer = createMockBoxer({ id: 'boxer-2', userId: 'user-2', name: 'My Boxer' });
+    const otherBoxer = createMockBoxer({ id: 'boxer-1', userId: 'user-1', name: 'Other Boxer' });
+
+    // The page dispatches fetchConnectionStatus which calls getConnectionStatus.
+    // Override the mock to return 'connected' so it doesn't overwrite the preloaded cache.
+    (connectionService.getConnectionStatus as Mock).mockResolvedValue({
+      status: 'connected', requestId: null, connectionId: 'conn-1',
+    });
+
+    const initialState = {
+      auth: {
+        user: { userId: 'user-2', email: 'boxer@test.com', role: 'BOXER' as UserRole },
+        token: 'test-token',
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      },
+      boxer: {
+        selectedBoxer: otherBoxer,
+        myBoxer,
+        boxers: [],
+        isLoading: false,
+        error: null,
+      },
+      connections: {
+        ...connectionsInitialState,
+        statusCache: {
+          'boxer-1': { status: 'connected', requestId: null, connectionId: 'conn-1' },
+        },
+      },
+    };
+
+    renderWithProviders(<BoxerDetailPage />, initialState);
+
+    await waitFor(() => {
+      const connectedBtn = screen.getByRole('button', { name: /connected/i });
+      expect(connectedBtn).toBeInTheDocument();
+      expect(connectedBtn).toBeDisabled();
+    });
+
+    // The idle "Connect" button should not be present when already connected
+    expect(screen.queryByRole('button', { name: /^connect$/i })).not.toBeInTheDocument();
+  });
+
+  it('shows "Request Sent" button when statusCache has pending_sent status', async () => {
+    const myBoxer = createMockBoxer({ id: 'boxer-2', userId: 'user-2', name: 'My Boxer' });
+    const otherBoxer = createMockBoxer({ id: 'boxer-1', userId: 'user-1', name: 'Other Boxer' });
+
+    // The page dispatches fetchConnectionStatus — override to return pending_sent
+    (connectionService.getConnectionStatus as Mock).mockResolvedValue({
+      status: 'pending_sent', requestId: 'req-1', connectionId: null,
+    });
+
+    const initialState = {
+      auth: {
+        user: { userId: 'user-2', email: 'boxer@test.com', role: 'BOXER' as UserRole },
+        token: 'test-token',
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      },
+      boxer: {
+        selectedBoxer: otherBoxer,
+        myBoxer,
+        boxers: [],
+        isLoading: false,
+        error: null,
+      },
+      connections: {
+        ...connectionsInitialState,
+        statusCache: {
+          'boxer-1': { status: 'pending_sent', requestId: 'req-1', connectionId: null },
+        },
+      },
+    };
+
+    renderWithProviders(<BoxerDetailPage />, initialState);
+
+    await waitFor(() => {
+      const requestSentBtn = screen.getByRole('button', { name: /request sent/i });
+      expect(requestSentBtn).toBeInTheDocument();
+      expect(requestSentBtn).toBeDisabled();
+    });
+  });
+
+  it('shows connections on the profile when connections are preloaded', async () => {
+    const ownBoxer = createMockBoxer({ id: 'boxer-1', userId: 'user-1', name: 'Own Boxer' });
+    const connectedBoxer = {
+      id: 'boxer-friend', name: 'Friend Boxer', profilePhotoUrl: null,
+      experienceLevel: 'BEGINNER' as ExperienceLevel, city: null, country: null,
+      wins: 0, losses: 0, draws: 0, user: { id: 'u-friend', name: 'Friend Boxer' },
+    };
+    const connection = {
+      id: 'conn-1', boxerAId: 'boxer-1', boxerBId: 'boxer-friend', createdAt: '2024-01-01',
+      boxer: connectedBoxer,
+    };
+
+    // The page dispatches fetchMyConnections (owner view) — mock to return our connection
+    (connectionService.getMyConnections as Mock).mockResolvedValue({
+      data: [connection],
+      pagination: { total: 1, page: 1, limit: 20, totalPages: 1, hasNextPage: false, hasPrevPage: false },
+      success: true,
+    });
+
+    const initialState = {
+      auth: {
+        user: { userId: 'user-1', email: 'own@test.com', role: 'BOXER' as UserRole },
+        token: 'test-token',
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      },
+      boxer: {
+        selectedBoxer: ownBoxer,
+        myBoxer: ownBoxer,
+        boxers: [],
+        isLoading: false,
+        error: null,
+      },
+    };
+
+    renderWithProviders(<BoxerDetailPage />, initialState);
+
+    await waitFor(() => {
+      expect(screen.getByText('Friend Boxer')).toBeInTheDocument();
+    });
+  });
+
+  it('shows pending requests for profile owner when incomingRequests are preloaded', async () => {
+    const ownBoxer = createMockBoxer({ id: 'boxer-1', userId: 'user-1', name: 'Own Boxer' });
+    const requesterBoxer = {
+      id: 'boxer-req', name: 'Requester Boxer', profilePhotoUrl: null,
+      experienceLevel: 'BEGINNER' as ExperienceLevel, city: null, country: null,
+      wins: 0, losses: 0, draws: 0, user: { id: 'u-req', name: 'Requester Boxer' },
+    };
+    const pendingRequest = {
+      id: 'req-1', requesterBoxerId: 'boxer-req', targetBoxerId: 'boxer-1',
+      status: 'PENDING' as const, message: null, createdAt: '2024-01-01', updatedAt: '2024-01-01',
+      requesterBoxer,
+    };
+
+    // The page dispatches fetchIncomingConnectionRequests (owner view) — mock to return our request
+    (connectionService.getConnectionRequests as Mock).mockResolvedValue({
+      data: [pendingRequest],
+      pagination: { total: 1, page: 1, limit: 20, totalPages: 1, hasNextPage: false, hasPrevPage: false },
+      success: true,
+    });
+
+    const initialState = {
+      auth: {
+        user: { userId: 'user-1', email: 'own@test.com', role: 'BOXER' as UserRole },
+        token: 'test-token',
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      },
+      boxer: {
+        selectedBoxer: ownBoxer,
+        myBoxer: ownBoxer,
+        boxers: [],
+        isLoading: false,
+        error: null,
+      },
+    };
+
+    renderWithProviders(<BoxerDetailPage />, initialState);
+
+    await waitFor(() => {
+      // Either "Pending Requests" heading or the "1 pending" badge should appear
+      const pendingEl =
+        screen.queryByText(/pending requests/i) ?? screen.queryByText(/1 pending/i);
+      expect(pendingEl).toBeInTheDocument();
+    });
+  });
 });

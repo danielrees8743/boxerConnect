@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2, Shield } from 'lucide-react';
+import { LogOut, Menu, X, User, Home, Users, Calendar, Settings, Building2, Shield, Bell, UserCheck } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { logout } from '@/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const incomingRequests = useAppSelector((state) => state.connections.incomingRequests);
+  const pendingCount = incomingRequests.filter((r) => r.status === 'PENDING').length;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -31,14 +33,17 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const isBoxer = user?.role === 'BOXER';
+
   const navLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: Home },
     { to: '/boxers', label: 'Boxers', icon: Users },
     { to: '/matches', label: 'Matches', icon: Calendar },
   ];
 
+  // Clubs visible to non-admin, non-boxer roles (coaches, gym staff, unauthenticated)
   const publicLinks = [
-    { to: '/clubs', label: 'Clubs', icon: Building2 },
+    ...(!isBoxer ? [{ to: '/clubs', label: 'Clubs', icon: Building2 }] : []),
   ];
 
   return (
@@ -77,6 +82,16 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     <span>{link.label}</span>
                   </Link>
                 ))}
+              {/* Connections link - visible for boxers only */}
+              {isAuthenticated && isBoxer && (
+                <Link
+                  to="/connections"
+                  className="flex items-center space-x-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <UserCheck className="h-4 w-4" />
+                  <span>Connections</span>
+                </Link>
+              )}
             </div>
 
             <div className="flex items-center space-x-4">
@@ -90,6 +105,20 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     >
                       <Shield className="h-4 w-4" />
                       <span>Admin</span>
+                    </Link>
+                  )}
+                  {user?.role !== 'ADMIN' && (
+                    <Link
+                      to="/connections"
+                      className="relative flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+                      aria-label={pendingCount > 0 ? `${pendingCount} pending connection request${pendingCount !== 1 ? 's' : ''}` : 'Connection requests'}
+                    >
+                      <Bell className="h-5 w-5" />
+                      {pendingCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-boxing-red text-[10px] font-bold text-white leading-none">
+                          {pendingCount > 9 ? '9+' : pendingCount}
+                        </span>
+                      )}
                     </Link>
                   )}
                   <Link
@@ -173,6 +202,26 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   >
                     <Shield className="h-4 w-4" />
                     <span>Admin</span>
+                  </Link>
+                )}
+                {user?.role !== 'ADMIN' && (
+                  <Link
+                    to="/connections"
+                    className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <span className="relative">
+                      {isBoxer ? <UserCheck className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
+                      {pendingCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-boxing-red text-[9px] font-bold text-white leading-none">
+                          {pendingCount > 9 ? '9+' : pendingCount}
+                        </span>
+                      )}
+                    </span>
+                    <span>
+                      {isBoxer ? 'Connections' : 'Requests'}
+                      {pendingCount > 0 && ` (${pendingCount})`}
+                    </span>
                   </Link>
                 )}
                 <Link

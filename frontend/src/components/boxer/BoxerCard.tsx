@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 interface BoxerCardProps {
   boxer: BoxerProfile;
   compatibilityScore?: number;
+  connectState?: 'idle' | 'pending' | 'connected';
   onViewProfile?: (id: string) => void;
   onSendRequest?: (id: string) => void;
   onConnect?: (id: string) => void;
@@ -64,6 +65,7 @@ function formatGender(gender: Gender): string {
 export const BoxerCard: React.FC<BoxerCardProps> = ({
   boxer,
   compatibilityScore,
+  connectState,
   onViewProfile,
   onSendRequest,
   onConnect,
@@ -174,7 +176,7 @@ export const BoxerCard: React.FC<BoxerCardProps> = ({
               </Button>
             )}
             {onConnect && (
-              <ConnectButton onConnect={() => onConnect(boxer.id)} size="sm" />
+              <ConnectButton onConnect={() => onConnect(boxer.id)} initialState={connectState} size="sm" />
             )}
             {!onConnect && onSendRequest && (
               <Button

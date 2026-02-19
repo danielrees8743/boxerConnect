@@ -6,7 +6,11 @@ import { createMatchRequest } from '@/features/requests/requestsSlice';
 import {
   fetchConnectionStatus,
   fetchMyConnections,
+  fetchIncomingConnectionRequests,
   sendConnectionRequest as sendConnectionRequestThunk,
+  acceptConnectionRequest,
+  declineConnectionRequest,
+  disconnect,
 } from '@/features/connections/connectionsSlice';
 import { BoxerProfile, FightHistoryList, BoxerForm } from '@/components/boxer';
 import { SendRequestDialog } from '@/components/requests';
@@ -110,6 +114,13 @@ const BoxerDetailPage: React.FC = () => {
     }
   }, [dispatch, selectedBoxer?.id, myBoxer?.id]);
 
+  // Fetch incoming connection requests when viewing own profile
+  useEffect(() => {
+    if (isOwner) {
+      dispatch(fetchIncomingConnectionRequests());
+    }
+  }, [dispatch, isOwner]);
+
   // Fetch the viewed boxer's connections for the ConnectionsCard
   useEffect(() => {
     let cancelled = false;
@@ -189,6 +200,19 @@ const BoxerDetailPage: React.FC = () => {
   const handleSendRequest = () => {
     setIsRequestDialogOpen(true);
   };
+
+  const handleAcceptConnection = useCallback(async (requestId: string) => {
+    await dispatch(acceptConnectionRequest(requestId));
+    dispatch(fetchMyConnections());
+  }, [dispatch]);
+
+  const handleDeclineConnection = useCallback(async (requestId: string) => {
+    await dispatch(declineConnectionRequest(requestId));
+  }, [dispatch]);
+
+  const handleDisconnect = useCallback(async (connectionId: string) => {
+    await dispatch(disconnect(connectionId));
+  }, [dispatch]);
 
   const handleConnect = useCallback(async () => {
     if (!selectedBoxer) return;
@@ -282,10 +306,14 @@ const BoxerDetailPage: React.FC = () => {
             ? (connectionsState.connectionsPagination?.total ?? connectionsState.connections.length)
             : viewedBoxerConnections.length
         }
+        incomingConnectionRequests={isOwner ? connectionsState.incomingRequests : []}
         isOwner={isOwner}
         isLoading={isLoading}
         onEdit={canEdit ? handleEditProfile : undefined}
         onConnect={!isOwner && myBoxer ? handleConnect : undefined}
+        onAcceptConnection={isOwner ? handleAcceptConnection : undefined}
+        onDeclineConnection={isOwner ? handleDeclineConnection : undefined}
+        onDisconnect={isOwner ? handleDisconnect : undefined}
         connectState={connectState}
       />
 

@@ -7,9 +7,14 @@ import {
   setSearchParams,
   clearSearchParams,
   setPage,
+  fetchMyBoxer,
 } from '@/features/boxer/boxerSlice';
 import { createMatchRequest } from '@/features/requests/requestsSlice';
-import { sendConnectionRequest as sendConnectionRequestThunk } from '@/features/connections/connectionsSlice';
+import {
+  sendConnectionRequest as sendConnectionRequestThunk,
+  fetchMyConnections,
+  fetchOutgoingConnectionRequests,
+} from '@/features/connections/connectionsSlice';
 import { BoxerList, BoxerSearchFilters } from '@/components/boxer';
 import { SendRequestDialog } from '@/components/requests';
 import { Alert, AlertDescription } from '@/components/ui';
@@ -25,12 +30,28 @@ export const BoxersPage: React.FC = () => {
   const { boxers, pagination, searchParams, isLoading, error } = useAppSelector(
     (state) => state.boxer
   );
-  const { myBoxer } = useAppSelector((state) => state.boxer);
+  const { myBoxer, isLoading: boxerLoading } = useAppSelector((state) => state.boxer);
+  const connectionsState = useAppSelector((state) => state.connections);
   const requestsState = useAppSelector((state) => state.requests);
 
   // Dialog state
   const [selectedBoxer, setSelectedBoxer] = React.useState<BoxerProfile | null>(null);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = React.useState(false);
+
+  // Ensure myBoxer is loaded so the Connect button renders correctly on refresh
+  React.useEffect(() => {
+    if (!myBoxer && !boxerLoading) {
+      dispatch(fetchMyBoxer());
+    }
+  }, [dispatch, myBoxer, boxerLoading]);
+
+  // Fetch connection state so the Connect button reflects current status
+  React.useEffect(() => {
+    if (myBoxer) {
+      dispatch(fetchMyConnections());
+      dispatch(fetchOutgoingConnectionRequests());
+    }
+  }, [dispatch, myBoxer]);
 
   // Fetch boxers on mount and when search params change
   React.useEffect(() => {
@@ -90,6 +111,25 @@ export const BoxersPage: React.FC = () => {
   // Filter out current user's boxer from results
   const filteredBoxers = boxers.filter((b) => b.id !== myBoxer?.id);
 
+  // Derive connect state per boxer from cached connections/requests (no extra API calls)
+  const connectStateMap = React.useMemo(() => {
+    const map: Record<string, 'idle' | 'pending' | 'connected'> = {};
+    for (const conn of connectionsState.connections) {
+      if (conn.boxer) map[conn.boxer.id] = 'connected';
+    }
+    for (const req of connectionsState.outgoingRequests) {
+      if (req.status === 'PENDING') map[req.targetBoxerId] = 'pending';
+    }
+    // statusCache overrides (populated when visiting individual boxer pages)
+    for (const [boxerId, result] of Object.entries(connectionsState.statusCache)) {
+      map[boxerId] =
+        result.status === 'connected' ? 'connected'
+        : result.status === 'pending_sent' || result.status === 'pending_received' ? 'pending'
+        : 'idle';
+    }
+    return map;
+  }, [connectionsState.connections, connectionsState.outgoingRequests, connectionsState.statusCache]);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -129,6 +169,7 @@ export const BoxersPage: React.FC = () => {
             onPageChange={handlePageChange}
             onViewProfile={handleViewProfile}
             onConnect={myBoxer ? handleConnect : undefined}
+            connectStateMap={myBoxer ? connectStateMap : undefined}
             isLoading={isLoading}
             emptyMessage="No boxers found matching your criteria."
           />
