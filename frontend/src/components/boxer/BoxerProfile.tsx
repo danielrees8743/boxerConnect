@@ -27,6 +27,7 @@ import {
 } from '@/components/ui';
 import type { BoxerProfile as BoxerProfileType, FightHistory, Availability, FightResult, Gender, BoxerVideo } from '@/types';
 import { cn } from '@/lib/utils';
+import { ConnectButton } from './ConnectButton';
 
 interface BoxerProfileProps {
   boxer: BoxerProfileType | null;
@@ -37,6 +38,7 @@ interface BoxerProfileProps {
   isLoading?: boolean;
   onEdit?: () => void;
   onSendRequest?: () => void;
+  onConnect?: () => void;
   className?: string;
 }
 
@@ -105,6 +107,7 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
   isLoading = false,
   onEdit,
   onSendRequest,
+  onConnect,
   className,
 }) => {
   if (isLoading) {
@@ -163,6 +166,9 @@ export const BoxerProfile: React.FC<BoxerProfileProps> = ({
                       <Edit2 className="h-4 w-4 mr-2" />
                       Edit Profile
                     </Button>
+                  )}
+                  {!isOwner && onConnect && (
+                    <ConnectButton onConnect={onConnect} />
                   )}
                   {!isOwner && onSendRequest && (
                     <Button onClick={onSendRequest}>Send Match Request</Button>
