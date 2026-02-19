@@ -8,9 +8,11 @@ describe('ConnectButton', () => {
     expect(screen.getByRole('button', { name: /connect/i })).toBeInTheDocument();
   });
 
-  it('renders "Connect" button in idle state when initialState is idle', () => {
-    render(<ConnectButton onConnect={vi.fn()} initialState="idle" />);
-    expect(screen.getByRole('button', { name: /connect/i })).toBeInTheDocument();
+  it('does not call onConnect when already in connected state', () => {
+    const onConnect = vi.fn();
+    render(<ConnectButton onConnect={onConnect} initialState="connected" />);
+    fireEvent.click(screen.getByRole('button', { name: /connected/i }));
+    expect(onConnect).not.toHaveBeenCalled();
   });
 
   it('calls onConnect and transitions to pending when clicked from idle', () => {

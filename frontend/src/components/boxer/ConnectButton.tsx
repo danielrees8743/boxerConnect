@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserPlus, Clock, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui';
 
@@ -14,6 +14,10 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
   initialState = 'idle',
 }) => {
   const [state, setState] = useState<ConnectState>(initialState);
+
+  useEffect(() => {
+    setState(initialState);
+  }, [initialState]);
 
   const handleClick = () => {
     onConnect();
