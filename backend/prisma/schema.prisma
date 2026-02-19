@@ -77,6 +77,13 @@ enum MembershipRequestStatus {
   REJECTED
 }
 
+enum ConnectionRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELLED
+}
+
 // ============================================================================
 // MODELS
 // ============================================================================
@@ -143,6 +150,10 @@ model Boxer {
   receivedMatchRequests MatchRequest[] @relation("TargetBoxer")
   coaches             CoachBoxer[]   @relation("BoxerRelation")
   videos              BoxerVideo[]
+  sentConnectionRequests     ConnectionRequest[] @relation("ConnectionRequester")
+  receivedConnectionRequests ConnectionRequest[] @relation("ConnectionTarget")
+  connectionsAsA             Connection[]        @relation("ConnectionBoxerA")
+  connectionsAsB             Connection[]        @relation("ConnectionBoxerB")
 
   @@index([userId])
   @@index([city, country])
@@ -218,6 +229,40 @@ model MatchRequest {
   @@index([expiresAt])
   @@index([status, expiresAt])
   @@map("match_requests")
+}
+
+model ConnectionRequest {
+  id               String                  @id @default(uuid()) @db.Uuid
+  requesterBoxerId String                  @map("requester_boxer_id") @db.Uuid
+  targetBoxerId    String                  @map("target_boxer_id") @db.Uuid
+  status           ConnectionRequestStatus @default(PENDING)
+  message          String?                 @db.VarChar(500)
+  createdAt        DateTime                @default(now()) @map("created_at")
+  updatedAt        DateTime                @updatedAt @map("updated_at")
+
+  requesterBoxer Boxer @relation("ConnectionRequester", fields: [requesterBoxerId], references: [id], onDelete: Cascade)
+  targetBoxer    Boxer @relation("ConnectionTarget", fields: [targetBoxerId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterBoxerId, targetBoxerId])
+  @@index([requesterBoxerId])
+  @@index([targetBoxerId])
+  @@index([status])
+  @@map("connection_requests")
+}
+
+model Connection {
+  id        String   @id @default(uuid()) @db.Uuid
+  boxerAId  String   @map("boxer_a_id") @db.Uuid
+  boxerBId  String   @map("boxer_b_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  boxerA Boxer @relation("ConnectionBoxerA", fields: [boxerAId], references: [id], onDelete: Cascade)
+  boxerB Boxer @relation("ConnectionBoxerB", fields: [boxerBId], references: [id], onDelete: Cascade)
+
+  @@unique([boxerAId, boxerBId])
+  @@index([boxerAId])
+  @@index([boxerBId])
+  @@map("connections")
 }
 
 model CoachBoxer {
