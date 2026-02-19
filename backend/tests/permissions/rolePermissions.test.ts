@@ -322,6 +322,23 @@ describe('Role-Permission Mappings', () => {
   });
 
   // ============================================================================
+  // Connection Permission Tests
+  // ============================================================================
+
+  describe('Connection Permissions', () => {
+    it('BOXER role has all connection permissions', () => {
+      expect(roleHasPermission(UserRole.BOXER, Permission.CONNECTION_SEND_REQUEST)).toBe(true);
+      expect(roleHasPermission(UserRole.BOXER, Permission.CONNECTION_READ_OWN)).toBe(true);
+      expect(roleHasPermission(UserRole.BOXER, Permission.CONNECTION_ACCEPT_REQUEST)).toBe(true);
+      expect(roleHasPermission(UserRole.BOXER, Permission.CONNECTION_DISCONNECT)).toBe(true);
+    });
+
+    it('COACH role does not have connection permissions', () => {
+      expect(roleHasPermission(UserRole.COACH, Permission.CONNECTION_SEND_REQUEST)).toBe(false);
+    });
+  });
+
+  // ============================================================================
   // ROLE_PERMISSIONS Map Tests
   // ============================================================================
 

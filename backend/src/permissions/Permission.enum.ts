@@ -70,6 +70,15 @@ export enum Permission {
   MATCH_CANCEL_REQUEST = 'match:cancel',
 
   // ============================================================================
+  // Connection Operations
+  // ============================================================================
+
+  CONNECTION_SEND_REQUEST = 'connection:send:request',
+  CONNECTION_READ_OWN = 'connection:read:own',
+  CONNECTION_ACCEPT_REQUEST = 'connection:accept:request',
+  CONNECTION_DISCONNECT = 'connection:disconnect',
+
+  // ============================================================================
   // Availability Operations
   // ============================================================================
 
