@@ -19,6 +19,8 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
     setState(initialState);
   }, [initialState]);
 
+  // NOTE: onConnect errors are the caller's responsibility.
+  // State moves optimistically to 'pending'. Add error recovery when backend is wired.
   const handleClick = () => {
     onConnect();
     setState('pending');
