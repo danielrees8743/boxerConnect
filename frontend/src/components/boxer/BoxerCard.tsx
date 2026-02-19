@@ -11,6 +11,7 @@ import {
   Badge,
   getInitials,
 } from '@/components/ui';
+import { ConnectButton } from './ConnectButton';
 import type { BoxerProfile, ExperienceLevel, Gender } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -19,6 +20,7 @@ interface BoxerCardProps {
   compatibilityScore?: number;
   onViewProfile?: (id: string) => void;
   onSendRequest?: (id: string) => void;
+  onConnect?: (id: string) => void;
   showActions?: boolean;
   className?: string;
 }
@@ -56,7 +58,7 @@ function formatGender(gender: Gender): string {
  * <BoxerCard
  *   boxer={boxerProfile}
  *   compatibilityScore={85}
- *   onSendRequest={(id) => handleSendRequest(id)}
+ *   onConnect={(id) => handleConnect(id)}
  * />
  */
 export const BoxerCard: React.FC<BoxerCardProps> = ({
@@ -64,6 +66,7 @@ export const BoxerCard: React.FC<BoxerCardProps> = ({
   compatibilityScore,
   onViewProfile,
   onSendRequest,
+  onConnect,
   showActions = true,
   className,
 }) => {
@@ -170,7 +173,10 @@ export const BoxerCard: React.FC<BoxerCardProps> = ({
                 <Link to={`/boxers/${boxer.id}`}>View Profile</Link>
               </Button>
             )}
-            {onSendRequest && (
+            {onConnect && (
+              <ConnectButton onConnect={() => onConnect(boxer.id)} size="sm" />
+            )}
+            {!onConnect && onSendRequest && (
               <Button
                 size="sm"
                 className="flex-1"

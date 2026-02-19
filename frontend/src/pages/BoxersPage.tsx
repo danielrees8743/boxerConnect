@@ -63,13 +63,19 @@ export const BoxersPage: React.FC = () => {
     navigate(`/boxers/${id}`);
   };
 
-  // Handle send request
+  // Handle send request (kept for dialog flow, not wired to cards)
   const handleSendRequest = (id: string) => {
     const boxer = boxers.find((b) => b.id === id);
     if (boxer) {
       setSelectedBoxer(boxer);
       setIsRequestDialogOpen(true);
     }
+  };
+
+  // Handle connect — local state only until backend is wired
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleConnect = (_id: string) => {
+    // no-op: ConnectButton manages optimistic UI state internally
   };
 
   // Handle submit request
@@ -122,7 +128,7 @@ export const BoxersPage: React.FC = () => {
             pagination={pagination}
             onPageChange={handlePageChange}
             onViewProfile={handleViewProfile}
-            onSendRequest={myBoxer ? handleSendRequest : undefined}
+            onConnect={myBoxer ? handleConnect : undefined}
             isLoading={isLoading}
             emptyMessage="No boxers found matching your criteria."
           />
