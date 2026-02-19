@@ -94,6 +94,12 @@ apiClient.interceptors.response.use(
           return Promise.reject(new Error('Session expired. Please log in again.'));
         }
 
+        // For login failures, propagate the real backend error (wrong credentials etc.)
+        if (originalRequest.url?.includes('/auth/login')) {
+          const message = data?.message || 'Invalid email or password';
+          return Promise.reject(new Error(message));
+        }
+
         // If already refreshing, queue this request
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
