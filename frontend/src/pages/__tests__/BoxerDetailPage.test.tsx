@@ -14,6 +14,7 @@ import { boxerService } from '@/services/boxerService';
 import boxerReducer from '@/features/boxer/boxerSlice';
 import authReducer from '@/features/auth/authSlice';
 import requestsReducer from '@/features/requests/requestsSlice';
+import connectionsReducer from '@/features/connections/connectionsSlice';
 import type { ExperienceLevel, UserRole } from '@/types';
 
 // ============================================================================
@@ -24,6 +25,14 @@ vi.mock('@/services/gymOwnerService', () => ({
   gymOwnerService: {
     getMyClubs: vi.fn(),
     getClubWithMembers: vi.fn(),
+  },
+}));
+
+vi.mock('@/services/connectionService', () => ({
+  connectionService: {
+    getPublicBoxerConnections: vi.fn().mockResolvedValue({ data: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0, hasNextPage: false, hasPrevPage: false } }),
+    getConnectionStatus: vi.fn().mockResolvedValue({ status: 'none', requestId: null, connectionId: null }),
+    sendConnectionRequest: vi.fn(),
   },
 }));
 
@@ -127,6 +136,7 @@ const createMockStore = (preloadedState?: any) => {
       boxer: boxerReducer,
       auth: authReducer,
       requests: requestsReducer,
+      connections: connectionsReducer,
     },
     preloadedState: {
       auth: {

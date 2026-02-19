@@ -3,12 +3,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { fetchBoxerById, clearSelectedBoxer, updateBoxer } from '@/features/boxer/boxerSlice';
 import { createMatchRequest } from '@/features/requests/requestsSlice';
+import {
+  fetchConnectionStatus,
+  fetchMyConnections,
+  sendConnectionRequest as sendConnectionRequestThunk,
+} from '@/features/connections/connectionsSlice';
 import { BoxerProfile, FightHistoryList, BoxerForm } from '@/components/boxer';
 import { SendRequestDialog } from '@/components/requests';
 import { Alert, AlertDescription } from '@/components/ui';
 import { boxerService } from '@/services/boxerService';
 import { gymOwnerService } from '@/services/gymOwnerService';
-import type { FightHistory, Club, UpdateBoxerData } from '@/types';
+import { connectionService } from '@/services/connectionService';
+import type { FightHistory, Club, UpdateBoxerData, Connection } from '@/types';
 
 /**
  * Boxer detail page component.
@@ -23,12 +29,15 @@ const BoxerDetailPage: React.FC = () => {
   const { selectedBoxer, myBoxer, isLoading, error } = useAppSelector((state) => state.boxer);
   const { user } = useAppSelector((state) => state.auth);
   const requestsState = useAppSelector((state) => state.requests);
+  const connectionsState = useAppSelector((state) => state.connections);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
   const [fights, setFights] = useState<FightHistory[]>([]);
   const [fightsLoading, setFightsLoading] = useState(false);
   const [isGymOwner, setIsGymOwner] = useState(false);
   const [checkingGymOwner, setCheckingGymOwner] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [viewedBoxerConnections, setViewedBoxerConnections] = useState<Connection[]>([]);
+  const [connectionsLoading, setConnectionsLoading] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -91,6 +100,40 @@ const BoxerDetailPage: React.FC = () => {
     };
   }, [selectedBoxer?.id]);
 
+  // Determine if current user owns this profile (needed before effects)
+  const isOwner = myBoxer?.id === selectedBoxer?.id;
+
+  // Fetch connection status when viewing another boxer's profile
+  useEffect(() => {
+    if (selectedBoxer && myBoxer && selectedBoxer.id !== myBoxer.id) {
+      dispatch(fetchConnectionStatus(selectedBoxer.id));
+    }
+  }, [dispatch, selectedBoxer?.id, myBoxer?.id]);
+
+  // Fetch the viewed boxer's connections for the ConnectionsCard
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      if (!selectedBoxer?.id) return;
+      setConnectionsLoading(true);
+      try {
+        if (isOwner) {
+          dispatch(fetchMyConnections());
+        } else {
+          const result = await connectionService.getPublicBoxerConnections(selectedBoxer.id);
+          if (!cancelled) setViewedBoxerConnections(result.data);
+        }
+      } catch {
+        // silent
+      } finally {
+        if (!cancelled) setConnectionsLoading(false);
+      }
+    };
+    load();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBoxer?.id, isOwner, dispatch]);
+
   // Determine if current user can manage this boxer's fights
   // - Admins can manage any boxer's fights
   // - Coaches can manage linked boxers' fights (backend enforces specific permission check)
@@ -110,7 +153,6 @@ const BoxerDetailPage: React.FC = () => {
   // Determine if current user can edit this boxer's profile
   // - Profile owners can edit via their profile page (redirect)
   // - Gym owners can edit boxers in their clubs
-  const isOwner = myBoxer?.id === selectedBoxer?.id;
   const canEdit = isOwner || isGymOwner;
 
   // Handle fight created - add to list and refetch boxer to update record
@@ -148,10 +190,19 @@ const BoxerDetailPage: React.FC = () => {
     setIsRequestDialogOpen(true);
   };
 
-  const handleConnect = () => {
-    // State is managed locally in ConnectButton for now.
-    // Wire up to backend connection API when ready.
-  };
+  const handleConnect = useCallback(async () => {
+    if (!selectedBoxer) return;
+    await dispatch(sendConnectionRequestThunk({ targetBoxerId: selectedBoxer.id }));
+  }, [dispatch, selectedBoxer]);
+
+  // Derive ConnectButton state from connection status cache
+  const connectionStatus = selectedBoxer
+    ? connectionsState.statusCache[selectedBoxer.id]?.status ?? 'none'
+    : 'none';
+  const connectState: 'idle' | 'pending' | 'connected' =
+    connectionStatus === 'connected' ? 'connected'
+    : connectionStatus === 'pending_sent' || connectionStatus === 'pending_received' ? 'pending'
+    : 'idle';
 
   const handleSubmitRequest = async (data: { targetBoxerId: string; message?: string; proposedDate?: string; proposedVenue?: string }) => {
     const result = await dispatch(createMatchRequest(data));
@@ -224,10 +275,18 @@ const BoxerDetailPage: React.FC = () => {
         boxer={selectedBoxer}
         fightHistory={fights}
         availability={selectedBoxer?.availability || []}
+        connections={isOwner ? connectionsState.connections : viewedBoxerConnections}
+        connectionsLoading={isOwner ? connectionsState.isLoading : connectionsLoading}
+        connectionsTotalCount={
+          isOwner
+            ? (connectionsState.connectionsPagination?.total ?? connectionsState.connections.length)
+            : viewedBoxerConnections.length
+        }
         isOwner={isOwner}
         isLoading={isLoading}
         onEdit={canEdit ? handleEditProfile : undefined}
         onConnect={!isOwner && myBoxer ? handleConnect : undefined}
+        connectState={connectState}
       />
 
       {/* Fight History Section with management for coaches/gym owners */}
