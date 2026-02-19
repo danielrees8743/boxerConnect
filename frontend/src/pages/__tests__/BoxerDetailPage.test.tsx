@@ -704,4 +704,66 @@ describe('Connect button for boxer users viewing other boxer profiles', () => {
 
     expect(screen.queryByRole('button', { name: /send match request/i })).not.toBeInTheDocument();
   });
+
+  it('does NOT show Connect button when boxer is viewing their own profile', async () => {
+    // myBoxer and selectedBoxer are the SAME boxer
+    const ownBoxer = createMockBoxer({ id: 'boxer-1', userId: 'user-1', name: 'Own Boxer' });
+
+    (gymOwnerService.getMyClubs as Mock).mockResolvedValue([]);
+    (boxerService.getBoxerFights as Mock).mockResolvedValue({ fights: [] });
+
+    const initialState = {
+      auth: {
+        user: { userId: 'user-1', email: 'own@test.com', role: 'BOXER' as UserRole },
+        token: 'test-token',
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      },
+      boxer: {
+        selectedBoxer: ownBoxer,
+        myBoxer: ownBoxer,
+        boxers: [],
+        isLoading: false,
+        error: null,
+      },
+    };
+
+    renderWithProviders(<BoxerDetailPage />, initialState);
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /connect/i })).not.toBeInTheDocument();
+    });
+  });
+
+  it('does NOT show Connect button when logged-in user is not a boxer', async () => {
+    const otherBoxer = createMockBoxer({ id: 'boxer-1', userId: 'user-1', name: 'Other Boxer' });
+
+    (gymOwnerService.getMyClubs as Mock).mockResolvedValue([]);
+    (boxerService.getBoxerFights as Mock).mockResolvedValue({ fights: [] });
+
+    const initialState = {
+      auth: {
+        user: { userId: 'user-2', email: 'coach@test.com', role: 'COACH' as UserRole },
+        token: 'test-token',
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      },
+      boxer: {
+        selectedBoxer: otherBoxer,
+        myBoxer: null,
+        boxers: [],
+        isLoading: false,
+        error: null,
+      },
+    };
+
+    renderWithProviders(<BoxerDetailPage />, initialState);
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /connect/i })).not.toBeInTheDocument();
+    });
+  });
+
 });

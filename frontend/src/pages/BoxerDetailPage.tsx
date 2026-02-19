@@ -142,6 +142,8 @@ const BoxerDetailPage: React.FC = () => {
     }
   }, [dispatch, id]);
 
+  // NOTE: handleSendRequest and SendRequestDialog are intentionally preserved.
+  // They will be used when non-boxer roles (coaches, admins) can initiate match requests.
   const handleSendRequest = () => {
     setIsRequestDialogOpen(true);
   };
