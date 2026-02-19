@@ -146,6 +146,11 @@ const BoxerDetailPage: React.FC = () => {
     setIsRequestDialogOpen(true);
   };
 
+  const handleConnect = () => {
+    // State is managed locally in ConnectButton for now.
+    // Wire up to backend connection API when ready.
+  };
+
   const handleSubmitRequest = async (data: { targetBoxerId: string; message?: string; proposedDate?: string; proposedVenue?: string }) => {
     const result = await dispatch(createMatchRequest(data));
     if (createMatchRequest.fulfilled.match(result)) {
@@ -220,7 +225,7 @@ const BoxerDetailPage: React.FC = () => {
         isOwner={isOwner}
         isLoading={isLoading}
         onEdit={canEdit ? handleEditProfile : undefined}
-        onSendRequest={!isOwner && myBoxer ? handleSendRequest : undefined}
+        onConnect={!isOwner && myBoxer ? handleConnect : undefined}
       />
 
       {/* Fight History Section with management for coaches/gym owners */}

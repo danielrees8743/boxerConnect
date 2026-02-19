@@ -665,3 +665,43 @@ describe('BoxerDetailPage - Gym Owner Edit Functionality', () => {
     });
   });
 });
+
+// ============================================================================
+// Connect Button for Boxer Users
+// ============================================================================
+
+describe('Connect button for boxer users viewing other boxer profiles', () => {
+  it('shows Connect button instead of Send Match Request when logged-in user is a boxer', async () => {
+    const myBoxerUserId = 'user-2';
+    const myBoxer = createMockBoxer({ id: 'boxer-2', userId: myBoxerUserId, name: 'My Boxer' });
+    const otherBoxer = createMockBoxer({ id: 'boxer-1', userId: 'user-1', name: 'Other Boxer' });
+
+    (gymOwnerService.getMyClubs as Mock).mockResolvedValue([]);
+    (boxerService.getBoxerFights as Mock).mockResolvedValue({ fights: [] });
+
+    const initialState = {
+      auth: {
+        user: { userId: myBoxerUserId, email: 'boxer@test.com', role: 'BOXER' as UserRole },
+        token: 'test-token',
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      },
+      boxer: {
+        selectedBoxer: otherBoxer,
+        myBoxer: myBoxer,
+        boxers: [],
+        isLoading: false,
+        error: null,
+      },
+    };
+
+    renderWithProviders(<BoxerDetailPage />, initialState);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /connect/i })).toBeInTheDocument();
+    });
+
+    expect(screen.queryByRole('button', { name: /send match request/i })).not.toBeInTheDocument();
+  });
+});
