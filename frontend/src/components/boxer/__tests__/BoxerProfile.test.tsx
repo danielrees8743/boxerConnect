@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { BoxerProfile } from '../BoxerProfile';
 import type { BoxerProfile as BoxerProfileType } from '@/types';
 
@@ -54,5 +54,21 @@ describe('BoxerProfile - action buttons', () => {
       <BoxerProfile boxer={mockBoxer} isOwner={false} onSendRequest={vi.fn()} />
     );
     expect(screen.getByText(/send match request/i)).toBeInTheDocument();
+  });
+
+  it('does not render Connect button when only onSendRequest is provided', () => {
+    render(
+      <BoxerProfile boxer={mockBoxer} isOwner={false} onSendRequest={vi.fn()} />
+    );
+    expect(screen.queryByRole('button', { name: /connect/i })).not.toBeInTheDocument();
+  });
+
+  it('calls onConnect when Connect button is clicked', () => {
+    const onConnect = vi.fn();
+    render(
+      <BoxerProfile boxer={mockBoxer} isOwner={false} onConnect={onConnect} />
+    );
+    fireEvent.click(screen.getByRole('button', { name: /connect/i }));
+    expect(onConnect).toHaveBeenCalledTimes(1);
   });
 });
